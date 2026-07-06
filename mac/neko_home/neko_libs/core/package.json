@@ -1,8 +1,10 @@
-{
-  "name": "core",
-  "version": "0.2.0",
-  "kind": "native",
-  "description": "Core builtins: print, len, type, assert, errors, timing, arrays",
-  "import_paths": [],
-  "builtin_count": 17
+﻿{
+    "name":  "core",
+    "version":  "0.2.1",
+    "kind":  "native",
+    "description":  "Core builtins: print, len, type, assert, errors, timing, arrays",
+    "import_paths":  [
+
+                     ],
+    "builtin_count":  17
 }

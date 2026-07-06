@@ -1,8 +1,11 @@
-{
-  "name": "time",
-  "version": "0.2.0",
-  "kind": "native",
-  "description": "Wall clock, formatting, parsing, time zones, and date arithmetic",
-  "import_paths": ["time", "std/time"],
-  "builtin_count": 32
+﻿{
+    "name":  "time",
+    "version":  "0.2.1",
+    "kind":  "native",
+    "description":  "Wall clock, formatting, parsing, time zones, and date arithmetic",
+    "import_paths":  [
+                         "time",
+                         "std/time"
+                     ],
+    "builtin_count":  32
 }
