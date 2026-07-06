@@ -1,0 +1,17 @@
+class Box {
+    items: int
+
+    static fn new(n: int) -> Box {
+        return Box { items: n }
+    }
+
+    fn add(self, n: int) {
+        self.items = self.items + n
+    }
+}
+
+fn main() {
+    let b = Box.new(1)
+    b.add(2)
+    assert(b.items == 3)
+}

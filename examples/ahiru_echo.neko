@@ -1,0 +1,15 @@
+import "ahiru"
+import "json"
+
+fn main() {
+    let app = ahiru_app_from_config("ahiru.config.toml")
+    ahiru_app_use(app, "request_id")
+    ahiru_app_use(app, "logging")
+    ahiru_app_get(app, "/api/echo", echo, {is_public: true})
+    ahiru_app_listen(app)
+}
+
+fn echo(ctx) {
+    let body = json_parse(ctx.body)
+    return ahiru_json_response(200, json_stringify(body))
+}

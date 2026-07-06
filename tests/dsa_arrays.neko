@@ -1,0 +1,68 @@
+import "dsa"
+
+fn main() {
+    // sort / sort_desc
+    let arr = [5, 3, 8, 1, 9, 2]
+    sort(arr)
+    assert(is_sorted(arr), "sort ascending")
+    assert(arr[0] == 1, "sort first")
+    assert(arr[5] == 9, "sort last")
+    sort_desc(arr)
+    assert(arr[0] == 9, "sort_desc first")
+    assert(arr[5] == 1, "sort_desc last")
+
+    // strings sort too
+    let words = ["pear", "apple", "mango"]
+    sort(words)
+    assert(words[0] == "apple", "string sort")
+
+    // binary search on sorted array
+    let sorted = [1, 3, 5, 7, 9, 11]
+    assert(binary_search(sorted, 7) == 3, "binary_search hit")
+    assert(binary_search(sorted, 4) == -1, "binary_search miss")
+    assert(binary_search(sorted, 1) == 0, "binary_search first")
+    assert(binary_search(sorted, 11) == 5, "binary_search last")
+
+    // reverse
+    let r = [1, 2, 3]
+    reverse(r)
+    assert(r[0] == 3, "reverse")
+
+    // sum / min / max
+    assert(sum([1, 2, 3, 4]) == 10, "sum")
+    assert(sum([1.5, 2.5]) == 4.0, "float sum")
+    assert(min([4, 2, 9]) == 2, "min")
+    assert(max([4, 2, 9]) == 9, "max")
+    assert(min([]) == nil, "min of empty is nil")
+
+    // push / pop
+    let p = [1, 2]
+    push(p, 3)
+    assert(len(p) == 3, "push grows")
+    assert(pop(p) == 3, "pop returns last")
+    assert(len(p) == 2, "pop shrinks")
+    push(p, "mixed")
+    assert(pop(p) == "mixed", "push converts to generic array")
+
+    // index_of / contains
+    let idx = [10, 20, 30]
+    assert(index_of(idx, 20) == 1, "index_of hit")
+    assert(index_of(idx, 99) == -1, "index_of miss")
+    assert(contains(idx, 30), "contains hit")
+    assert(!contains(idx, 99), "contains miss")
+
+    // unique preserves first-seen order
+    let u = unique([3, 1, 3, 2, 1])
+    assert(len(u) == 3, "unique len")
+    assert(u[0] == 3, "unique order 0")
+    assert(u[1] == 1, "unique order 1")
+    assert(u[2] == 2, "unique order 2")
+
+    // works with the native int-array fast path too
+    let big = make_random_int_array(10000)
+    sort(big)
+    assert(is_sorted(big), "sort 10k native ints")
+    assert(binary_search(big, big[5000]) >= 0, "binary_search in 10k")
+
+    print("dsa array tests passed")
+}

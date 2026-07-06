@@ -1,0 +1,15 @@
+import "nml"
+
+fn main() {
+    nml_set_device("cpu")
+    let l1 = nml_linear(4, 8)
+    let relu = nml_relu_layer()
+    let l2 = nml_linear(8, 2)
+    let model = nml_sequential([l1, relu, l2])
+    let x = nml_randn([16, 4])
+    let y = nml_zeros([16, 2])
+    let trainer = nml_trainer(model, "adam", "mse", 0.01)
+    let loss = nml_train_epoch(trainer, x, y)
+    print("mlp loss", loss)
+    nml_save(model, "mlp_demo.nml")
+}

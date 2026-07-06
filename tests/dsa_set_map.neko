@@ -1,0 +1,80 @@
+import "dsa"
+
+fn main() {
+    // set basics
+    let s = set_new()
+    assert(set_is_empty(s), "new set is empty")
+    assert(set_add(s, 1), "set add new")
+    assert(!set_add(s, 1), "set add dup returns false")
+    set_add(s, 2)
+    set_add(s, "hello")
+    set_add(s, true)
+    assert(len(s) == 4, "set len")
+    assert(set_contains(s, 1), "set contains int")
+    assert(set_contains(s, "hello"), "set contains string")
+    assert(!set_contains(s, 3), "set not contains")
+    assert(set_remove(s, 1), "set remove")
+    assert(!set_remove(s, 1), "set remove missing returns false")
+    assert(len(s) == 3, "set len after remove")
+
+    // set from array + dedup
+    let a = set_from_array([1, 2, 3, 2, 1])
+    assert(len(a) == 3, "set_from_array dedups")
+
+    // union / intersect / diff
+    let b = set_from_array([2, 3, 4])
+    let u = set_union(a, b)
+    assert(len(u) == 4, "union size")
+    assert(set_contains(u, 4), "union contents")
+    let inter = set_intersect(a, b)
+    assert(len(inter) == 2, "intersect size")
+    assert(set_contains(inter, 2), "intersect contents")
+    assert(!set_contains(inter, 1), "intersect excludes")
+    let d = set_diff(a, b)
+    assert(len(d) == 1, "diff size")
+    assert(set_contains(d, 1), "diff contents")
+
+    // insertion order preserved in to_array
+    let ord = set_new()
+    set_add(ord, 30)
+    set_add(ord, 10)
+    set_add(ord, 20)
+    let arr = set_to_array(ord)
+    assert(arr[0] == 30, "set order 0")
+    assert(arr[1] == 10, "set order 1")
+    assert(arr[2] == 20, "set order 2")
+
+    // map basics
+    let m = map_new()
+    assert(map_is_empty(m), "new map is empty")
+    map_set(m, "one", 1)
+    map_set(m, "two", 2)
+    map_set(m, 3, "three")
+    assert(len(m) == 3, "map len")
+    assert(map_get(m, "one") == 1, "map get string key")
+    assert(map_get(m, 3) == "three", "map get int key")
+    assert(map_get(m, "missing") == nil, "map get missing is nil")
+    assert(map_has(m, "two"), "map has")
+    assert(!map_has(m, "nope"), "map not has")
+
+    // overwrite
+    map_set(m, "one", 100)
+    assert(map_get(m, "one") == 100, "map overwrite")
+    assert(len(m) == 3, "map len after overwrite")
+
+    // remove
+    assert(map_remove(m, "two"), "map remove")
+    assert(!map_remove(m, "two"), "map remove missing returns false")
+    assert(len(m) == 2, "map len after remove")
+
+    // keys / values (insertion order)
+    let keys = map_keys(m)
+    assert(keys[0] == "one", "map keys order")
+    let vals = map_values(m)
+    assert(vals[0] == 100, "map values order")
+
+    map_clear(m)
+    assert(map_is_empty(m), "map clear")
+
+    print("dsa set/map tests passed")
+}

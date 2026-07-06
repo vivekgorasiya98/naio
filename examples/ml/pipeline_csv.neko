@@ -1,0 +1,20 @@
+import "nml"
+import "nvis"
+
+fn main() {
+    let x_raw = nml_tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [4, 2])
+    let y_raw = nml_tensor([0.0, 1.0, 0.0, 1.0], [4])
+    let x_train = nml_standardize(x_raw)
+    let model = nml_sequential([nml_linear(2, 4), nml_relu_layer(), nml_linear(4, 1)])
+    let trainer = nml_trainer(model, "adam", "mse", 0.01)
+
+    let epoch = 0
+    while epoch < 30 {
+        let loss = nml_train_epoch(trainer, x_train, y_raw, { batch_size: 2 })
+        print("epoch", epoch, "loss", loss)
+        epoch = epoch + 1
+    }
+
+    let chart = nml_plot_training(trainer)
+    nvis_print_ascii(chart)
+}

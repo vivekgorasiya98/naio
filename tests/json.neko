@@ -1,0 +1,90 @@
+import "json" as j
+
+fn test_parse_scalars() {
+    assert(j.type(j.parse("null")) == "null", "null type")
+    assert(j.type(j.parse("true")) == "bool", "bool type")
+    assert(j.type(j.parse("42")) == "number", "int type")
+    assert(j.type(j.parse("3.14")) == "number", "float type")
+    assert(j.type(j.parse("\"hi\"")) == "string", "string type")
+    assert(j.parse("42") == 42, "int value")
+    assert(j.parse("3.5") == 3.5, "float value")
+    assert(j.parse("\"hello\"") == "hello", "string value")
+}
+
+fn test_parse_collections() {
+    let arr = j.parse("[1, 2, 3]")
+    assert(j.type(arr) == "array", "array type")
+    assert(j.array_len(arr) == 3, "array len")
+    assert(arr[0] == 1, "array elem")
+
+    let obj = j.parse("{\"name\": \"Neko\", \"n\": 1}")
+    assert(j.type(obj) == "object", "object type")
+    assert(j.object_len(obj) == 2, "object len")
+    assert(j.has(obj, "name"), "has key")
+    assert(!j.has(obj, "missing"), "missing key")
+    assert(j.get(obj, "name") == "Neko", "get key")
+    assert(j.get(obj, "n") == 1, "get number")
+}
+
+fn test_stringify_roundtrip() {
+    let data = j.parse("{\"title\": \"demo\", \"count\": 3, \"tags\": [\"a\", \"b\"]}")
+    let text = j.stringify(data)
+    assert(j.valid(text), "valid json")
+    let back = j.parse(text)
+    assert(j.equal(data, back), "roundtrip equal")
+}
+
+fn test_stringify_pretty() {
+    let obj = j.parse("{\"x\": 1, \"y\": 2}")
+    let pretty = j.stringify_pretty(obj)
+    assert(len(pretty) > len(j.stringify(obj)), "pretty longer")
+}
+
+fn test_path_access() {
+    let doc = j.parse("{\"user\": {\"items\": [{\"id\": 7}]}}")
+    assert(j.get(doc, "user.items[0].id") == 7, "nested path")
+}
+
+fn test_set_merge_clone() {
+    let target = j.parse("{\"a\": 1, \"nested\": {\"x\": 1}}")
+    j.set(target, "nested.y", 2)
+    assert(j.get(target, "nested.y") == 2, "json_set")
+
+    let patch = j.parse("{\"b\": 2, \"nested\": {\"z\": 3}}")
+    j.merge(target, patch)
+    assert(j.get(target, "a") == 1, "merge keeps a")
+    assert(j.get(target, "b") == 2, "merge adds b")
+    assert(j.get(target, "nested.x") == 1, "merge keeps nested.x")
+    assert(j.get(target, "nested.z") == 3, "merge adds nested.z")
+
+    let copy = j.clone(target)
+    assert(j.equal(target, copy), "clone equal")
+    j.set(copy, "a", 99)
+    assert(j.get(copy, "a") == 99, "clone independent")
+    assert(j.get(target, "a") == 1, "original unchanged")
+}
+
+fn test_keys() {
+    let obj = j.parse("{\"z\": 1, \"a\": 2}")
+    let keys = j.keys(obj)
+    assert(keys[0] == "a", "sorted keys")
+    assert(keys[1] == "z", "sorted keys")
+}
+
+fn test_is_json() {
+    assert(j.is_json(j.parse("{\"a\": 1}")), "object is json")
+    assert(j.is_json([1, 2]), "array is json")
+    assert(j.type(j.parse("null")) == "null", "null json type")
+}
+
+fn main() {
+    test_parse_scalars()
+    test_parse_collections()
+    test_stringify_roundtrip()
+    test_stringify_pretty()
+    test_path_access()
+    test_set_merge_clone()
+    test_keys()
+    test_is_json()
+    print("all json tests passed")
+}

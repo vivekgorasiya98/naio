@@ -1,0 +1,9 @@
+[package]
+name = "neko_interpreter"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+neko_ast = { workspace = true }
+neko_parser = { workspace = true }
+neko_runtime = { workspace = true }

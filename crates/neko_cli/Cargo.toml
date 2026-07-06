@@ -1,0 +1,40 @@
+[package]
+name = "neko_cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "neko"
+path = "src/main.rs"
+
+[dependencies]
+neko_ast = { workspace = true }
+neko_lexer = { workspace = true }
+neko_parser = { workspace = true }
+neko_runtime = { workspace = true }
+neko_interpreter = { workspace = true }
+neko_ir = { workspace = true }
+neko_bytecode = { workspace = true }
+neko_vm = { workspace = true }
+neko_format = { workspace = true }
+neko_lint = { workspace = true }
+neko_docs = { workspace = true }
+neko_web = { workspace = true }
+ahiru_core = { workspace = true }
+axum = { workspace = true }
+toml = "0.8"
+clap = { workspace = true }
+tokio = { workspace = true }
+
+[features]
+default = []
+nllm-llama = ["neko_runtime/nllm-llama"]
+nllm-cuda = ["neko_runtime/nllm-cuda"]
+
+[dev-dependencies]
+neko_interpreter = { workspace = true }
+neko_parser = { workspace = true }
+neko_format = { workspace = true }
+neko_lint = { workspace = true }
+neko_bytecode = { workspace = true }
+neko_docs = { workspace = true }

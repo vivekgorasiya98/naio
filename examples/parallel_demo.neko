@@ -1,0 +1,35 @@
+import "parallel" as p
+
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+fn worker(n: int) -> int {
+    return n * n
+}
+
+fn main() {
+    print("cpus: " + p.cpu_count())
+
+    let m = p.Mutex.new(0)
+    p.Mutex.lock(m)
+    p.Mutex.set(m, 42)
+    print("mutex: " + p.Mutex.get(m))
+    p.Mutex.unlock(m)
+
+    let ch = p.Channel.new(8)
+    p.Channel.send(ch, "hello")
+    p.Channel.send(ch, "parallel")
+    print(p.Channel.recv(ch))
+    print(p.Channel.recv(ch))
+    p.Channel.close(ch)
+
+    let pool = p.Pool.new(2)
+    let t1 = p.Pool.submit(pool, worker, 6)
+    let t2 = p.Pool.submit(pool, worker, 8)
+    print("pool: " + p.Pool.wait(pool, t1) + " " + p.Pool.wait(pool, t2))
+    p.Pool.shutdown(pool)
+
+    let th = p.Thread.spawn(add, 10, 32)
+    print("thread: " + p.Thread.join(th))
+}

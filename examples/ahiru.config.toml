@@ -1,0 +1,23 @@
+[server]
+host = "127.0.0.1"
+port = 3001
+workers = 2
+body_limit_mb = 5
+
+[auth]
+mode = "none"
+scope = "global"
+
+[websocket]
+mode = "disabled"
+
+[security]
+cors_origins = ["*"]
+rate_limit_rps = 200
+secure_headers = true
+csrf = false
+
+[logging]
+level = "info"
+request_id = true
+json_logs = false

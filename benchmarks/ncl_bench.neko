@@ -1,0 +1,12 @@
+import "ncl"
+
+// Vectorized math on 1M integers
+let n = 1000000
+let a = ncl.arange(0, n)
+let b = ncl.mul(a, 3)
+let s = ncl.sum(b)
+print(s)
+
+// Parallel sum for large arrays
+let ps = ncl.parallel_sum(b)
+print(ps)

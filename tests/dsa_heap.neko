@@ -1,0 +1,53 @@
+import "dsa"
+
+fn main() {
+    // min-heap pops in ascending order
+    let h = heap_new_min()
+    assert(heap_is_empty(h), "new heap is empty")
+    heap_push(h, 5)
+    heap_push(h, 1)
+    heap_push(h, 4)
+    heap_push(h, 1)
+    heap_push(h, 3)
+    assert(len(h) == 5, "heap len")
+    assert(heap_peek(h) == 1, "min heap peek")
+    assert(heap_pop(h) == 1, "min pop 1")
+    assert(heap_pop(h) == 1, "min pop dup")
+    assert(heap_pop(h) == 3, "min pop 3")
+    assert(heap_pop(h) == 4, "min pop 4")
+    assert(heap_pop(h) == 5, "min pop 5")
+    assert(heap_pop(h) == nil, "pop from empty heap is nil")
+
+    // max-heap pops in descending order
+    let hm = heap_new_max()
+    heap_push(hm, 10)
+    heap_push(hm, 30)
+    heap_push(hm, 20)
+    assert(heap_pop(hm) == 30, "max pop 1")
+    assert(heap_pop(hm) == 20, "max pop 2")
+    assert(heap_pop(hm) == 10, "max pop 3")
+
+    // floats and ints mix
+    let hf = heap_new_min()
+    heap_push(hf, 2.5)
+    heap_push(hf, 2)
+    heap_push(hf, 3)
+    assert(heap_pop(hf) == 2, "mixed pop int first")
+    assert(heap_pop(hf) == 2.5, "mixed pop float")
+
+    // heap sort: n pushes + n pops
+    let hs = heap_new_min()
+    let i = 100
+    while i > 0 {
+        heap_push(hs, i)
+        i = i - 1
+    }
+    let prev = heap_pop(hs)
+    while !heap_is_empty(hs) {
+        let cur = heap_pop(hs)
+        assert(prev <= cur, "heap sort order")
+        prev = cur
+    }
+
+    print("dsa heap tests passed")
+}

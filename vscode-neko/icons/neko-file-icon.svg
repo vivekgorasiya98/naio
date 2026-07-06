@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <clipPath id="neko-circle">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#neko-circle)">
+    <circle cx="50" cy="50" r="50" fill="#000000"/>
+
+    <!-- cat profile: ears, face, neck -->
+    <path fill="#FFFFFF" d="
+      M 35 46
+      C 35 40 38 34 43 30
+      L 49 17
+      L 55 25
+      L 63 13
+      L 71 22
+      C 79 28 83 36 81 42
+      C 79 48 73 51 69 53
+      C 65 55 63 58 63 62
+      L 63 98
+      C 63 98 52 98 52 98
+      L 52 63
+      C 49 59 45 55 40 53
+      C 37 51 35 49 35 46
+      Z
+    "/>
+
+    <!-- neck curve -->
+    <path fill="#FFFFFF" d="
+      M 63 78
+      C 63 78 76 80 76 92
+      C 76 98 68 98 63 98
+      Z
+    "/>
+
+    <!-- speed lines -->
+    <rect x="10" y="36.5" width="20" height="5.5" rx="2.75" fill="#FFFFFF"/>
+    <rect x="6" y="47" width="27" height="5.5" rx="2.75" fill="#FFFFFF"/>
+    <rect x="12" y="57.5" width="19" height="5.5" rx="2.75" fill="#FFFFFF"/>
+
+    <!-- trailing dot -->
+    <circle cx="15" cy="69" r="2.8" fill="#FFFFFF"/>
+
+    <!-- eye -->
+    <circle cx="69.5" cy="34.5" r="3.2" fill="#000000"/>
+  </g>
+</svg>

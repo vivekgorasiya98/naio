@@ -1,0 +1,9 @@
+let x = 10
+let y = 32
+print(x + y)
+
+fn double(n: int) -> int {
+    return n * 2
+}
+
+print(double(x))

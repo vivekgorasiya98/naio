@@ -1,0 +1,30 @@
+import "net"
+import "json"
+
+fn handler(req) {
+    if req.path == "/echo" {
+        return net_http_response(200, "application/json", req.body)
+    }
+    return net_http_response(404, "text/plain", "not found")
+}
+
+fn main() {
+    print("== URL utilities ==")
+    print(net_url_encode("hello world"))
+
+    print("== async HTTP ==")
+    let task = net_async_http_get("https://httpbin.org/get")
+    let resp = net_task_wait(task)
+    if resp.ok {
+        print("async status: " + net_response_field(resp, "status"))
+    }
+
+    print("== TCP socket ==")
+    let sock = net_tcp_connect("example.com", 80)
+    net_tcp_send(sock, "GET / HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n")
+    let bytes = net_tcp_recv(sock, 512)
+    print("tcp bytes: " + len(bytes))
+    net_tcp_close(sock)
+
+    print("done")
+}

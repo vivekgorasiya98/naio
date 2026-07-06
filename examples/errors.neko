@@ -1,0 +1,41 @@
+fn divide(a: int, b: int) -> int {
+    try {
+        return a // b
+    } catch (e) {
+        print("Caught error:")
+        print("  code: " + e.code)
+        print("  kind: " + e.kind)
+        print("  message: " + e.message)
+        print("  at line " + e.line + ", col " + e.col)
+        return 0
+    }
+}
+
+fn validate_age(age: int) -> int {
+    if age < 0 {
+        throw error("age must be non-negative")
+    }
+    if age > 150 {
+        throw error(4001, "age out of range")
+    }
+    return age
+}
+
+fn main() {
+    print(divide(10, 2))
+    print(divide(10, 0))
+
+    try {
+        print(validate_age(25))
+        print(validate_age(-1))
+    } catch (e) {
+        print("Validation failed: " + e.message + " (E" + e.code + ")")
+    }
+
+    try {
+        print(validate_age(200))
+    } catch (e) {
+        assert(is_error(e))
+        print("Custom code: " + e.code)
+    }
+}

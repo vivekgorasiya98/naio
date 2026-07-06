@@ -1,0 +1,27 @@
+import "net"
+
+fn main() {
+    let port = 38421
+    let listener = net_tcp_bind("127.0.0.1", port)
+    net_tcp_listen(listener, 8)
+
+    // client connects and sends
+    let client = net_tcp_connect("127.0.0.1", port)
+    net_tcp_send(client, "ping")
+    net_tcp_close(client)
+
+    let accepted = net_tcp_accept(listener)
+    let data = net_tcp_recv(accepted, 64)
+    assert(len(data) == 4, "recv len")
+    assert(data[0] == 112, "p")
+    assert(data[1] == 105, "i")
+    net_tcp_close(accepted)
+    net_tcp_close(listener)
+
+    // udp roundtrip
+    let udp = net_udp_bind("127.0.0.1", 38422)
+    net_udp_send(udp, "127.0.0.1", 38422, "hi")
+    let pkt = net_udp_recv(udp, 128)
+    assert(len(pkt) == 2, "udp len")
+    assert(pkt[0] == 104, "h")
+}

@@ -1,0 +1,11 @@
+﻿{
+    "version":  "0.2.0",
+    "name":  "ahiru",
+    "description":  "ahiru-server: high-performance HTTP/WebSocket backend framework",
+    "import_paths":  [
+                         "ahiru",
+                         "std/ahiru"
+                     ],
+    "kind":  "native",
+    "builtin_count":  15
+}

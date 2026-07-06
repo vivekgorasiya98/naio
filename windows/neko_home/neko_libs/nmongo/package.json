@@ -1,0 +1,16 @@
+{
+
+  "name": "nmongo",
+
+  "version": "0.2.0",
+
+  "kind": "native",
+
+  "description": "Fast MongoDB: CRUD, aggregation, indexes, transactions, GridFS, change streams, async",
+
+  "import_paths": ["nmongo", "std/nmongo"],
+
+  "builtin_count": 45
+
+}
+

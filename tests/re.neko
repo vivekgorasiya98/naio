@@ -1,0 +1,87 @@
+import "re"
+
+fn test_valid_escape() {
+    assert(re_valid("\\d+"), "digit pattern valid")
+    assert(!re_valid("[unclosed"), "bad pattern invalid")
+    assert(re_escape("a.b") == "a\\.b", "escape dots")
+}
+
+fn test_match_test() {
+    assert(re_match("\\d+", "42"), "full digit match")
+    assert(!re_match("\\d+", "x42"), "partial not full match")
+    assert(re_test("\\d+", "x42"), "test finds digits")
+    assert(!re_test("^\\d+$", "x42"), "anchored test")
+}
+
+fn test_search_captures() {
+    let m = re_search("(\\w+)@(\\w+)\\.(\\w+)", "alice@example.com")
+    assert(m != nil, "search found match")
+    assert(m.full == "alice@example.com", "full match text")
+    assert(m.start == 0, "start index")
+    assert(m.end == 17, "end index")
+    assert(m.groups[1] == "alice", "capture group 1")
+    assert(m.groups[2] == "example", "capture group 2")
+    assert(m.groups[3] == "com", "capture group 3")
+
+    assert(re_search("zzz", "none") == nil, "no match returns nil")
+}
+
+fn test_find_all() {
+    let hits = re_find_all_strings("\\d+", "a1b22c333")
+    assert(len(hits) == 3, "three number runs")
+    assert(hits[0] == "1", "first hit")
+    assert(hits[1] == "22", "second hit")
+    assert(hits[2] == "333", "third hit")
+
+    let objs = re_find_all("(\\w)", "ab")
+    assert(len(objs) == 2, "two capture matches")
+    assert(objs[0].full == "a", "first obj full")
+    assert(objs[1].full == "b", "second obj full")
+}
+
+fn test_replace_split_count() {
+    assert(re_replace("\\s+", "a  b   c", "-") == "a-b-c", "replace all whitespace")
+    assert(re_replace_n("\\d", "a1b2c3", "X", 2) == "aXbXc3", "replace first n")
+    let parts = re_split("[,;]+", "a,b;;c")
+    assert(len(parts) == 3, "split parts")
+    assert(parts[0] == "a", "split a")
+    assert(parts[1] == "b", "split b")
+    assert(parts[2] == "c", "split c")
+    assert(re_count("\\w", "hi!") == 2, "count word chars")
+}
+
+fn test_flags() {
+    assert(re_test("hello", "HELLO", "i"), "case insensitive flag")
+    assert(!re_test("hello", "HELLO"), "case sensitive default")
+}
+
+fn test_handles() {
+    let h = re_compile("\\d+")
+    assert(re_test_h(h, "99"), "handle test")
+    assert(re_match_h(h, "99"), "handle full match")
+    assert(re_count_h(h, "a1b22") == 2, "handle count")
+    assert(re_replace_h(h, "a1b2", "[$0]") == "a[1]b[2]", "handle replace")
+    assert(re_close(h), "close handle")
+    assert(!re_close(h), "second close fails")
+}
+
+fn test_invalid_pattern() {
+    try {
+        re_compile("[")
+        assert(false, "should throw")
+    } catch (e) {
+        assert(e.code == 1301, "pattern error code")
+    }
+}
+
+fn main() {
+    test_valid_escape()
+    test_match_test()
+    test_search_captures()
+    test_find_all()
+    test_replace_split_count()
+    test_flags()
+    test_handles()
+    test_invalid_pattern()
+    print("all re tests passed")
+}

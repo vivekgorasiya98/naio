@@ -1,0 +1,20 @@
+import "parallel"
+
+fn slow_square(n: int) -> int {
+    parallel_thread_sleep(10)
+    return n * n
+}
+
+fn main() {
+    let pool = parallel_pool_new(2)
+    let t1 = parallel_pool_submit(pool, slow_square, 3)
+    let t2 = parallel_pool_submit(pool, slow_square, 4)
+
+    while parallel_pool_active(pool) > 0 {
+        parallel_thread_yield()
+    }
+
+    print(parallel_pool_wait(pool, t1))
+    print(parallel_pool_wait(pool, t2))
+    parallel_pool_shutdown(pool)
+}

@@ -1,0 +1,14 @@
+import "net"
+
+fn main() {
+    let u = net_url_parse("https://example.com/path")
+    print("host: " + u.host)
+
+    let r = net_http_get("https://httpbin.org/get")
+    if r.ok {
+        print("status: " + net_response_field(r, "status"))
+        print("body prefix: " + net_response_field(r, "body"))
+    } else {
+        print("request failed")
+    }
+}

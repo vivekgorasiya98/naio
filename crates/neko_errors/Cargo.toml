@@ -1,0 +1,7 @@
+[package]
+name = "neko_errors"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+neko_ast = { workspace = true }

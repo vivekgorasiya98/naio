@@ -1,0 +1,8 @@
+{
+  "name": "ahiru",
+  "version": "0.2.2",
+  "kind": "native",
+  "description": "ahiru-server: VM default serve, per-worker pool, native health/ping, fast bridge",
+  "import_paths": ["ahiru", "std/ahiru"],
+  "builtin_count": 19
+}

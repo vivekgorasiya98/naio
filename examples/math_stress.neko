@@ -1,0 +1,6 @@
+// Arithmetic stress — mod loop matching benchmarks/benchmark_math.py
+// Run:  neko bench examples/math_stress.neko
+
+fn main() {
+    print_super_boom_math(10000000)
+}

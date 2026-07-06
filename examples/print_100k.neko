@@ -1,0 +1,17 @@
+// print throughput benchmark — 100k lines, super boom edition.
+
+// Run:  cargo build --release --bin neko
+//       .\target\release\neko.exe .\examples\print_100k.neko
+
+fn main() {
+    let n = 100000
+    let t0 = now_us()
+    let i = 0
+    while i < n {
+        print("line", i, "boom")
+        i += 1
+    }
+    let t1 = now_us()
+    print("lines:", n)
+    print("print ms:", (t1 - t0) / 1000)
+}

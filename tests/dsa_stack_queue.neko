@@ -1,0 +1,44 @@
+import "dsa"
+
+fn main() {
+    // stack: LIFO order
+    let s = stack_new()
+    assert(stack_is_empty(s), "new stack is empty")
+    stack_push(s, 1)
+    stack_push(s, 2)
+    stack_push(s, 3)
+    assert(len(s) == 3, "stack len")
+    assert(stack_peek(s) == 3, "stack peek")
+    assert(stack_pop(s) == 3, "stack pop 1")
+    assert(stack_pop(s) == 2, "stack pop 2")
+    assert(stack_pop(s) == 1, "stack pop 3")
+    assert(stack_pop(s) == nil, "pop from empty stack is nil")
+    stack_push(s, 9)
+    stack_clear(s)
+    assert(stack_is_empty(s), "stack clear")
+
+    // queue: FIFO order
+    let q = queue_new()
+    assert(queue_is_empty(q), "new queue is empty")
+    queue_push(q, "a")
+    queue_push(q, "b")
+    queue_push(q, "c")
+    assert(queue_front(q) == "a", "queue front")
+    assert(queue_back(q) == "c", "queue back")
+    assert(queue_pop(q) == "a", "queue pop 1")
+    assert(queue_pop(q) == "b", "queue pop 2")
+    assert(len(q) == 1, "queue len")
+
+    // deque: both ends
+    let d = deque_new()
+    deque_push_back(d, 2)
+    deque_push_front(d, 1)
+    deque_push_back(d, 3)
+    assert(deque_front(d) == 1, "deque front")
+    assert(deque_back(d) == 3, "deque back")
+    assert(deque_pop_front(d) == 1, "deque pop front")
+    assert(deque_pop_back(d) == 3, "deque pop back")
+    assert(len(d) == 1, "deque len")
+
+    print("dsa stack/queue/deque tests passed")
+}

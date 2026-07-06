@@ -1,0 +1,15 @@
+[workspace]
+
+[package]
+name = "neko_installer"
+version = "0.2.1"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "NekoSetup"
+path = "src/main.rs"
+
+[dependencies]
+rust-embed = { version = "8", features = ["compression"] }
+winreg = "0.55"

@@ -1,0 +1,24 @@
+// ahiru-server helpers — use alongside native `import "ahiru"` builtins.
+// Native API: ahiru_app_from_config, ahiru_app_get/post, ahiru_app_listen, etc.
+
+fn make_route_opts(permission, is_public, use_ws) {
+    let opts = {}
+    if permission != "" {
+        opts.permission = permission
+    }
+    if is_public {
+        opts.is_public = true
+    }
+    if use_ws {
+        opts.ws = true
+    }
+    return opts
+}
+
+fn text_response(status, body) {
+    return ahiru_response(status, "text/plain; charset=utf-8", body)
+}
+
+fn json_response(status, body) {
+    return ahiru_response(status, "application/json; charset=utf-8", body)
+}

@@ -1,0 +1,7 @@
+import "nml"
+
+fn main() {
+    let data = [1.0, 1.0, 2.0, 2.0, 10.0, 10.0, 11.0, 11.0]
+    let km = nml_kmeans(data, 4, 2, 2)
+    print("kmeans", nml_kind(km))
+}

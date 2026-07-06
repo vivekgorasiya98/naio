@@ -1,0 +1,14 @@
+import "ncl"
+
+let a = ncl.arange(1, 5)
+let b = ncl.mul(a, 10)
+
+assert(ncl.sum(ncl.add(a, b)) == 110)
+assert(ncl.mean(a) == 2.5)
+assert(ncl.max(b) == 40)
+assert(ncl.min(a) == 1)
+
+let f = ncl.linspace(0.0, 1.0, 5)
+assert(len(f) == 5)
+
+print("ncl_math ok")

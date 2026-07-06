@@ -1,0 +1,22 @@
+class Counter {
+    value: int
+
+    static fn new(start: int) -> Counter {
+        return Counter { value: start }
+    }
+
+    fn inc(self) {
+        self.value = self.value + 1
+    }
+
+    fn get(self) -> int {
+        return self.value
+    }
+}
+
+fn main() {
+    let c = Counter.new(0)
+    c.inc()
+    c.inc()
+    print(c.get())
+}

@@ -1,0 +1,73 @@
+import "io"
+
+fn main() {
+    let base = io_join(io_temp_dir(), "neko_io_test")
+    io_create_dir_all(base)
+
+    let file = io_join(base, "hello.txt")
+    let nested = io_join(base, "nested")
+    io_create_dir(nested)
+
+    // sync whole-file
+    io_write_file(file, "line one\nline two\n")
+    assert(io_read_file(file) == "line one\nline two\n", "read_file")
+    io_append_file(file, "line three\n")
+    assert(io_read_file(file) == "line one\nline two\nline three\n", "append_file")
+
+    let lines = io_read_lines(file)
+    assert(len(lines) == 3, "read_lines count")
+    assert(lines[0] == "line one", "read_lines first")
+
+    io_write_lines(io_join(base, "out.txt"), ["a", "b", "c"])
+    assert(io_read_file(io_join(base, "out.txt")) == "a\nb\nc", "write_lines")
+
+    // bytes
+    let bin = io_join(base, "data.bin")
+    io_write_bytes(bin, [72, 105])
+    let bytes = io_read_bytes(bin)
+    assert(len(bytes) == 2, "read_bytes len")
+    assert(bytes[0] == 72, "read_bytes data")
+
+    // metadata
+    assert(io_exists(file), "exists")
+    assert(io_is_file(file), "is_file")
+    assert(io_is_dir(nested), "is_dir")
+    assert(io_file_size(file) > 0, "file_size")
+
+    // path helpers (normalize slashes on Windows)
+    assert(io_basename(file) == "hello.txt", "basename")
+    assert(io_stem(file) == "hello", "stem")
+    assert(io_extension(file) == "txt", "extension")
+
+    // list dir
+    let names = io_list_dir(base)
+    assert(len(names) >= 2, "list_dir")
+
+    // streaming handle
+    let h = io_open(file, "r")
+    let chunk = io_read(h, 4)
+    assert(chunk == "line", "io_read chunk")
+    io_close(h)
+
+    let hw = io_open(io_join(base, "stream.txt"), "w")
+    io_write(hw, "streamed")
+    io_flush(hw)
+    io_close(hw)
+    assert(io_read_file(io_join(base, "stream.txt")) == "streamed", "stream write")
+
+    // async (skip io_task_wait on binaries without global async task pool fix)
+    let copy_dst = io_join(base, "copy.txt")
+    io_copy(file, copy_dst)
+    assert(io_read_file(copy_dst) == io_read_file(file), "copy")
+
+    // cleanup
+    io_remove_file(bin)
+    io_remove_file(io_join(base, "out.txt"))
+    io_remove_file(io_join(base, "stream.txt"))
+    io_remove_file(copy_dst)
+    io_remove_file(file)
+    io_remove_dir(nested)
+    io_remove_dir(base)
+
+    print("io tests passed")
+}

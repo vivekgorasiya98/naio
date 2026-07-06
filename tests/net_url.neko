@@ -1,0 +1,33 @@
+import "net"
+
+fn main() {
+    let u = net_url_parse("https://user:pass@host:8080/path?q=1#frag")
+    assert(u.scheme == "https", "scheme")
+    assert(u.host == "host", "host")
+    assert(u.port == 8080, "port")
+    assert(u.path == "/path", "path")
+    assert(u.query == "q=1", "query")
+    assert(u.fragment == "frag", "fragment")
+
+    assert(net_url_encode("a b") == "a+b", "encode")
+    assert(net_url_decode("a+b") == "a b", "decode")
+
+    let joined = net_url_join("https://example.com/a/", "b")
+    assert(joined == "https://example.com/a/b", "join")
+
+    let built = net_url_build({
+        scheme: "http",
+        host: "localhost",
+        port: 3000,
+        path: "/api",
+        query: "x=1"
+    })
+    assert(built == "http://localhost:3000/api?x=1", "build")
+
+    let addrs = net_resolve("localhost", 80)
+    assert(len(addrs) > 0, "resolve")
+    assert(addrs[0].family == "ipv4" || addrs[0].family == "ipv6", "family")
+
+    let name = net_hostname()
+    assert(len(name) > 0, "hostname")
+}

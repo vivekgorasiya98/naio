@@ -1,0 +1,45 @@
+// Typed error handling tests (interpreter mode)
+
+fn test_division_error_fields() {
+    try {
+        let x = 10 / 0
+        assert(false, "should not reach")
+    } catch (e) {
+        assert(is_error(e))
+        assert(e.code == 2001)
+        assert(e.kind == "division_by_zero")
+        assert(e.message == "division by zero")
+        assert(e.line > 0)
+    }
+}
+
+fn test_error_constructor() {
+    let e = error("something went wrong")
+    assert(is_error(e))
+    assert(e.code == 2007)
+    assert(e.kind == "thrown")
+    assert(e.message == "something went wrong")
+}
+
+fn test_error_with_code() {
+    let e = error(9001, "custom failure")
+    assert(e.code == 9001)
+    assert(e.message == "custom failure")
+}
+
+fn test_throw_and_catch() {
+    try {
+        throw error("boom")
+        assert(false, "unreachable")
+    } catch (e) {
+        assert(e.message == "boom")
+    }
+}
+
+fn main() {
+    test_division_error_fields()
+    test_error_constructor()
+    test_error_with_code()
+    test_throw_and_catch()
+    print("all error tests passed")
+}

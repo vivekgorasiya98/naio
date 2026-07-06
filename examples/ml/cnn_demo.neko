@@ -1,0 +1,12 @@
+import "nml"
+
+fn main() {
+    nml_set_device("cpu")
+    let conv = nml_conv2d_layer(1, 4, 3)
+    let relu = nml_relu_layer()
+    let bn = nml_batch_norm2d(4)
+    let model = nml_sequential([conv, bn, relu])
+    let x = nml_randn([2, 1, 8, 8])
+    let out = nml_forward(model, x)
+    print("cnn out shape", nml_shape(out))
+}

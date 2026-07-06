@@ -1,0 +1,21 @@
+[package]
+name = "neko_ml"
+version.workspace = true
+edition.workspace = true
+description = "Deep learning: autograd, layers, training for NML"
+
+[dependencies]
+neko_tensor = { path = "../neko_tensor" }
+neko_data = { path = "../neko_data" }
+neko_graph = { path = "../neko_graph" }
+rayon = "1"
+serde = { version = "1", features = ["derive"] }
+rand = "0.8"
+rand_distr = "0.4"
+
+[features]
+default = ["cpu"]
+cpu = ["neko_tensor/cpu"]
+cuda = ["neko_tensor/cuda"]
+cuda-f16 = ["neko_tensor/cuda-f16"]
+wgpu = ["neko_tensor/wgpu"]

@@ -1,0 +1,19 @@
+import "parallel"
+
+fn main() {
+    let m = parallel_mutex_new(0)
+    parallel_mutex_lock(m)
+    parallel_mutex_set(m, 10)
+    let v = parallel_mutex_get(m)
+    parallel_mutex_unlock(m)
+    assert(v == 10, "mutex get/set")
+
+    parallel_mutex_lock(m)
+    parallel_mutex_set(m, v + 5)
+    parallel_mutex_unlock(m)
+    assert(parallel_mutex_get(m) == 15, "mutex auto get")
+
+    let ok = parallel_mutex_try_lock(m)
+    assert(ok, "try_lock")
+    parallel_mutex_unlock(m)
+}

@@ -1,0 +1,20 @@
+import "parallel"
+
+fn main() {
+    let ch = parallel_channel_new(4)
+    parallel_channel_send(ch, 1)
+    parallel_channel_send(ch, 2)
+    parallel_channel_send(ch, 3)
+
+    assert(parallel_channel_recv(ch) == 1, "recv 1")
+    assert(parallel_channel_recv(ch) == 2, "recv 2")
+
+    let empty = parallel_channel_try_recv(ch)
+    assert(empty != nil, "try_recv has value")
+    assert(empty == 3, "try_recv value")
+
+    let none = parallel_channel_try_recv(ch)
+    assert(none == nil, "try_recv empty")
+
+    parallel_channel_close(ch)
+}

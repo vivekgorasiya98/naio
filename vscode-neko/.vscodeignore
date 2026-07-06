@@ -1,0 +1,8 @@
+.vscode/**
+.vscode-test/**
+.git/**
+.gitignore
+**/*.vsix
+node_modules/**
+package-lock.json
+icons/image-removebg-preview.png

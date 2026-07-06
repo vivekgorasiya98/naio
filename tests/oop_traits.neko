@@ -1,0 +1,22 @@
+trait Addable {
+    fn add(self, n: int)
+}
+
+class Acc implements Addable {
+    total: int
+
+    static fn new() -> Acc {
+        return Acc { total: 0 }
+    }
+
+    fn add(self, n: int) {
+        self.total = self.total + n
+    }
+}
+
+fn main() {
+    let a = Acc.new()
+    a.add(5)
+    assert(a.total == 5)
+    assert(has_trait(a, "Addable"))
+}

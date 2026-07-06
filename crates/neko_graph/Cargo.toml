@@ -1,0 +1,8 @@
+[package]
+name = "neko_graph"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+neko_tensor = { workspace = true }
+rand = "0.8"

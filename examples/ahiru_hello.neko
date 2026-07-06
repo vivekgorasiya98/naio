@@ -1,0 +1,44 @@
+import "ahiru"
+
+
+
+fn main() {
+
+    let app = ahiru_app_new()
+
+    ahiru_app_use(app, "request_id")
+
+    ahiru_app_use(app, "cors", {origins: ["*"]})
+
+    ahiru_app_get(app, "/health", health, {is_public: true})
+
+    ahiru_app_get(app, "/hello/:name", hello, {is_public: true})
+
+    ahiru_app_listen(app, "0.0.0.0", 3000)
+
+}
+
+
+
+fn health(ctx) {
+
+    return ahiru_json_response(200, "{\"status\":\"ok\"}")
+
+}
+
+
+
+fn hello(ctx) {
+
+    let name = "world"
+
+    if ctx.params["name"] != "" {
+
+        name = ctx.params["name"]
+
+    }
+
+    return ahiru_json_response(200, "{\"hello\":\"" + name + "\"}")
+
+}
+

@@ -1,0 +1,91 @@
+(* Neko Language Grammar v0.1 *)
+
+program        = { import_stmt | top_level } ;
+top_level      = fn_def | struct_def | class_def | trait_def | server_block | route_block ;
+
+import_stmt    = "import" string_lit [ "as" ident ] ";" ;
+
+fn_def         = "fn" ident [ "(" param_list ")" ] [ "->" type_name ] block ;
+param_list     = param { "," param } ;
+param          = ident [ ":" type_name ] ;
+
+struct_def     = "struct" ident "{" { field_def } "}" ;
+field_def      = ident ":" type_name ";" ;
+
+class_def      = "class" ident [ "extends" ident ] { "implements" ident { "," ident } }
+                 "{" { class_member } "}" ;
+trait_def      = "trait" ident "{" { method_sig } "}" ;
+method_sig     = "fn" ident "(" [ param_list ] ")" [ "->" type_name ] ;
+class_member   = [ "public" | "private" ] ( field_def
+                 | "static" ( fn_def | static_field )
+                 | fn_def ) ;
+static_field   = "let" ident [ "=" expr ] ";" ;
+
+block          = "{" { stmt } "}" ;
+stmt           = var_decl
+               | assign_stmt
+               | expr_stmt
+               | if_stmt
+               | while_stmt
+               | for_stmt
+               | return_stmt
+               | try_stmt
+               | throw_stmt
+               | break_stmt
+               | continue_stmt
+               ;
+
+var_decl       = "let" ident [ ":" type_name ] [ "=" expr ] ";" ;
+assign_stmt    = ident assign_op expr ";" ;
+expr_stmt      = expr ";" ;
+if_stmt        = "if" expr block [ "else" ( block | if_stmt ) ] ;
+while_stmt     = "while" expr block ;
+for_stmt       = "for" ident "in" expr block ;
+return_stmt    = "return" [ expr ] ";" ;
+try_stmt       = "try" block "catch" "(" ident ")" block ;
+throw_stmt     = "throw" expr ";" ;
+break_stmt     = "break" ";" ;
+continue_stmt  = "continue" ";" ;
+
+expr           = assign_expr ;
+assign_expr    = or_expr [ assign_op assign_expr ] ;
+assign_op      = "=" | "+=" | "-=" ;
+
+or_expr        = and_expr { "||" and_expr } ;
+and_expr       = equality { "&&" equality } ;
+equality       = comparison { ( "==" | "!=" ) comparison } ;
+comparison     = term { ( "<" | ">" | "<=" | ">=" ) term } ;
+term           = factor { ( "+" | "-" ) factor } ;
+factor         = unary { ( "*" | "/" | "%" ) unary } ;
+unary          = ( "!" | "-" ) unary | postfix ;
+postfix        = primary { call_suffix | member_suffix | index_suffix } ;
+call_suffix    = "(" [ arg_list ] ")" ;
+member_suffix  = "." ident ;
+index_suffix   = "[" expr "]" ;
+arg_list       = expr { "," expr } ;
+
+primary        = int_lit | float_lit | string_lit | bool_lit | nil_lit
+               | ident | array_lit | object_lit | class_init | "(" expr ")" ;
+class_init     = ident "{" [ field_init { "," field_init } ] "}" ;
+
+array_lit      = "[" [ expr { "," expr } ] "]" ;
+object_lit     = "{" [ field_init { "," field_init } ] "}" ;
+field_init     = ident ":" expr ;
+
+type_name      = "int" | "float" | "string" | "bool" | "void" | "error" | ident ;
+
+int_lit        = digit { digit } ;
+float_lit      = digit { digit } "." digit { digit } ;
+string_lit     = '"' { string_char } '"' ;
+bool_lit       = "true" | "false" ;
+nil_lit        = "nil" ;
+ident          = letter { letter | digit | "_" } ;
+
+(* Web DSL blocks - parsed as special top-level constructs *)
+server_block   = "server" "{" { server_field } "}" ;
+server_field   = ident "=" expr ";" ;
+route_block    = method string_lit block ;
+method         = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" ;
+
+digit          = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+letter         = "a".."z" | "A".."Z" ;

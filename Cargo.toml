@@ -1,0 +1,73 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/neko_ast",
+    "crates/neko_errors",
+    "crates/neko_lexer",
+    "crates/neko_parser",
+    "crates/neko_runtime",
+    "crates/neko_interpreter",
+    "crates/neko_ir",
+    "crates/neko_bytecode",
+    "crates/neko_vm",
+    "crates/neko_format",
+    "crates/neko_lint",
+    "crates/neko_docs",
+    "crates/neko_web",
+    "crates/neko_cli",
+    "crates/neko_pkg",
+    "crates/neko_nm",
+    "crates/ahiru_core",
+    "crates/neko_tensor",
+    "crates/neko_ml",
+    "crates/neko_classic",
+    "crates/neko_data",
+    "crates/neko_graph",
+    "crates/neko_rag",
+    "crates/neko_llm",
+]
+
+[workspace.package]
+version = "0.2.1"
+edition = "2021"
+license = "MIT"
+authors = ["Neko Contributors"]
+
+[workspace.dependencies]
+neko_ast = { path = "crates/neko_ast" }
+neko_errors = { path = "crates/neko_errors" }
+neko_lexer = { path = "crates/neko_lexer" }
+neko_parser = { path = "crates/neko_parser" }
+neko_runtime = { path = "crates/neko_runtime", features = ["nmongo", "nrag", "nllm"] }
+neko_interpreter = { path = "crates/neko_interpreter" }
+neko_ir = { path = "crates/neko_ir" }
+neko_bytecode = { path = "crates/neko_bytecode" }
+neko_vm = { path = "crates/neko_vm" }
+neko_format = { path = "crates/neko_format" }
+neko_lint = { path = "crates/neko_lint" }
+neko_docs = { path = "crates/neko_docs" }
+neko_web = { path = "crates/neko_web" }
+neko_pkg = { path = "crates/neko_pkg" }
+ahiru_core = { path = "crates/ahiru_core" }
+neko_nm = { path = "crates/neko_nm" }
+neko_tensor = { path = "crates/neko_tensor" }
+neko_ml = { path = "crates/neko_ml" }
+neko_classic = { path = "crates/neko_classic" }
+neko_data = { path = "crates/neko_data" }
+neko_graph = { path = "crates/neko_graph" }
+neko_rag = { path = "crates/neko_rag" }
+neko_llm = { path = "crates/neko_llm" }
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+axum = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+regex = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"

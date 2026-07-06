@@ -1,0 +1,11 @@
+// Super boom factorial — native Rust bigint, returns correct n! for any n.
+// Run:  neko bench examples/factorial.neko
+// Or:   neko examples/factorial.neko time
+
+fn factorial(n: int) -> int {
+    return super_boom_factorial(n)
+}
+
+fn main() {
+    print(factorial(10000))
+}

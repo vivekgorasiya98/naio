@@ -1,0 +1,14 @@
+[package]
+name = "neko_classic"
+version.workspace = true
+edition.workspace = true
+description = "Classic ML algorithms for NML"
+
+[dependencies]
+neko_tensor = { path = "../neko_tensor" }
+rayon = "1"
+rand = "0.8"
+
+[features]
+default = ["cpu"]
+cpu = ["neko_tensor/cpu"]

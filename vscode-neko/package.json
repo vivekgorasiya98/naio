@@ -1,0 +1,56 @@
+{
+  "name": "neko-language",
+  "displayName": "Neko Language",
+  "description": "Syntax highlighting and language support for the Neko programming language (.neko files)",
+  "version": "0.1.1",
+  "publisher": "neko-lang",
+  "license": "MIT",
+  "icon": "icons/neko-file-icon.png",
+  "engines": {
+    "vscode": "^1.64.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "neko",
+    "programming language"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neko-lang/neko"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "neko",
+        "aliases": [
+          "Neko",
+          "neko"
+        ],
+        "extensions": [
+          ".neko"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/neko-file-icon.png",
+          "dark": "./icons/neko-file-icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "neko",
+        "scopeName": "source.neko",
+        "path": "./syntaxes/neko.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package",
+    "install-local": "vsce package && code --uninstall-extension neko-lang.neko-language && code --install-extension neko-language-0.1.1.vsix"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.1"
+  }
+}

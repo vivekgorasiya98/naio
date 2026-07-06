@@ -1,0 +1,8 @@
+import "nml"
+
+fn main() {
+    let x = nml_randn([1, 1, 4, 4])
+    let conv = nml_conv2d_layer(1, 2, 3)
+    let out = nml_conv2d(conv, x)
+    print("conv ok", nml_kind(out))
+}

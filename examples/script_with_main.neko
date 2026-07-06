@@ -1,0 +1,5 @@
+print("top-level runs first")
+
+fn main() {
+    print("main runs after")
+}

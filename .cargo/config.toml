@@ -1,0 +1,3 @@
+# Windows: avoid static/dynamic CRT mix from Cranelift JIT (LNK1169).
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=/NODEFAULTLIB:libcpmt.lib"]

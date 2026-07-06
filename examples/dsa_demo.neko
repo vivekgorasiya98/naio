@@ -1,0 +1,131 @@
+// DSA standard library showcase.
+// Run:  neko run examples/dsa_demo.neko            (bytecode VM)
+// Or:   neko run examples/dsa_demo.neko --mode interp
+import "dsa"
+
+fn main() {
+    // ---- linked list: O(1) push/pop at both ends ----
+    print("== linked list ==")
+    let l = list_new()
+    list_push_back(l, 2)
+    list_push_back(l, 3)
+    list_push_front(l, 1)
+    print(l)                       // list[1, 2, 3]
+    print(list_get(l, 1))          // 2
+    list_insert(l, 1, 99)
+    print(l)                       // list[1, 99, 2, 3]
+    print(list_remove(l, 1))       // 99
+    list_reverse(l)
+    print(l)                       // list[3, 2, 1]
+    print(list_index_of(l, 2))     // 1
+
+    // ---- stack (LIFO) ----
+    print("== stack ==")
+    let s = stack_new()
+    stack_push(s, "a")
+    stack_push(s, "b")
+    stack_push(s, "c")
+    print(stack_peek(s))           // c
+    print(stack_pop(s))            // c
+    print(len(s))                  // 2
+
+    // ---- queue (FIFO) ----
+    print("== queue ==")
+    let q = queue_new()
+    queue_push(q, 10)
+    queue_push(q, 20)
+    queue_push(q, 30)
+    print(queue_pop(q))            // 10
+    print(queue_front(q))          // 20
+
+    // ---- deque ----
+    print("== deque ==")
+    let d = deque_new()
+    deque_push_back(d, 2)
+    deque_push_front(d, 1)
+    deque_push_back(d, 3)
+    print(deque_pop_front(d))      // 1
+    print(deque_pop_back(d))       // 3
+
+    // ---- heap / priority queue ----
+    print("== heap ==")
+    let h = heap_new_min()
+    heap_push(h, 42)
+    heap_push(h, 7)
+    heap_push(h, 19)
+    print(heap_peek(h))            // 7
+    print(heap_pop(h))             // 7
+    print(heap_pop(h))             // 19
+
+    let hmax = heap_new_max()
+    heap_push(hmax, 1)
+    heap_push(hmax, 100)
+    heap_push(hmax, 50)
+    print(heap_pop(hmax))          // 100
+
+    // ---- hash set ----
+    print("== set ==")
+    let a = set_from_array([1, 2, 3, 2, 1])
+    print(len(a))                  // 3
+    let b = set_from_array([2, 3, 4])
+    print(set_to_array(set_union(a, b)))      // [1, 2, 3, 4]
+    print(set_to_array(set_intersect(a, b)))  // [2, 3]
+    print(set_to_array(set_diff(a, b)))       // [1]
+    print(set_contains(a, 2))                 // true
+
+    // ---- hash map ----
+    print("== map ==")
+    let m = map_new()
+    map_set(m, "one", 1)
+    map_set(m, "two", 2)
+    map_set(m, "three", 3)
+    print(map_get(m, "two"))       // 2
+    print(map_has(m, "four"))      // false
+    print(map_keys(m))             // [one, two, three]
+    map_remove(m, "one")
+    print(len(m))                  // 2
+
+    // ---- graph: BFS / DFS / Dijkstra / topo sort ----
+    print("== graph ==")
+    let g = graph_new(6)
+    graph_add_edge(g, 0, 1)
+    graph_add_edge(g, 0, 2)
+    graph_add_edge(g, 1, 3)
+    graph_add_edge(g, 2, 4)
+    graph_add_edge(g, 3, 5)
+    print(graph_bfs(g, 0))         // [0, 1, 2, 3, 4, 5]
+    print(graph_dfs(g, 0))         // [0, 1, 3, 5, 2, 4]
+
+    let w = graph_new_directed(4)
+    graph_add_edge_w(w, 0, 1, 4)
+    graph_add_edge_w(w, 0, 2, 1)
+    graph_add_edge_w(w, 2, 1, 2)
+    graph_add_edge_w(w, 1, 3, 1)
+    print(graph_dijkstra(w, 0))    // [0, 3, 1, 4]
+
+    let dag = graph_new_directed(4)
+    graph_add_edge(dag, 0, 1)
+    graph_add_edge(dag, 0, 2)
+    graph_add_edge(dag, 1, 3)
+    graph_add_edge(dag, 2, 3)
+    print(graph_topo_sort(dag))    // [0, 1, 2, 3]
+
+    // ---- array algorithms ----
+    print("== arrays ==")
+    let arr = [5, 3, 8, 1, 9, 2]
+    sort(arr)
+    print(arr)                     // [1, 2, 3, 5, 8, 9]
+    print(binary_search(arr, 8))   // 4
+    sort_desc(arr)
+    print(arr)                     // [9, 8, 5, 3, 2, 1]
+    reverse(arr)
+    print(arr)                     // [1, 2, 3, 5, 8, 9]
+    print(sum(arr))                // 28
+    print(min(arr))                // 1
+    print(max(arr))                // 9
+    push(arr, 100)
+    print(pop(arr))                // 100
+    print(index_of(arr, 5))        // 3
+    print(contains(arr, 42))       // false
+    print(unique([1, 2, 2, 3, 1])) // [1, 2, 3]
+}

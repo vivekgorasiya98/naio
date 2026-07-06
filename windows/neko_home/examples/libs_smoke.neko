@@ -1,0 +1,22 @@
+// Quick import test — every standard library loads without error.
+import "json"
+import "io"
+import "re"
+import "nos"
+import "nenv"
+import "time"
+import "dsa"
+import "net"
+import "parallel"
+import "nsqlite"
+import "npg"
+import "nmongo"
+import "ncl"
+
+fn main() {
+    print("platform: " + nos.platform())
+    print("json ok: " + json.stringify({ok: true}))
+    print("re ok: " + re.test("\\d+", "x42"))
+    print("time ok: " + time.now_iso())
+    print("all libraries imported")
+}

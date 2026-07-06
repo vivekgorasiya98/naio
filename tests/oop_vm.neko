@@ -1,0 +1,34 @@
+class Animal {
+    name: string
+
+    fn speak(self) {
+        print("animal")
+    }
+}
+
+class Dog extends Animal {
+    fn speak(self) {
+        super.speak()
+        print("woof")
+    }
+}
+
+trait Named {
+    fn label(self) -> string
+}
+
+class Pet implements Named {
+    name: string
+
+    fn label(self) -> string {
+        return self.name
+    }
+}
+
+fn main() {
+    let d = Dog { name: "Rex" }
+    d.speak()
+    let p = Pet { name: "Neko" }
+    assert(has_trait(p, "Named"))
+    assert(p.label() == "Neko")
+}

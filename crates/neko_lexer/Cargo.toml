@@ -1,0 +1,10 @@
+[package]
+name = "neko_lexer"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+neko_ast = { workspace = true }
+neko_errors = { workspace = true }
+
+[dev-dependencies]

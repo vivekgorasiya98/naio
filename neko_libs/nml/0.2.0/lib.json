@@ -1,0 +1,8 @@
+{
+  "name": "nml",
+  "version": "0.2.0",
+  "kind": "native",
+  "description": "Neko Machine Learning — fast tensors, GPU training, classic ML",
+  "import_paths": ["nml", "std/nml"],
+  "builtin_count": 67
+}

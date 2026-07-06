@@ -1,0 +1,50 @@
+import "nos" as os
+import "io"
+
+fn test_constants() {
+    assert(os.name == "nt" || os.name == "posix", "os.name")
+    assert(len(os.sep) == 1, "os.sep")
+    assert(len(os.linesep) >= 1, "os.linesep")
+    assert(len(os.devnull) > 0, "os.devnull")
+}
+
+fn test_process() {
+    assert(os.getpid() > 0, "getpid")
+    assert(os.cpu_count() >= 1, "cpu_count")
+    let plat = os.platform()
+    assert(plat == "windows" || plat == "linux" || plat == "macos" || plat == "unknown", "platform")
+    assert(len(os.arch()) > 0, "arch")
+}
+
+fn test_cwd_and_fs() {
+    let orig = os.getcwd()
+    assert(!is_error(orig), "getcwd")
+
+    let base = io_join(io_temp_dir(), "neko_nos_test")
+    os.makedirs(base)
+
+    let sub = io_join(base, "subdir")
+    os.mkdir(sub)
+    assert(os.isdir(sub), "isdir")
+    let names = os.listdir(base)
+    assert(len(names) >= 1, "listdir")
+
+    let st = os.stat(base)
+    assert(st.is_dir, "stat is_dir")
+    assert(st.size >= 0, "stat size")
+
+    os.remove(base)
+}
+
+fn test_argv() {
+    let args = os.argv()
+    assert(type(args) == "array", "argv is array")
+}
+
+fn main() {
+    test_constants()
+    test_process()
+    test_cwd_and_fs()
+    test_argv()
+    print("nos tests passed")
+}

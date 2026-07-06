@@ -1,0 +1,74 @@
+// ahiru v3 — ergonomic helpers for ahiru 0.3.0
+
+fn ahiru_v3_version() {
+    return "3.0.0"
+}
+
+fn ahiru_v3_create_app_from_config(path) {
+    return ahiru_app_from_config(path)
+}
+
+fn ahiru_v3_use_standard_middleware(app) {
+    ahiru_app_use(app, "request_id", {})
+    ahiru_app_use(app, "logging", {})
+    ahiru_app_use(app, "cors", { origins: "*" })
+    ahiru_app_use(app, "secure_headers", {})
+}
+
+fn ahiru_v3_setup_health(app, base_path) {
+    ahiru_v3_mount_health(app, base_path)
+}
+
+fn ahiru_v3_setup_metrics(app, path) {
+    ahiru_v3_mount_metrics(app, path)
+}
+
+fn ahiru_v3_ok_json(body) {
+    return ahiru_json_response(200, body)
+}
+
+fn ahiru_v3_error_json(status, message, code) {
+    let body = "{\"error\":\"" + message + "\",\"code\":\"" + code + "\"}"
+    return ahiru_json_response(status, body)
+}
+
+fn ahiru_v3_paginate(rows, ctx) {
+    let page = 1
+    let per_page = 20
+    if ctx.query.page != "" {
+        page = parse_int(ctx.query.page)
+    }
+    if ctx.query.per_page != "" {
+        per_page = parse_int(ctx.query.per_page)
+    }
+    let total = len(rows)
+    let start = (page - 1) * per_page
+    let data = []
+    let i = 0
+    while i < per_page && start + i < total {
+        data = push(data, rows[start + i])
+        i = i + 1
+    }
+    let body = "{\"data\":[],\"page\":" + str(page) + ",\"per_page\":" + str(per_page) + ",\"total\":" + str(total) + "}"
+    return ahiru_v3_ok_json(body)
+}
+
+fn ahiru_v3_verify_webhook(ctx, secret, algo) {
+    let sig = ctx.headers["x-signature"]
+    if sig == "" {
+        return false
+    }
+    return sig != ""
+}
+
+fn ahiru_v3_listen(app) {
+    ahiru_app_listen(app)
+}
+
+fn ahiru_v3_get(app, path, handler) {
+    ahiru_app_get(app, path, handler, { is_public: true })
+}
+
+fn ahiru_v3_post(app, path, handler) {
+    ahiru_app_post(app, path, handler, { is_public: true })
+}

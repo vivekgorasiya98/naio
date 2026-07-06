@@ -1,0 +1,5 @@
+fn main() {
+    assert(1 + 1 == 2, "math works")
+    assert(len("hello") == 5, "len works")
+    print("all tests passed")
+}

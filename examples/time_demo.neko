@@ -1,0 +1,50 @@
+// Time standard library showcase.
+// Run:  neko run examples/time_demo.neko
+import "time" as t
+
+fn main() {
+    print("== wall clock ==")
+    let now = t.now_unix_ms()
+    print(now)
+    print(t.now_iso())
+    print(t.now_iso_local())
+
+    print("== datetime object ==")
+    let dt = t.now("UTC")
+    print(dt.year)
+    print(dt.month)
+    print(dt.day)
+    print(dt.hour)
+    print(dt.weekday_name)
+    print(dt.timezone)
+
+    print("== format & parse ==")
+    let text = t.format(now, "%Y-%m-%d %H:%M:%S", "UTC")
+    print(text)
+    let parsed = t.parse("2026-07-03 15:30:00", "%Y-%m-%d %H:%M:%S", "UTC")
+    print(parsed)
+    print(t.to_iso(parsed, "UTC"))
+
+    print("== time zones ==")
+    print(t.utc_offset_ms("America/New_York"))
+    print(t.utc_offset_ms("Asia/Kolkata"))
+  //  print(len(t.list_timezones()))  // full IANA list (400+)
+
+    print("== arithmetic ==")
+    let tomorrow = t.add_days(now, 1)
+    print(t.diff_ms(tomorrow, now))
+    print(t.start_of_day(now, "UTC"))
+    print(t.end_of_day(now, "UTC"))
+
+    print("== calendar ==")
+    print(t.is_leap_year(2024))
+    print(t.days_in_month(2024, 2))
+    print(t.is_valid_date(2026, 2, 29))
+
+    print("== components ==")
+    let sample = t.from_parts(2026, 7, 3, 10, 45, 30, 0, "UTC")
+    print(t.year(sample, "UTC"))
+    print(t.weekday_name(sample, "UTC"))
+
+    print("time demo done")
+}

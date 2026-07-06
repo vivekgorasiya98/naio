@@ -1,0 +1,8 @@
+{
+  "name": "npg",
+  "version": "0.1.0",
+  "kind": "native",
+  "description": "Fast PostgreSQL: pools, migrations, prepared statements, transactions, async",
+  "import_paths": ["npg", "std/npg"],
+  "builtin_count": 52
+}

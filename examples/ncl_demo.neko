@@ -1,0 +1,27 @@
+import "ncl"
+
+fn main() {
+    let a = ncl.arange(0, 100000)
+    let b = ncl.mul(a, 2)
+    print("sum(b) = " + ncl.sum(b))
+
+    let df = ncl.dataframe({
+        id: ncl.arange(1, 5),
+        group: ncl.arange(0, 4),
+        amount: ncl.mul(ncl.arange(1, 5), 10),
+        price: ncl.linspace(1.5, 4.5, 4)
+    })
+    print("shape: " + ncl.df_shape(df))
+
+    let price_col = ncl.df_get(df, "price")
+    let rolled = ncl.rolling_mean(price_col, 2)
+    print("rolling mean len: " + len(ncl.series_values(rolled)))
+
+    let g = ncl.groupby(df, "group")
+    let stats = ncl.agg(g, {amount: "sum", price: "mean"})
+    print("grouped cols: " + len(ncl.df_columns(stats)))
+
+    ncl.to_csv(df, "ncl_demo_out.csv")
+    let df2 = ncl.read_csv("ncl_demo_out.csv")
+    print("csv reload rows: " + ncl.df_shape(df2)[0])
+}

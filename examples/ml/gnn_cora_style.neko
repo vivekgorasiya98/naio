@@ -1,0 +1,19 @@
+import "nml"
+
+fn main() {
+    let g = graph_new(6)
+    graph_add_edge(g, 0, 1)
+    graph_add_edge(g, 1, 2)
+    graph_add_edge(g, 2, 3)
+    graph_add_edge(g, 3, 4)
+    graph_add_edge(g, 4, 5)
+    graph_add_edge(g, 5, 0)
+    graph_add_edge(g, 0, 3)
+
+    let adj = nml_graph_from_dsa(g)
+    let adj_norm = nml_graph_normalize(adj)
+    let features = nml_tensor([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0], [6, 3])
+    let layer = nml_gcn_layer(3, 2)
+    let out = nml_graph_forward(layer, features, adj_norm)
+    print("gcn out shape ok")
+}

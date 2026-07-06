@@ -1,0 +1,17 @@
+import "ahiru"
+import "std/ahiru/v3"
+
+fn main() {
+    let app = ahiru_v3_create_app_from_config("ahiru.config.toml")
+    ahiru_v3_use_standard_middleware(app)
+    ahiru_app_set_state(app, "version", "0.3.0")
+    ahiru_v3_setup_health(app, "/health")
+    ahiru_v3_setup_metrics(app, "/metrics")
+    ahiru_v3_get(app, "/hello", hello_handler)
+    ahiru_app_listen(app)
+}
+
+fn hello_handler(ctx) {
+    let ver = ctx.state.version
+    return ahiru_v3_ok_json("{\"hello\":\"world\",\"ahiru\":\"" + ver + "\"}")
+}

@@ -1,0 +1,290 @@
+// ahiru v2 — ergonomic helpers on top of native `import "ahiru"` builtins.
+
+// Usage:
+
+//   import "ahiru"
+
+//   import "std/ahiru/v2"
+
+
+
+fn ahiru_v2_route_opts(permission, is_public, use_ws) {
+
+    let opts = {}
+
+    if permission != "" {
+
+        opts.permission = permission
+
+    }
+
+    if is_public {
+
+        opts.is_public = true
+
+    }
+
+    if use_ws {
+
+        opts.ws = true
+
+    }
+
+    return opts
+
+}
+
+
+
+fn ahiru_v2_public_route() {
+
+    return ahiru_v2_route_opts("", true, false)
+
+}
+
+
+
+fn ahiru_v2_text(status, body) {
+
+    return ahiru_response(status, "text/plain; charset=utf-8", body)
+
+}
+
+
+
+fn ahiru_v2_json(status, body) {
+
+    return ahiru_response(status, "application/json; charset=utf-8", body)
+
+}
+
+
+
+fn ahiru_v2_ok_json(body) {
+
+    return ahiru_v2_json(200, body)
+
+}
+
+
+
+fn ahiru_v2_error_json(status, message, code) {
+
+    let payload = "{\"error\":\"" + message + "\""
+
+    if code != "" {
+
+        payload = payload + ",\"code\":\"" + code + "\""
+
+    }
+
+    payload = payload + "}"
+
+    return ahiru_v2_json(status, payload)
+
+}
+
+
+
+fn ahiru_v2_not_found(ctx) {
+
+    return ahiru_v2_error_json(404, "not found", "NOT_FOUND")
+
+}
+
+
+
+fn ahiru_v2_health_ok() {
+
+    return ahiru_v2_ok_json("{\"status\":\"ok\",\"service\":\"ahiru\",\"version\":\"2\"}")
+
+}
+
+
+
+fn ahiru_v2_ctx_query(ctx, key, default_val) {
+
+    if ctx.query[key] != "" {
+
+        return ctx.query[key]
+
+    }
+
+    return default_val
+
+}
+
+
+
+fn ahiru_v2_ctx_param(ctx, key, default_val) {
+
+    if ctx.params[key] != "" {
+
+        return ctx.params[key]
+
+    }
+
+    return default_val
+
+}
+
+
+
+fn ahiru_v2_use_standard_middleware(app) {
+
+    ahiru_app_use(app, "request_id")
+
+    ahiru_app_use(app, "logging")
+
+    ahiru_app_use(app, "cors", {origins: ["*"]})
+
+    ahiru_app_use(app, "secure_headers")
+
+}
+
+
+
+fn ahiru_v2_use_dev_middleware(app) {
+
+    ahiru_app_use(app, "request_id")
+
+    ahiru_app_use(app, "logging")
+
+    ahiru_app_use(app, "cors", {origins: ["*"]})
+
+}
+
+
+
+fn ahiru_v2_use_quiet_middleware(app) {
+
+    ahiru_app_use(app, "request_id", {enabled: true})
+
+    ahiru_app_use(app, "logging", {enabled: false})
+
+    ahiru_app_use(app, "cors", {origins: ["*"]})
+
+}
+
+
+
+fn ahiru_v2_use_production_middleware(app) {
+
+    ahiru_app_use(app, "request_id", {enabled: true})
+
+    ahiru_app_use(app, "logging", {enabled: true, json: true, skip: ["/health", "/ping"]})
+
+    ahiru_app_use(app, "cors", {origins: ["*"]})
+
+    ahiru_app_use(app, "secure_headers")
+
+}
+
+
+
+fn ahiru_v2_set_quiet(app, quiet) {
+
+    ahiru_app_set_logging(app, {access_log: !quiet, quiet_handlers: quiet, startup_banner: !quiet})
+
+}
+
+
+
+fn ahiru_v2_create_app_from_config(path) {
+
+    return ahiru_app_from_config(path)
+
+}
+
+
+
+fn ahiru_v2_get(app, path, handler) {
+
+    ahiru_app_get(app, path, handler, ahiru_v2_public_route())
+
+}
+
+
+
+fn ahiru_v2_post(app, path, handler) {
+
+    ahiru_app_post(app, path, handler, ahiru_v2_public_route())
+
+}
+
+
+
+fn ahiru_v2_listen(app) {
+
+    ahiru_app_listen(app)
+
+}
+
+
+
+fn ahiru_v2_listen_on(app, host, port) {
+
+    ahiru_app_listen(app, host, port)
+
+}
+
+
+
+fn ahiru_v2_health_route(ctx) {
+
+    return ahiru_v2_health_ok()
+
+}
+
+
+
+fn ahiru_v2_mount_health(app, path) {
+    let route = path
+    if route == "" {
+        route = "/health"
+    }
+    if ahiru_native_routes() {
+        ahiru_native_mount_health(app, route)
+    } else {
+        ahiru_app_get(app, route, ahiru_v2_health_route, ahiru_v2_public_route())
+    }
+}
+
+
+
+fn ahiru_v2_ping_route(ctx) {
+
+    return ahiru_v2_ok_json("{\"pong\":true}")
+
+}
+
+
+
+fn ahiru_v2_mount_ping(app, path) {
+    let route = path
+    if route == "" {
+        route = "/ping"
+    }
+    if ahiru_native_routes() {
+        ahiru_native_mount_ping(app, route)
+    } else {
+        ahiru_app_get(app, route, ahiru_v2_ping_route, ahiru_v2_public_route())
+    }
+}
+
+
+
+fn ahiru_v2_rate_limit(app, rps) {
+
+    ahiru_app_use(app, "rate_limit", {rps: rps})
+
+}
+
+
+
+fn ahiru_v2_version() {
+
+    return "2.2.0"
+
+}
+

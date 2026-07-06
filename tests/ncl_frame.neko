@@ -1,0 +1,15 @@
+import "ncl"
+
+let df = ncl.dataframe({
+    id: ncl.arange(1, 4),
+    val: ncl.mul(ncl.arange(1, 4), 10)
+})
+assert(ncl.df_shape(df)[0] == 3)
+
+let h = ncl.head(df, 2)
+assert(ncl.df_shape(h)[0] == 2)
+
+let t = ncl.tail(df, 1)
+assert(ncl.df_shape(t)[0] == 1)
+
+print("ncl_frame ok")

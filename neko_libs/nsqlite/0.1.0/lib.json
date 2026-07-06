@@ -1,0 +1,8 @@
+{
+  "name": "nsqlite",
+  "version": "0.1.0",
+  "kind": "native",
+  "description": "Fast SQLite: schema, migrations, prepared statements, transactions, async",
+  "import_paths": ["nsqlite", "std/nsqlite"],
+  "builtin_count": 39
+}

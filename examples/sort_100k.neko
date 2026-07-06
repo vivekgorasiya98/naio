@@ -1,0 +1,46 @@
+// 1M int benchmark — packed IntArray + native sort (faster than Python).
+
+// Run:  cargo build --release --bin neko
+
+//       .\target\release\neko.exe .\examples\sort_100k.neko
+
+
+
+fn main() {
+
+    let n = 1000000
+
+    let t0 = now_us()
+
+
+
+    let data = make_random_int_array(n)
+
+    let t1 = now_us()
+
+
+
+    super_booster_sort(data)
+
+    let t2 = now_us()
+
+
+
+    print("elements:", n)
+
+    print("make ms:", (t1 - t0) / 1000)
+
+    print("sort ms:", (t2 - t1) / 1000)
+
+    print("total ms:", (t2 - t0) / 1000)
+
+    let mid = n // 2
+
+    print("first:", data[0], "mid:", data[mid], "last:", data[n - 1])
+
+    assert(is_sorted(data), "sort failed")
+
+    print("sorted ok — super boom")
+
+}
+

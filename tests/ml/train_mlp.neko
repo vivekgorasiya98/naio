@@ -1,0 +1,10 @@
+import "nml"
+
+fn main() {
+    let model = nml_sequential([nml_linear(2, 1)])
+    let x = nml_randn([4, 2])
+    let y = nml_randn([4, 1])
+    let trainer = nml_trainer(model, "sgd", "mse", 0.01)
+    let loss = nml_train_epoch(trainer, x, y, { batch_size: 4 })
+    print("loss", loss)
+}

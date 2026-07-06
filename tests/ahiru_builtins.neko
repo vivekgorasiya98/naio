@@ -1,0 +1,5 @@
+fn main() {
+  assert(type(ahiru_app_new) == "function", "ahiru_app_new builtin")
+  assert(type(ahiru_response) == "function", "ahiru_response builtin")
+  print("ahiru builtins ok")
+}

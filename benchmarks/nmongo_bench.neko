@@ -1,0 +1,176 @@
+// MongoDB cross-language benchmark — Neko driver script.
+// Native import only (VM mode). Run: neko run --mode vm benchmarks/nmongo_bench.neko <bench> <n>
+import "nmongo"
+import "json"
+import "nos"
+
+fn bench_name() {
+    return nos.argv()[0]
+}
+
+fn bench_n() {
+    return json.parse(nos.argv()[1])
+}
+
+fn client() {
+    let uri = "mongodb://localhost:27017"
+    return nmongo.connect_uri(uri)
+}
+
+fn coll_name(_n) {
+    return "bench_cell"
+}
+
+fn setup(client, db, coll, n) {
+    nmongo.drop_collection(client, db, coll)
+    let docs = []
+    let i = 0
+    while i < n {
+        push(docs, {tag: i, value: i})
+        i = i + 1
+    }
+    nmongo.insert_many(client, db, coll, docs)
+}
+
+fn bench_insert_one_loop(client, db, coll, n) {
+    nmongo.drop_collection(client, db, coll)
+    let i = 0
+    while i < n {
+        nmongo.insert_one(client, db, coll, {tag: i, value: i})
+        i = i + 1
+    }
+}
+
+fn bench_insert_many_single(client, db, coll, n) {
+    nmongo.drop_collection(client, db, coll)
+    let docs = []
+    let i = 0
+    while i < n {
+        push(docs, {tag: i, value: i})
+        i = i + 1
+    }
+    nmongo.insert_many(client, db, coll, docs)
+}
+
+fn bench_insert_many_chunks(client, db, coll, n) {
+    nmongo.drop_collection(client, db, coll)
+    let i = 0
+    while i < n {
+        let chunk = []
+        let j = 0
+        while j < 1000 && i < n {
+            push(chunk, {tag: i, value: i})
+            i = i + 1
+            j = j + 1
+        }
+        nmongo.insert_many(client, db, coll, chunk)
+    }
+}
+
+fn bench_find_all(client, db, coll, n) {
+    setup(client, db, coll, n)
+    let rows = nmongo.find(client, db, coll, {})
+    assert(len(rows) == n, "find all count")
+}
+
+fn bench_find_filtered(client, db, coll, n) {
+    setup(client, db, coll, n)
+    let rows = nmongo.find(client, db, coll, {tag: 50})
+    assert(len(rows) >= 1, "find filtered")
+}
+
+fn bench_count(client, db, coll, n) {
+    setup(client, db, coll, n)
+    let c = nmongo.count_documents(client, db, coll, {})
+    assert(c == n, "count")
+}
+
+fn bench_update_many(client, db, coll, n) {
+    setup(client, db, coll, n)
+    nmongo.update_many(client, db, coll, {}, json.parse("{\"$inc\":{\"value\":1}}"))
+}
+
+fn bench_delete_many(client, db, coll, n) {
+    setup(client, db, coll, n)
+    nmongo.delete_many(client, db, coll, json.parse("{\"tag\":{\"$lt\":50}}"))
+}
+
+fn bench_bulk_write(client, db, coll, n) {
+    nmongo.drop_collection(client, db, coll)
+    let ops = []
+    let i = 0
+    while i < n {
+        push(ops, {insert_one: {document: {tag: i, value: i}}})
+        i = i + 1
+    }
+    let j = 0
+    while j < n {
+        push(ops, {delete_one: {filter: {tag: j}}})
+        j = j + 1
+    }
+    nmongo.bulk_write(client, db, coll, ops)
+}
+
+fn bench_aggregate(client, db, coll, n) {
+    setup(client, db, coll, n)
+    let rows = nmongo.aggregate(client, db, coll, json.parse("[{\"$match\":{\"tag\":{\"$gte\":0}}},{\"$group\":{\"_id\":\"$tag\",\"c\":{\"$sum\":1}}}]"))
+    assert(len(rows) >= 1, "aggregate")
+}
+
+fn bench_concurrent_reads(client, db, coll, n) {
+    setup(client, db, coll, n)
+    let tasks = []
+    let i = 0
+    while i < 100 {
+        let t = nmongo.async_find(client, db, coll, {}, {limit: n})
+        push(tasks, t)
+        i = i + 1
+    }
+    let j = 0
+    while j < len(tasks) {
+        nmongo.task_wait(tasks[j])
+        let _ = nmongo.task_result(tasks[j])
+        j = j + 1
+    }
+}
+
+fn main() {
+    let c = client()
+    if is_error(c) {
+        print("skip: MongoDB not available")
+        return
+    }
+    let db = "neko_bench"
+    let name = bench_name()
+    let n = bench_n()
+    let coll = coll_name(n)
+
+    if name == "insert_one_loop" {
+        bench_insert_one_loop(c, db, coll, n)
+    } else if name == "insert_many_single" {
+        bench_insert_many_single(c, db, coll, n)
+    } else if name == "insert_many_chunks" {
+        bench_insert_many_chunks(c, db, coll, n)
+    } else if name == "find_all" {
+        bench_find_all(c, db, coll, n)
+    } else if name == "find_filtered" {
+        bench_find_filtered(c, db, coll, n)
+    } else if name == "count" {
+        bench_count(c, db, coll, n)
+    } else if name == "update_many" {
+        bench_update_many(c, db, coll, n)
+    } else if name == "delete_many" {
+        bench_delete_many(c, db, coll, n)
+    } else if name == "bulk_write" {
+        bench_bulk_write(c, db, coll, n)
+    } else if name == "aggregate" {
+        bench_aggregate(c, db, coll, n)
+    } else if name == "concurrent_reads" {
+        bench_concurrent_reads(c, db, coll, n)
+    } else {
+        print("unknown bench: " + name)
+    }
+
+    nmongo.drop_collection(c, db, coll)
+    nmongo.close(c)
+}

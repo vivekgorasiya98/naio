@@ -1,0 +1,23 @@
+class Animal {
+    name: string
+
+    static fn new(name: string) -> Animal {
+        return Animal { name: name }
+    }
+
+    fn speak(self) {
+        print("animal")
+    }
+}
+
+class Dog extends Animal {
+    fn speak(self) {
+        super.speak()
+        print("woof")
+    }
+}
+
+fn main() {
+    let d = Dog { name: "Rex" }
+    d.speak()
+}

@@ -1,0 +1,32 @@
+import "net"
+
+fn handler(req) {
+    if req.path == "/hello" {
+        return net_http_response(200, "text/plain", "hello")
+    }
+    return net_http_response(404, "text/plain", "missing")
+}
+
+fn main() {
+    let port = 38423
+    let srv = net_http_listen(port)
+    net_http_route(srv, "GET", "/hello", handler)
+
+    // client runs in background while main thread polls the server
+    let task = net_async_http_get("http://127.0.0.1:" + port + "/hello", {
+        timeout_ms: 5000
+    })
+
+    let ok = false
+    while !net_task_done(task) {
+        net_http_poll(srv)
+    }
+    let r = net_task_poll(task)
+    if net_response_field(r, "status") == 200 {
+        assert(net_response_field(r, "body") == "hello", "body")
+        ok = true
+    }
+    assert(ok, "server responded")
+
+    net_http_stop(srv)
+}

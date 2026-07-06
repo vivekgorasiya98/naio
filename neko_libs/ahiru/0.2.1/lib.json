@@ -1,0 +1,8 @@
+{
+  "name": "ahiru",
+  "version": "0.2.1",
+  "kind": "native",
+  "description": "ahiru-server: HTTP/WebSocket backend - logging controls, worker pool, path params",
+  "import_paths": ["ahiru", "std/ahiru"],
+  "builtin_count": 16
+}

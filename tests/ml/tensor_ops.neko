@@ -1,0 +1,9 @@
+import "nml"
+
+fn main() {
+    let a = nml_randn([3, 3])
+    let b = nml_randn([3, 3])
+    let c = nml_matmul(a, b)
+    assert(nml_len(c) == 9, "matmul 3x3")
+    print("nml tensor ok", nml_kind(c))
+}

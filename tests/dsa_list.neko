@@ -1,0 +1,46 @@
+import "dsa"
+
+fn main() {
+    let l = list_new()
+    assert(list_is_empty(l), "new list is empty")
+    list_push_back(l, 2)
+    list_push_back(l, 3)
+    list_push_front(l, 1)
+    assert(len(l) == 3, "list len")
+    assert(list_front(l) == 1, "list front")
+    assert(list_back(l) == 3, "list back")
+    assert(list_get(l, 1) == 2, "list get")
+
+    list_insert(l, 1, 99)
+    assert(list_get(l, 1) == 99, "list insert")
+    assert(list_remove(l, 1) == 99, "list remove returns value")
+    assert(len(l) == 3, "list len after remove")
+
+    assert(list_contains(l, 2), "list contains")
+    assert(!list_contains(l, 42), "list not contains")
+    assert(list_index_of(l, 3) == 2, "list index_of")
+    assert(list_index_of(l, 42) == -1, "list index_of missing")
+
+    list_set(l, 0, 10)
+    assert(list_get(l, 0) == 10, "list set")
+
+    list_reverse(l)
+    assert(list_front(l) == 3, "list reverse front")
+    assert(list_back(l) == 10, "list reverse back")
+
+    assert(list_pop_front(l) == 3, "list pop front")
+    assert(list_pop_back(l) == 10, "list pop back")
+
+    let arr = list_to_array(l)
+    assert(len(arr) == 1, "list to_array")
+
+    let l2 = list_from_array([7, 8, 9])
+    assert(len(l2) == 3, "list from_array")
+    assert(list_get(l2, 2) == 9, "list from_array get")
+
+    list_clear(l2)
+    assert(list_is_empty(l2), "list clear")
+    assert(list_pop_front(l2) == nil, "pop from empty list is nil")
+
+    print("dsa list tests passed")
+}
