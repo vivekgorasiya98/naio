@@ -1,5 +1,5 @@
 ﻿{
-    "updated_at":  "1783244182149",
+    "updated_at":  "1783362571005",
     "libs":  {
                  "time":  {
                               "version":  "0.2.0",
@@ -11,7 +11,7 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  32,
-                              "installed_at":  "1783244182149"
+                              "installed_at":  "1783362571005"
                           },
                  "re":  {
                             "version":  "0.2.0",
@@ -23,7 +23,7 @@
                                              ],
                             "kind":  "native",
                             "builtin_count":  22,
-                            "installed_at":  "1783244182149"
+                            "installed_at":  "1783362571005"
                         },
                  "nsqlite":  {
                                  "version":  "0.2.0",
@@ -35,7 +35,7 @@
                                                   ],
                                  "kind":  "native",
                                  "builtin_count":  39,
-                                 "installed_at":  "1783244182149"
+                                 "installed_at":  "1783362571005"
                              },
                  "dsa":  {
                              "version":  "0.2.0",
@@ -47,7 +47,7 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  90,
-                             "installed_at":  "1783244182149"
+                             "installed_at":  "1783362571005"
                          },
                  "io":  {
                             "version":  "0.2.0",
@@ -59,7 +59,7 @@
                                              ],
                             "kind":  "native",
                             "builtin_count":  55,
-                            "installed_at":  "1783244182149"
+                            "installed_at":  "1783362571005"
                         },
                  "parallel":  {
                                   "version":  "0.2.0",
@@ -71,7 +71,7 @@
                                                    ],
                                   "kind":  "native",
                                   "builtin_count":  38,
-                                  "installed_at":  "1783244182149"
+                                  "installed_at":  "1783362571005"
                               },
                  "npg":  {
                              "version":  "0.1.0",
@@ -83,7 +83,7 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  52,
-                             "installed_at":  "1783244182149"
+                             "installed_at":  "1783362571005"
                          },
                  "nos":  {
                              "version":  "0.2.0",
@@ -95,7 +95,7 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  23,
-                             "installed_at":  "1783244182149"
+                             "installed_at":  "1783362571005"
                          },
                  "net":  {
                              "version":  "0.2.0",
@@ -107,7 +107,7 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  55,
-                             "installed_at":  "1783244182149"
+                             "installed_at":  "1783362571005"
                          },
                  "core":  {
                               "version":  "0.2.0",
@@ -118,7 +118,7 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  17,
-                              "installed_at":  "1783244182149"
+                              "installed_at":  "1783362571005"
                           },
                  "nmongo":  {
                                 "version":  "0.2.0",
@@ -130,7 +130,7 @@
                                                  ],
                                 "kind":  "native",
                                 "builtin_count":  45,
-                                "installed_at":  "1783244182149"
+                                "installed_at":  "1783362571005"
                             },
                  "json":  {
                               "version":  "0.2.0",
@@ -142,7 +142,7 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  15,
-                              "installed_at":  "1783244182149"
+                              "installed_at":  "1783362571005"
                           },
                  "ncl":  {
                              "version":  "0.2.0",
@@ -154,7 +154,7 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  62,
-                             "installed_at":  "1783244182149"
+                             "installed_at":  "1783362571005"
                          },
                  "nenv":  {
                               "version":  "0.1.0",
@@ -166,20 +166,20 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  26,
-                              "installed_at":  "1783244182149"
+                              "installed_at":  "1783362571005"
                           },
                  "ahiru":  {
-                               "version":  "0.2.2",
+                               "version":  "0.3.0",
                                "name":  "ahiru",
-                               "description":  "ahiru-server: VM default serve, per-worker pool, native health/ping, fast bridge",
+                               "description":  "ahiru-server 0.3.0: state, custom middleware, groups, cache, jobs, metrics, CLI toolkit",
                                "import_paths":  [
                                                     "ahiru",
                                                     "std/ahiru"
                                                 ],
                                "kind":  "native",
-                               "builtin_count":  19,
-                               "installed_at":  "1783244182149"
+                               "builtin_count":  36,
+                               "installed_at":  "1783362571005"
                            }
              },
-    "neko_version":  "0.2.0"
+    "neko_version":  "0.2.1"
 }
