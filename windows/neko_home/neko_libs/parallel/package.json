@@ -1,6 +1,6 @@
 ﻿{
     "name":  "parallel",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "Threading, mutexes, channels, worker pools, and cooperative poll",
     "import_paths":  [

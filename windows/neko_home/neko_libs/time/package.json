@@ -1,6 +1,6 @@
 ﻿{
     "name":  "time",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "Wall clock, formatting, parsing, time zones, and date arithmetic",
     "import_paths":  [

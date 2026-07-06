@@ -7,7 +7,7 @@ $PortableHome = Join-Path $WinDir "neko_home"
 $SrcLibs = Join-Path $Root "neko_libs"
 $ReleaseBin = Join-Path $Root "target\release"
 
-$Version = "0.2.1"
+$Version = "0.2.2"
 $Ts = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds().ToString()
 
 function Stage-Libs {
@@ -49,15 +49,15 @@ function Stage-Libs {
         Copy-LibManifest -Name "ahiru" -Ver $ahiruVer
     } else {
         $ahiruLib = Join-Path $LibsDest "ahiru"
-        $ahiruVerDir = Join-Path $ahiruLib "0.2.2"
+        $ahiruVerDir = Join-Path $ahiruLib "0.3.0"
         New-Item -ItemType Directory -Force -Path $ahiruVerDir | Out-Null
         $ahiruSpec = @{
             name = "ahiru"
-            version = "0.2.2"
+            version = "0.3.0"
             kind = "native"
-            description = "ahiru-server: VM default serve, per-worker pool, native health/ping, fast bridge"
+            description = "ahiru-server 0.3.0: state, custom middleware, groups, cache, jobs, metrics, CLI toolkit"
             import_paths = @("ahiru", "std/ahiru")
-            builtin_count = 19
+            builtin_count = 36
         }
         $ahiruJson = $ahiruSpec | ConvertTo-Json -Depth 5
         Set-Content (Join-Path $ahiruVerDir "lib.json") $ahiruJson -Encoding UTF8

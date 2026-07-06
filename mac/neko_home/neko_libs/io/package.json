@@ -1,6 +1,6 @@
 ﻿{
     "name":  "io",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "File I/O, paths, streaming handles, async background tasks",
     "import_paths":  [

@@ -7,7 +7,7 @@ $LibsDest = Join-Path $MacHome "neko_libs"
 $SrcLibs = Join-Path $Root "neko_libs"
 $Engine = Join-Path $MacDir "engine"
 
-$Version = "0.2.1"
+$Version = "0.2.2"
 $Ts = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds().ToString()
 
 function Copy-LibManifest {
@@ -56,7 +56,7 @@ function Write-AhiruLib {
         return
     }
     $name = "ahiru"
-    $ver = "0.2.2"
+    $ver = "0.3.0"
     $destLib = Join-Path $LibsDest $name
     $destVer = Join-Path $destLib $ver
     New-Item -ItemType Directory -Force -Path $destVer | Out-Null
@@ -64,9 +64,9 @@ function Write-AhiruLib {
         name = $name
         version = $ver
         kind = "native"
-        description = "ahiru-server: VM default serve, per-worker pool, native health/ping, fast bridge"
+        description = "ahiru-server 0.3.0: state, custom middleware, groups, cache, jobs, metrics, CLI toolkit"
         import_paths = @("ahiru", "std/ahiru")
-        builtin_count = 19
+        builtin_count = 36
     }
     $spec | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $destVer "lib.json") -Encoding UTF8
     $spec | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $destLib "package.json") -Encoding UTF8
@@ -96,6 +96,7 @@ function Copy-EngineSource {
 
 Write-Host "== Preparing self-contained mac/ bundle =="
 
+if (Test-Path $LibsDest) { Remove-Item $LibsDest -Recurse -Force }
 New-Item -ItemType Directory -Force -Path (Join-Path $MacHome "bin") | Out-Null
 New-Item -ItemType Directory -Force -Path $LibsDest | Out-Null
 

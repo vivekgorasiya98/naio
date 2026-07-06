@@ -39,7 +39,7 @@ See [JSON.md](JSON.md) for the JSON standard library and [NET.md](NET.md) for th
 ## Versioning
 
 - Language spec: v0.1 (with OOP: `class`, `trait`, `extends`, `implements`, `self`, `super`, `static`)
-- CLI/engine: 0.2.1
+- CLI/engine: 0.2.2
 
 ## Object-Oriented Programming
 

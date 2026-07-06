@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2 — 2026-07-07
+
+### Release
+- Toolchain (`neko`, `nm`) and distribution bundles bumped to **0.2.2**.
+- Standard library packages aligned to **0.2.2** (`core`, `dsa`, `json`, `io`, `re`, `net`, `parallel`, `time`, `nsqlite`, `npg`, `nmongo`, `nos`, `nenv`, `ncl`, `nml`, `nvis`).
+- `ahiru` remains at **0.3.0**.
+
 ## 0.2.1 — 2026-07-06
 
 ### Performance

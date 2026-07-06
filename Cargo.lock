@@ -24,7 +24,7 @@ dependencies = [
 
 [[package]]
 name = "ahiru_core"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "ahash",
  "axum",
@@ -3798,14 +3798,14 @@ checksum = "27b02d87554356db9e9a873add8782d4ea6e3e58ea071a9adb9a2e8ddb884a8b"
 
 [[package]]
 name = "neko_ast"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "neko_bytecode"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_ir",
@@ -3817,7 +3817,7 @@ dependencies = [
 
 [[package]]
 name = "neko_classic"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_tensor",
  "rand 0.8.6",
@@ -3826,7 +3826,7 @@ dependencies = [
 
 [[package]]
 name = "neko_cli"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "ahiru_core",
  "axum",
@@ -3849,7 +3849,7 @@ dependencies = [
 
 [[package]]
 name = "neko_data"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_tensor",
  "rand 0.8.6",
@@ -3859,7 +3859,7 @@ dependencies = [
 
 [[package]]
 name = "neko_docs"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_parser",
@@ -3867,14 +3867,14 @@ dependencies = [
 
 [[package]]
 name = "neko_errors"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
 ]
 
 [[package]]
 name = "neko_format"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_parser",
@@ -3882,7 +3882,7 @@ dependencies = [
 
 [[package]]
 name = "neko_graph"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_tensor",
  "rand 0.8.6",
@@ -3890,7 +3890,7 @@ dependencies = [
 
 [[package]]
 name = "neko_interpreter"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_parser",
@@ -3899,7 +3899,7 @@ dependencies = [
 
 [[package]]
 name = "neko_ir"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_runtime",
@@ -3907,7 +3907,7 @@ dependencies = [
 
 [[package]]
 name = "neko_lexer"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_errors",
@@ -3915,7 +3915,7 @@ dependencies = [
 
 [[package]]
 name = "neko_lint"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_parser",
@@ -3923,7 +3923,7 @@ dependencies = [
 
 [[package]]
 name = "neko_llm"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "candle-core",
  "candle-transformers",
@@ -3938,7 +3938,7 @@ dependencies = [
 
 [[package]]
 name = "neko_ml"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_data",
  "neko_graph",
@@ -3951,7 +3951,7 @@ dependencies = [
 
 [[package]]
 name = "neko_nm"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "clap",
  "neko_pkg",
@@ -3960,7 +3960,7 @@ dependencies = [
 
 [[package]]
 name = "neko_parser"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "neko_ast",
  "neko_errors",
@@ -3969,7 +3969,7 @@ dependencies = [
 
 [[package]]
 name = "neko_pkg"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -3977,7 +3977,7 @@ dependencies = [
 
 [[package]]
 name = "neko_rag"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "fastembed",
  "serde",
@@ -3987,7 +3987,7 @@ dependencies = [
 
 [[package]]
 name = "neko_runtime"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "ahash",
  "ahiru_core",
@@ -4035,7 +4035,7 @@ dependencies = [
 
 [[package]]
 name = "neko_tensor"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "candle-core",
  "criterion",
@@ -4047,7 +4047,7 @@ dependencies = [
 
 [[package]]
 name = "neko_vm"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "ahiru_core",
  "cranelift-codegen",
@@ -4066,7 +4066,7 @@ dependencies = [
 
 [[package]]
 name = "neko_web"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "axum",
  "neko_ast",

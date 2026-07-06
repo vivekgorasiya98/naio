@@ -1,6 +1,6 @@
 ﻿{
     "name":  "net",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "Networking: HTTP, TCP/UDP, DNS, TLS, WebSocket, SMTP, FTP",
     "import_paths":  [

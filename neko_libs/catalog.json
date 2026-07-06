@@ -1,23 +1,23 @@
 ﻿{
-  "neko_version": "0.2.1",
-  "description": "Neko standard library catalog — source packages for nm install",
-  "libs": [
-    "core",
-    "dsa",
-    "json",
-    "io",
-    "re",
-    "net",
-    "parallel",
-    "time",
-    "nsqlite",
-    "npg",
-    "nmongo",
-    "nos",
-    "nenv",
-    "ncl",
-    "ahiru",
-    "nrag",
-    "nllm"
-  ]
+    "neko_version":  "0.2.2",
+    "description":  "Neko standard library catalog — source packages for nm install",
+    "libs":  [
+                 "core",
+                 "dsa",
+                 "json",
+                 "io",
+                 "re",
+                 "net",
+                 "parallel",
+                 "time",
+                 "nsqlite",
+                 "npg",
+                 "nmongo",
+                 "nos",
+                 "nenv",
+                 "ncl",
+                 "ahiru",
+                 "nrag",
+                 "nllm"
+             ]
 }

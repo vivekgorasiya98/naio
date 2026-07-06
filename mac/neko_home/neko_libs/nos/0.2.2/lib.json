@@ -1,0 +1,11 @@
+﻿{
+    "name":  "nos",
+    "version":  "0.2.2",
+    "kind":  "native",
+    "description":  "OS interface: environment, process, platform constants, lightweight filesystem",
+    "import_paths":  [
+                         "nos",
+                         "std/nos"
+                     ],
+    "builtin_count":  27
+}

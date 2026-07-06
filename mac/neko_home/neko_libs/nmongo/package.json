@@ -1,6 +1,6 @@
 ﻿{
     "name":  "nmongo",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "Fast MongoDB: CRUD, aggregation, indexes, transactions, GridFS, change streams, async",
     "import_paths":  [

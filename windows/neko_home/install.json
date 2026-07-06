@@ -1,12 +1,12 @@
 ﻿{
-    "installed_at":  "1783362892239",
+    "installed_at":  "1783363308894",
     "root":  "C:\\Risu\\Neko\\windows\\neko_home",
-    "neko_version":  "0.2.1",
+    "neko_version":  "0.2.2",
     "source_root":  "",
     "mode":  "global",
     "libs":  {
                  "time":  {
-                              "version":  "0.2.1",
+                              "version":  "0.2.2",
                               "name":  "time",
                               "description":  "Wall clock, formatting, parsing, time zones, and date arithmetic",
                               "import_paths":  [
@@ -15,10 +15,10 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  32,
-                              "installed_at":  "1783362892239"
+                              "installed_at":  "1783363308894"
                           },
                  "re":  {
-                            "version":  "0.2.1",
+                            "version":  "0.2.2",
                             "name":  "re",
                             "description":  "Regular expressions: match, find, replace, split",
                             "import_paths":  [
@@ -27,10 +27,10 @@
                                              ],
                             "kind":  "native",
                             "builtin_count":  22,
-                            "installed_at":  "1783362892239"
+                            "installed_at":  "1783363308894"
                         },
                  "nsqlite":  {
-                                 "version":  "0.2.1",
+                                 "version":  "0.2.2",
                                  "name":  "nsqlite",
                                  "description":  "Fast SQLite: schema, migrations, prepared statements, transactions, async",
                                  "import_paths":  [
@@ -39,10 +39,10 @@
                                                   ],
                                  "kind":  "native",
                                  "builtin_count":  39,
-                                 "installed_at":  "1783362892239"
+                                 "installed_at":  "1783363308894"
                              },
                  "dsa":  {
-                             "version":  "0.2.1",
+                             "version":  "0.2.2",
                              "name":  "dsa",
                              "description":  "Data structures and algorithms: list, stack, queue, heap, map, graph, sort",
                              "import_paths":  [
@@ -51,10 +51,10 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  90,
-                             "installed_at":  "1783362892239"
+                             "installed_at":  "1783363308894"
                          },
                  "io":  {
-                            "version":  "0.2.1",
+                            "version":  "0.2.2",
                             "name":  "io",
                             "description":  "File I/O, paths, streaming handles, async background tasks",
                             "import_paths":  [
@@ -63,10 +63,10 @@
                                              ],
                             "kind":  "native",
                             "builtin_count":  55,
-                            "installed_at":  "1783362892239"
+                            "installed_at":  "1783363308894"
                         },
                  "parallel":  {
-                                  "version":  "0.2.1",
+                                  "version":  "0.2.2",
                                   "name":  "parallel",
                                   "description":  "Threading, mutexes, channels, worker pools, and cooperative poll",
                                   "import_paths":  [
@@ -75,10 +75,10 @@
                                                    ],
                                   "kind":  "native",
                                   "builtin_count":  38,
-                                  "installed_at":  "1783362892239"
+                                  "installed_at":  "1783363308894"
                               },
                  "npg":  {
-                             "version":  "0.1.0",
+                             "version":  "0.2.2",
                              "name":  "npg",
                              "description":  "Fast PostgreSQL: pools, migrations, prepared statements, transactions, async",
                              "import_paths":  [
@@ -87,10 +87,10 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  52,
-                             "installed_at":  "1783362892239"
+                             "installed_at":  "1783363308894"
                          },
                  "nos":  {
-                             "version":  "0.2.1",
+                             "version":  "0.2.2",
                              "name":  "nos",
                              "description":  "OS interface: process, platform constants, lightweight filesystem",
                              "import_paths":  [
@@ -99,10 +99,10 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  23,
-                             "installed_at":  "1783362892239"
+                             "installed_at":  "1783363308894"
                          },
                  "net":  {
-                             "version":  "0.2.1",
+                             "version":  "0.2.2",
                              "name":  "net",
                              "description":  "Networking: HTTP, TCP/UDP, DNS, TLS, WebSocket, SMTP, FTP",
                              "import_paths":  [
@@ -111,10 +111,10 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  55,
-                             "installed_at":  "1783362892239"
+                             "installed_at":  "1783363308894"
                          },
                  "core":  {
-                              "version":  "0.2.1",
+                              "version":  "0.2.2",
                               "name":  "core",
                               "description":  "Core builtins: print, len, type, assert, errors, timing, arrays",
                               "import_paths":  [
@@ -122,10 +122,10 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  17,
-                              "installed_at":  "1783362892239"
+                              "installed_at":  "1783363308894"
                           },
                  "nmongo":  {
-                                "version":  "0.2.1",
+                                "version":  "0.2.2",
                                 "name":  "nmongo",
                                 "description":  "Fast MongoDB: CRUD, aggregation, indexes, transactions, GridFS, change streams, async",
                                 "import_paths":  [
@@ -134,10 +134,10 @@
                                                  ],
                                 "kind":  "native",
                                 "builtin_count":  45,
-                                "installed_at":  "1783362892239"
+                                "installed_at":  "1783363308894"
                             },
                  "json":  {
-                              "version":  "0.2.1",
+                              "version":  "0.2.2",
                               "name":  "json",
                               "description":  "JSON parse, stringify, and object utilities",
                               "import_paths":  [
@@ -146,10 +146,10 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  15,
-                              "installed_at":  "1783362892239"
+                              "installed_at":  "1783363308894"
                           },
                  "ncl":  {
-                             "version":  "0.2.1",
+                             "version":  "0.2.2",
                              "name":  "ncl",
                              "description":  "Neko Column Library â€” fast pandas/numpy-style columnar data and math",
                              "import_paths":  [
@@ -158,10 +158,10 @@
                                               ],
                              "kind":  "native",
                              "builtin_count":  62,
-                             "installed_at":  "1783362892239"
+                             "installed_at":  "1783363308894"
                          },
                  "nenv":  {
-                              "version":  "0.1.0",
+                              "version":  "0.2.2",
                               "name":  "nenv",
                               "description":  "Environment variables, .env loading, typed accessors, validation, and stores",
                               "import_paths":  [
@@ -170,7 +170,7 @@
                                                ],
                               "kind":  "native",
                               "builtin_count":  26,
-                              "installed_at":  "1783362892239"
+                              "installed_at":  "1783363308894"
                           },
                  "ahiru":  {
                                "version":  "0.3.0",
@@ -182,7 +182,7 @@
                                                 ],
                                "kind":  "native",
                                "builtin_count":  36,
-                               "installed_at":  "1783362892239"
+                               "installed_at":  "1783363308894"
                            }
              }
 }

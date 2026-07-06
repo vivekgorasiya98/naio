@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// ahiru-server library version (may differ from toolchain for native lib updates).
-pub const AHIRU_LIB_VERSION: &str = "0.2.2";
+pub const AHIRU_LIB_VERSION: &str = "0.3.0";
 
 /// Neko toolchain version (matches workspace `Cargo.toml`).
 pub const NEKO_TOOLCHAIN_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -165,9 +165,9 @@ pub fn standard_libs() -> Vec<LibSpec> {
         native_lib(
             "ahiru",
             AHIRU_LIB_VERSION,
-            "ahiru-server: VM default serve, per-worker pool, native health/ping, fast bridge",
+            "ahiru-server 0.3.0: state, custom middleware, groups, cache, jobs, metrics, CLI toolkit",
             &["ahiru", "std/ahiru"],
-            19,
+            36,
         ),
     ]
 }

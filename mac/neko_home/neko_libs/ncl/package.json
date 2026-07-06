@@ -1,6 +1,6 @@
 ﻿{
     "name":  "ncl",
-    "version":  "0.2.1",
+    "version":  "0.2.2",
     "kind":  "native",
     "description":  "Neko Column Library â€” fast pandas/numpy-style columnar data and math",
     "import_paths":  [
