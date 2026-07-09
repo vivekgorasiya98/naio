@@ -1,10 +1,10 @@
-# NVIS — Neko Visualization
+# NVIS — Niao Visualization
 
 Lightweight chart generation for training curves and data inspection. No browser required — export SVG or print ASCII to the terminal.
 
 ## Import
 
-```neko
+```niao
 import "nvis"
 ```
 
@@ -22,7 +22,7 @@ Flat builtins (`nvis_line`, etc.) are also available after import, matching the 
 
 ## Output
 
-```neko
+```niao
 let chart = nvis_line(loss_history)
 nvis_print_ascii(chart)
 nvis_save_svg(chart, "loss.svg")
@@ -31,7 +31,7 @@ let csv = nvis_to_csv(chart)
 
 ## Training integration
 
-```neko
+```niao
 import "nml"
 import "nvis"
 

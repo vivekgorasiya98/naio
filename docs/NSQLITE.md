@@ -1,16 +1,16 @@
 # nsqlite standard library
 
-Fast SQLite for Neko programs: cwd-relative database files, schema migrations, prepared statements, transactions, batch inserts, introspection, and async background queries. Implemented in Rust via `rusqlite` (bundled SQLite).
+Fast SQLite for Niao programs: cwd-relative database files, schema migrations, prepared statements, transactions, batch inserts, introspection, and async background queries. Implemented in Rust via `rusqlite` (bundled SQLite).
 
 ## Import
 
-```neko
+```niao
 import "nsqlite"
 ```
 
 Use the **`nsqlite`** namespace for short names:
 
-```neko
+```niao
 let db = nsqlite.open("app.db")
 nsqlite.migrate(db, [{version: 1, sql: "CREATE TABLE t (id INTEGER PRIMARY KEY)"}])
 ```
@@ -56,13 +56,13 @@ File databases default to WAL journal, `NORMAL` synchronous, foreign keys on, an
 
 **Object rows** (default):
 
-```neko
+```niao
 [{id: 1, name: "neo"}]
 ```
 
 **Compact rows** (`format: "array"`):
 
-```neko
+```niao
 {columns: ["id", "name"], rows: [[1, "neo"]]}
 ```
 
@@ -118,7 +118,7 @@ Background tasks reopen the database by path in a worker thread (handles are thr
 
 ## Example
 
-```neko
+```niao
 import "nsqlite"
 import "io"
 
@@ -131,7 +131,7 @@ fn main() {
         {version: 2, sql: "CREATE INDEX idx_users_name ON users(name)"}
     ])
 
-    nsqlite.insert(db, "users", {name: "Neko"})
+    nsqlite.insert(db, "users", {name: "Niao"})
     let rows = nsqlite.query(db, "SELECT id, name FROM users WHERE id > ?", [0])
     print(rows[0].name)
 
@@ -155,4 +155,4 @@ fn main() {
 | E1705 | Async task not found |
 | E1706 | Invalid bind value |
 
-Errors surface as Neko error values with `kind: "nsqlite_error"`.
+Errors surface as Niao error values with `kind: "nsqlite_error"`.

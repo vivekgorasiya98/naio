@@ -833,7 +833,7 @@ impl AhiruResponse {
     }
 }
 
-/// Bridge for shared-per-worker Neko interpreter invocation.
+/// Bridge for shared-per-worker Niao interpreter invocation.
 pub struct WorkerInterpreterPool {
     pub invoke: Arc<dyn Fn(HashMap<String, String>) -> Result<AhiruResponse, String> + Send + Sync>,
 }

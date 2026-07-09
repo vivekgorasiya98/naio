@@ -1,0 +1,41 @@
+[package]
+name = "niao_cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "niao"
+path = "src/main.rs"
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_lexer = { workspace = true }
+niao_parser = { workspace = true }
+niao_runtime = { workspace = true }
+niao_interpreter = { workspace = true }
+niao_ir = { workspace = true }
+niao_bytecode = { workspace = true }
+niao_vm = { workspace = true }
+niao_format = { workspace = true }
+niao_lint = { workspace = true }
+niao_docs = { workspace = true }
+niao_web = { workspace = true }
+ahiru_core = { workspace = true }
+axum = { workspace = true }
+toml = "0.8"
+clap = { workspace = true }
+tokio = { workspace = true }
+
+[features]
+default = ["nllm-llama"]
+nllm-llama = ["niao_runtime/nllm-llama"]
+nllm-cuda = ["niao_runtime/nllm-cuda"]
+nllm-vulkan = ["niao_runtime/nllm-vulkan"]
+
+[dev-dependencies]
+niao_interpreter = { workspace = true }
+niao_parser = { workspace = true }
+niao_format = { workspace = true }
+niao_lint = { workspace = true }
+niao_bytecode = { workspace = true }
+niao_docs = { workspace = true }

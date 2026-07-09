@@ -1,10 +1,10 @@
-# Stage Windows payload: neko.exe, nm.exe, all libraries, examples.
+# Stage Windows payload: niao.exe, nm.exe, all libraries, examples.
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
 $WinDir = $PSScriptRoot
 $Payload = Join-Path $WinDir "payload"
-$PortableHome = Join-Path $WinDir "neko_home"
-$SrcLibs = Join-Path $Root "neko_libs"
+$PortableHome = Join-Path $WinDir "niao_home"
+$SrcLibs = Join-Path $Root "niao_libs"
 $ReleaseBin = Join-Path $Root "target\release"
 
 $Version = "0.2.2"
@@ -80,7 +80,7 @@ function Stage-Libs {
         }
     }
 
-    $catalog = @{ neko_version = $Version; updated_at = $Ts; libs = $libs }
+    $catalog = @{ niao_version = $Version; updated_at = $Ts; libs = $libs }
     $catalog | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $LibsDest "catalog.json") -Encoding UTF8
     return $libs
 }
@@ -88,7 +88,7 @@ function Stage-Libs {
 function Write-InstallJson {
     param([string]$HomeRoot, [hashtable]$Libs)
     $install = @{
-        neko_version = $Version
+        niao_version = $Version
         mode = "global"
         installed_at = $Ts
         root = $HomeRoot
@@ -100,24 +100,24 @@ function Write-InstallJson {
 
 Write-Host "== Preparing Windows bundle =="
 
-$nekoExe = Join-Path $ReleaseBin "neko.exe"
+$niaoExe = Join-Path $ReleaseBin "niao.exe"
 $nmExe = Join-Path $ReleaseBin "nm.exe"
-if (-not (Test-Path $nekoExe)) {
-    throw "Missing $nekoExe - run: cargo build --release --bin neko --bin nm"
+if (-not (Test-Path $niaoExe)) {
+    throw "Missing $niaoExe - run: cargo build --release --no-default-features --bin niao --bin nm"
 }
 
 if (Test-Path $Payload) { Remove-Item $Payload -Recurse -Force }
 New-Item -ItemType Directory -Force -Path (Join-Path $Payload "bin") | Out-Null
 
-$libs = Stage-Libs -LibsDest (Join-Path $Payload "neko_libs")
-Copy-Item $nekoExe (Join-Path $Payload "bin\neko.exe") -Force
+$libs = Stage-Libs -LibsDest (Join-Path $Payload "niao_libs")
+Copy-Item $niaoExe (Join-Path $Payload "bin\niao.exe") -Force
 Copy-Item $nmExe (Join-Path $Payload "bin\nm.exe") -Force
 
 $installPayload = @{
-    neko_version = $Version
+    niao_version = $Version
     mode = "global"
     installed_at = $Ts
-    root = "%USERPROFILE%\.neko"
+    root = "%USERPROFILE%\.niao"
     source_root = ""
     libs = $libs
 }
@@ -125,10 +125,10 @@ $installPayload | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $Payload "ins
 
 $exPayload = Join-Path $Payload "examples"
 New-Item -ItemType Directory -Force -Path $exPayload | Out-Null
-Copy-Item (Join-Path $Root "examples\hello.neko") $exPayload -Force
-Copy-Item (Join-Path $Root "examples\re_demo.neko") $exPayload -Force
-if (Test-Path (Join-Path $Root "mac\examples\libs_smoke.neko")) {
-    Copy-Item (Join-Path $Root "mac\examples\libs_smoke.neko") $exPayload -Force
+Copy-Item (Join-Path $Root "examples\hello.niao") $exPayload -Force
+Copy-Item (Join-Path $Root "examples\re_demo.niao") $exPayload -Force
+if (Test-Path (Join-Path $Root "mac\examples\libs_smoke.niao")) {
+    Copy-Item (Join-Path $Root "mac\examples\libs_smoke.niao") $exPayload -Force
 }
 
 if (Test-Path $PortableHome) { Remove-Item $PortableHome -Recurse -Force }
@@ -143,5 +143,5 @@ Copy-Item (Join-Path $exPayload "*") $exPortable -Force
 
 Write-Host "Done."
 Write-Host "  payload:     $Payload"
-Write-Host "  neko_home:   $PortableHome"
+Write-Host "  niao_home:   $PortableHome"
 Write-Host "  libraries:   $(($libs.Keys | Measure-Object).Count)"

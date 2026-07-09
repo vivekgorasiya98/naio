@@ -1,8 +1,0 @@
-﻿{
-  "name": "json",
-  "version": "0.1.0",
-  "kind": "native",
-  "description": "JSON parse, stringify, and object utilities",
-  "import_paths": ["json", "std/json"],
-  "builtin_count": 15
-}

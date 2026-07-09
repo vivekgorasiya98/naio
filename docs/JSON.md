@@ -1,26 +1,26 @@
 # JSON standard library
 
-Fast JSON parsing and manipulation for Neko programs, implemented in Rust via `serde_json`.
+Fast JSON parsing and manipulation for Niao programs, implemented in Rust via `serde_json`.
 
 ## Import
 
-```neko
+```niao
 import "json"
 ```
 
 Use the **`json`** namespace object for short names:
 
-```neko
+```niao
 let data = json.parse("{\"ok\": true}")
 print(json.stringify(data))
 ```
 
 ### Custom alias (`import as`)
 
-```neko
+```niao
 import "json" as jsonobj
 
-let data = jsonobj.parse("{\"name\": \"Neko\"}")
+let data = jsonobj.parse("{\"name\": \"Niao\"}")
 print(jsonobj.get(data, "name"))
 ```
 
@@ -56,7 +56,7 @@ These global builtins remain available for backward compatibility:
 
 ## Examples
 
-```neko
+```niao
 import "json" as j
 
 fn main() {
@@ -74,13 +74,13 @@ fn main() {
 Run the demo:
 
 ```bash
-neko run examples/json_demo.neko
+niao run examples/json_demo.niao
 ```
 
 Run tests:
 
 ```bash
-neko run tests/json.neko
+niao run tests/json.niao
 ```
 
 ## Errors

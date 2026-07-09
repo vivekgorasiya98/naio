@@ -1,12 +1,12 @@
-# Neko Object-Oriented Programming (OOP)
+# Niao Object-Oriented Programming (OOP)
 
-Complete reference for classes, traits, inheritance, and runtime behavior in Neko v0.1.
+Complete reference for classes, traits, inheritance, and runtime behavior in Niao v0.1.
 
 ---
 
 ## Overview
 
-Neko has **two ways to group data**:
+Niao has **two ways to group data**:
 
 | Feature | Keyword | Methods | Inheritance | Use case |
 |---------|---------|---------|-------------|----------|
@@ -18,9 +18,9 @@ Neko has **two ways to group data**:
 Both the **bytecode VM** (default) and the **interpreter** (`--mode interp`) support OOP. Run examples with:
 
 ```bash
-neko run examples/oop_basics.neko
-neko run examples/oop_inheritance.neko
-neko run examples/oop_traits.neko
+niao run examples/oop_basics.niao
+niao run examples/oop_inheritance.niao
+niao run examples/oop_traits.niao
 ```
 
 ---
@@ -45,9 +45,9 @@ neko run examples/oop_traits.neko
 
 ## Structs (data-only)
 
-Structs are unchanged from pre-OOP Neko. They create plain `Value::Object` maps — no methods, no vtable.
+Structs are unchanged from pre-OOP Niao. They create plain `Value::Object` maps — no methods, no vtable.
 
-```neko
+```niao
 struct User {
     name: string
     age: int
@@ -59,7 +59,7 @@ fn main() {
 }
 ```
 
-See `examples/structs.neko`.
+See `examples/structs.niao`.
 
 ---
 
@@ -67,7 +67,7 @@ See `examples/structs.neko`.
 
 ### Syntax
 
-```neko
+```niao
 class ClassName [extends ParentName] [implements TraitA, TraitB] {
     [public | private] field_name: type;
 
@@ -80,7 +80,7 @@ class ClassName [extends ParentName] [implements TraitA, TraitB] {
 
 ### Minimal example
 
-```neko
+```niao
 class Counter {
     value: int
 
@@ -104,7 +104,7 @@ fn main() {
 }
 ```
 
-See `examples/oop_basics.neko`.
+See `examples/oop_basics.niao`.
 
 ### Instance methods and `self`
 
@@ -118,13 +118,13 @@ Two patterns:
 
 **1. Static constructor** — `ClassName.new(...)` calls `static fn new`:
 
-```neko
+```niao
 let c = Counter.new(0)
 ```
 
 **2. Field initializer** — `ClassName { field: value, ... }`:
 
-```neko
+```niao
 let d = Dog { name: "Rex" }
 ```
 
@@ -136,7 +136,7 @@ Field names must exist on the class (including inherited fields). Unknown fields
 
 Access via the class name, not an instance:
 
-```neko
+```niao
 Counter.new(0)        // static method
 ClassName.static_field // static let (if defined)
 ```
@@ -145,7 +145,7 @@ Static methods are compiled as `__CS__ClassName__method`. Instance methods use `
 
 ### Field and method access
 
-```neko
+```niao
 instance.field        // read field
 instance.field = val  // write field
 instance.method(args) // dispatch instance method
@@ -164,7 +164,7 @@ instance.method(args) // dispatch instance method
 
 Inside a subclass instance method, call the parent implementation:
 
-```neko
+```niao
 class Animal {
     name: string
 
@@ -187,7 +187,7 @@ Rules:
 - Resolves the **parent class’s** method for the current call context (the class whose method is running).
 - `self` must be in scope (first parameter).
 
-See `examples/oop_inheritance.neko`.
+See `examples/oop_inheritance.niao`.
 
 ---
 
@@ -197,7 +197,7 @@ See `examples/oop_inheritance.neko`.
 
 Traits contain **method signatures only** (no bodies):
 
-```neko
+```niao
 trait Greeter {
     fn greet(self)
 }
@@ -209,7 +209,7 @@ trait Named {
 
 ### Implementing a trait
 
-```neko
+```niao
 class Person implements Greeter {
     name: string
 
@@ -223,11 +223,11 @@ class Person implements Greeter {
 }
 ```
 
-At **class registration**, Neko checks that every trait method exists on the class. Missing methods → **E1022**.
+At **class registration**, Niao checks that every trait method exists on the class. Missing methods → **E1022**.
 
 Multiple traits:
 
-```neko
+```niao
 class Worker implements Greeter, Named {
     ...
 }
@@ -235,7 +235,7 @@ class Worker implements Greeter, Named {
 
 ### Runtime trait check: `has_trait`
 
-```neko
+```niao
 has_trait(instance, "TraitName")   // returns bool
 ```
 
@@ -243,7 +243,7 @@ has_trait(instance, "TraitName")   // returns bool
 - Useful until static type checking lands in v0.2.
 - Trait names in type annotations (e.g. `fn f(g: Greeter)`) are **parsed but not enforced** yet.
 
-See `examples/oop_traits.neko`.
+See `examples/oop_traits.niao`.
 
 ---
 
@@ -283,7 +283,7 @@ Applies to fields, instance methods, static methods, and static fields.
 
 Modules can export **functions, classes, and traits** alongside each other.
 
-- `import "other.neko"` loads the file and merges exported classes/traits into the class registry.
+- `import "other.niao"` loads the file and merges exported classes/traits into the class registry.
 - Same circular-import handling as functions applies.
 
 Top-level in a file can mix `fn`, `struct`, `class`, and `trait` definitions.
@@ -332,7 +332,7 @@ Class metadata is embedded in the bytecode module (`classes`, `traits`, `field_n
 
 Method names are stored in the module `field_names` pool (fixes prior `GetField(0)` name bugs).
 
-`BYTECODE_CACHE_VERSION` is **5** (includes `CallSuper`). Stale `.nekobc` files recompile automatically.
+`BYTECODE_CACHE_VERSION` is **5** (includes `CallSuper`). Stale `.niaobc` files recompile automatically.
 
 ### Dispatch diagram
 
@@ -377,19 +377,19 @@ Postfix `super` is parsed as `super.method(args)` → `SuperCall` AST node.
 
 | Path | What it demonstrates |
 |------|---------------------|
-| `examples/oop_basics.neko` | Class, `self`, static `new`, methods |
-| `examples/oop_inheritance.neko` | `extends`, `super`, override |
-| `examples/oop_traits.neko` | `trait`, `implements`, `has_trait` |
-| `examples/structs.neko` | Data-only structs (non-OOP) |
-| `tests/oop_classes.neko` | Class + static `new` + field mutation |
-| `tests/oop_traits.neko` | Trait implementation + `has_trait` |
-| `tests/oop_vm.neko` | Inheritance + traits on VM path |
+| `examples/oop_basics.niao` | Class, `self`, static `new`, methods |
+| `examples/oop_inheritance.niao` | `extends`, `super`, override |
+| `examples/oop_traits.niao` | `trait`, `implements`, `has_trait` |
+| `examples/structs.niao` | Data-only structs (non-OOP) |
+| `tests/oop_classes.niao` | Class + static `new` + field mutation |
+| `tests/oop_traits.niao` | Trait implementation + `has_trait` |
+| `tests/oop_vm.niao` | Inheritance + traits on VM path |
 
 Run tests:
 
 ```bash
-neko test tests/oop_classes.neko
-cargo test -p neko_cli oop
+niao test tests/oop_classes.niao
+cargo test -p niao_cli oop
 ```
 
 ---
@@ -411,7 +411,7 @@ See also [DECISIONS.md](DECISIONS.md).
 
 ## Quick reference cheat sheet
 
-```neko
+```niao
 // Data record
 struct Point { x: int, y: int }
 let p = Point { x: 1, y: 2 }

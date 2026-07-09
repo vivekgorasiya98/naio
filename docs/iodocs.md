@@ -1,6 +1,6 @@
 # I/O standard library
 
-Fast file and path operations for Neko programs, implemented in Rust (`std::fs`, buffered streams, and background worker threads).
+Fast file and path operations for Niao programs, implemented in Rust (`std::fs`, buffered streams, and background worker threads).
 
 The `io` module provides three layers:
 
@@ -14,7 +14,7 @@ The `io` module provides three layers:
 
 ## Import
 
-```neko
+```niao
 import "io"
 ```
 
@@ -22,11 +22,11 @@ import "io"
 
 Importing `io` registers all `io_*` builtins globally. Unlike the JSON module, there is no `io.read_file` namespace object — call the flat names directly:
 
-```neko
+```niao
 import "io"
 
 fn main() {
-    io_write_file("hello.txt", "Hello, Neko!\n")
+    io_write_file("hello.txt", "Hello, Niao!\n")
     print(io_read_file("hello.txt"))
 }
 ```
@@ -39,7 +39,7 @@ Programs that only `import "io"` (no other file imports) run on the bytecode VM 
 
 Most I/O failures return a structured **`error` value** (code `E1201`, kind `"io_error"`) instead of aborting the program. Check with `is_error()` or inspect fields in `try/catch`:
 
-```neko
+```niao
 import "io"
 
 fn main() {
@@ -81,8 +81,8 @@ All path functions accept string paths. On Windows, separators in returned paths
 | `io_is_absolute(path)` | `string` | `bool` | Whether path is absolute |
 | `io_canonical(path)` | `string` | `string` or `error` | Resolve to absolute canonical path |
 
-```neko
-let cfg = io_join(io_home_dir(), ".config", "neko", "settings.json")
+```niao
+let cfg = io_join(io_home_dir(), ".config", "niao", "settings.json")
 let name = io_basename(cfg)   // "settings.json"
 let dir  = io_dirname(cfg)    // parent path
 ```
@@ -122,7 +122,7 @@ Optimized for reading or writing an entire file in one call. Uses `std::fs::read
 - **Text** functions use UTF-8 strings.
 - **Binary** functions use packed `int_array` values (`make_int_array` / literal `[72, 105]`) with each element in `0..=255`.
 
-```neko
+```niao
 io_write_file("log.txt", "started\n")
 io_append_file("log.txt", "line 2\n")
 
@@ -160,8 +160,8 @@ let raw = io_read_bytes("data.bin")
 | `io_temp_dir()` | — | `string` | OS temp directory |
 | `io_home_dir()` | — | `string` or `error` | User home (`HOME` / `USERPROFILE`) |
 
-```neko
-let scratch = io_join(io_temp_dir(), "neko_scratch")
+```niao
+let scratch = io_join(io_temp_dir(), "niao_scratch")
 io_create_dir_all(scratch)
 ```
 
@@ -212,7 +212,7 @@ Handles are positive `int` ids. Always call `io_close` when finished.
 
 Writer-only handles (`"w"`, `"a"`, `"wb"`, `"ab"`) do not support `io_seek` / `io_tell`.
 
-```neko
+```niao
 let h = io_open("big.log", "r")
 let chunk = io_read(h, 4096)
 while chunk != "" {
@@ -251,7 +251,7 @@ Async functions spawn work on a background thread and return a **task id** (`int
 | I/O failure | `error` value (`E1201`) |
 | Cancelled | `error` value (cancelled message) |
 
-```neko
+```niao
 // Fire-and-wait (simplest)
 let task = io_async_read("large.txt")
 let content = io_task_wait(task)
@@ -264,7 +264,7 @@ while !io_task_done(task) {
 let result = io_task_poll(task)
 ```
 
-Async tasks use a process-wide task pool (`async_tasks` in `neko_runtime`). Rebuild Neko from source after upgrading the runtime if async calls hang on an older binary.
+Async tasks use a process-wide task pool (`async_tasks` in `niao_runtime`). Rebuild Niao from source after upgrading the runtime if async calls hang on an older binary.
 
 ---
 
@@ -292,18 +292,18 @@ All builtins registered by `import "io"`:
 
 ### Quick read/write
 
-```neko
+```niao
 import "io"
 
 fn main() {
-    io_write_file("greeting.txt", "Hello from Neko I/O!\n")
+    io_write_file("greeting.txt", "Hello from Niao I/O!\n")
     print(io_read_file("greeting.txt"))
 }
 ```
 
 ### Line-based config
 
-```neko
+```niao
 import "io"
 
 fn main() {
@@ -317,7 +317,7 @@ fn main() {
 
 ### Safe error handling
 
-```neko
+```niao
 import "io"
 
 fn read_config(path: string) -> string {
@@ -330,7 +330,7 @@ fn read_config(path: string) -> string {
 
 fn main() {
     try {
-        print(read_config("neko.config"))
+        print(read_config("niao.config"))
     } catch (e) {
         print("config error: " + e.message)
     }
@@ -340,8 +340,8 @@ fn main() {
 ### Demo and tests
 
 ```bash
-neko run examples/io_demo.neko
-neko run tests/io.neko
+niao run examples/io_demo.niao
+niao run tests/io.niao
 ```
 
 ---
@@ -359,8 +359,8 @@ neko run tests/io.neko
 
 ## Implementation notes
 
-- **Runtime:** `crates/neko_runtime/src/io.rs`
-- **Async pool:** `crates/neko_runtime/src/async_tasks.rs` (shared with other async natives)
+- **Runtime:** `crates/niao_runtime/src/io.rs`
+- **Async pool:** `crates/niao_runtime/src/async_tasks.rs` (shared with other async natives)
 - **Registration:** `io::builtins()` in `builtin_table()`; virtual module paths `io`, `std/io`
 - **Performance:** whole-file ops avoid extra copies; streaming uses 64 KiB buffers; binary data uses packed `IntArray`
 - **Platform:** paths and metadata follow the host OS; `io_created_ms` may be unavailable on some filesystems

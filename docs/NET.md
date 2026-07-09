@@ -1,6 +1,6 @@
 # Network standard library
 
-Python-style networking for Neko programs: HTTP/HTTPS client, programmatic HTTP server, TCP/UDP sockets, TLS, DNS, URL utilities, WebSocket, SMTP, and FTP. Implemented in Rust inside `neko_runtime` (`ureq`, `tiny_http`, `rustls`, `tungstenite`, `lettre`, `suppaftp`).
+Python-style networking for Niao programs: HTTP/HTTPS client, programmatic HTTP server, TCP/UDP sockets, TLS, DNS, URL utilities, WebSocket, SMTP, and FTP. Implemented in Rust inside `niao_runtime` (`ureq`, `tiny_http`, `rustls`, `tungstenite`, `lettre`, `suppaftp`).
 
 The `net` module provides three layers:
 
@@ -14,7 +14,7 @@ The `net` module provides three layers:
 
 ## Import
 
-```neko
+```niao
 import "net"
 ```
 
@@ -22,7 +22,7 @@ import "net"
 
 Importing `net` registers all `net_*` builtins globally. There is no `net.get` namespace object — call the flat names directly:
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -41,7 +41,7 @@ Programs that only `import "net"` (no other file imports) run on the **bytecode 
 
 Most recoverable network failures return a structured **`error` value** (kind `"net_error"`) instead of aborting the program. Check with `is_error()` or inspect fields in `try/catch`:
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -80,20 +80,20 @@ See [ERRORS.md](ERRORS.md) for the full error registry.
 | TCP / UDP / TLS / WebSocket | Yes | Yes |
 | SMTP / FTP | Yes | Yes |
 | Async tasks (`net_async_*`, `net_task_*`) | Yes | Yes |
-| HTTP server **with Neko handler functions** | **No** | **Yes** |
+| HTTP server **with Niao handler functions** | **No** | **Yes** |
 
-HTTP server route handlers are invoked through an interpreter callback bridge (`call_neko_function`). Use:
+HTTP server route handlers are invoked through an interpreter callback bridge (`call_niao_function`). Use:
 
 ```bash
-neko run --mode interp my_server.neko
-neko test tests          # always uses interpreter
+niao run --mode interp my_server.niao
+niao test tests          # always uses interpreter
 ```
 
-**Handler registration:** pass a top-level function by name (e.g. `handler`), not a variable holding a callable. Neko does not yet support first-class function values through variables.
+**Handler registration:** pass a top-level function by name (e.g. `handler`), not a variable holding a callable. Niao does not yet support first-class function values through variables.
 
 **Serving models:**
 
-| Function | Thread | Neko handlers |
+| Function | Thread | Niao handlers |
 |----------|--------|---------------|
 | `net_http_poll(server)` | Caller (cooperative) | Yes (interpreter) |
 | `net_http_serve(server)` | Caller (blocking) | Yes (interpreter) |
@@ -126,7 +126,7 @@ When using `net_http_poll` on the same thread as a blocking HTTP client, run the
 | `user` | `string` | Username |
 | `password` | `string` | Password |
 
-```neko
+```niao
 let u = net_url_parse("https://user:pass@host:8080/path?q=1#frag")
 print(u.host)    // "host"
 print(u.port)    // 8080
@@ -158,7 +158,7 @@ Each entry in `net_resolve` result:
 | `port` | `int` | Port number |
 | `family` | `string` | `"ipv4"` or `"ipv6"` |
 
-```neko
+```niao
 let addrs = net_resolve("localhost", 80)
 print(addrs[0].ip)
 ```
@@ -210,7 +210,7 @@ Access fields with dot notation or `net_response_field(resp, "field")`:
 
 HTTP error status codes (4xx, 5xx) still return a **response object** with the error status — they are not `error` values unless the transport fails.
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -249,7 +249,7 @@ Binary send/receive uses **`int_array`** values (bytes 0–255), same as `io_rea
 | `net_tcp_recv(sock, n)` | `int`, `int` | `int_array` or `error` | Read up to `n` bytes |
 | `net_tcp_close(handle)` | `int` | `nil` or `error` | Close socket or listener |
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -269,7 +269,7 @@ fn main() {
 }
 ```
 
-> **Note:** `server` is a reserved keyword in Neko. Do not use it as a variable name.
+> **Note:** `server` is a reserved keyword in Niao. Do not use it as a variable name.
 
 ### UDP
 
@@ -304,7 +304,7 @@ Wrapped TLS handles support `net_tcp_send`, `net_tcp_recv`, and `net_set_timeout
 
 TLS uses **rustls** with the platform native root certificate store. No OpenSSL dependency.
 
-```neko
+```niao
 let sock = net_tls_connect("example.com", 443)
 net_tcp_send(sock, "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n")
 let bytes = net_tcp_recv(sock, 4096)
@@ -324,7 +324,7 @@ Programmatic HTTP server via `tiny_http`. Register routes, then serve with `net_
 | `net_http_on_request(server, handler)` | `int`, `fn` | `nil` or `error` | Catch-all fallback handler |
 | `net_http_poll(server)` | `int` | `nil` or `error` | Process one pending request (non-blocking) |
 | `net_http_serve(server)` | `int` | `nil` or `error` | Blocking accept loop until `net_http_stop` |
-| `net_http_serve_async(server)` | `int` | `int` (task id) | Background accept loop (**no Neko handlers**) |
+| `net_http_serve_async(server)` | `int` | `int` (task id) | Background accept loop (**no Niao handlers**) |
 | `net_http_stop(server)` | `int` | `nil` or `error` | Signal server to stop |
 | `net_http_response(status, content_type, body)` | `int`, `string`, `string` | `object` | Build handler response object |
 | `net_request_field(req, field)` | `object`, `string` | value | Read request field |
@@ -350,7 +350,7 @@ Programmatic HTTP server via `tiny_http`. Register routes, then serve with `net_
 
 ### HTTP server with handlers
 
-```neko
+```niao
 import "net"
 
 fn handler(req) {
@@ -381,7 +381,7 @@ fn main() {
 
 Blocking server (simple scripts):
 
-```neko
+```niao
 import "net"
 
 fn handle(req) {
@@ -408,7 +408,7 @@ Blocking WebSocket client via `tungstenite`. Handles are separate from TCP handl
 | `net_ws_recv(handle)` | `int` | `string`, `int_array`, or `nil` | Blocking receive; `nil` on close |
 | `net_ws_close(handle)` | `int` | `nil` or `error` | Close connection |
 
-```neko
+```niao
 let ws = net_ws_connect("wss://echo.websocket.events")
 net_ws_send(ws, "hello")
 let msg = net_ws_recv(ws)
@@ -432,7 +432,7 @@ net_ws_close(ws)
 
 Uses `lettre` with rustls. Relay mode (STARTTLS as configured by server).
 
-```neko
+```niao
 net_smtp_send("smtp.example.com", 587, "from@example.com", "to@example.com",
     "Subject", "Body text", { user: "alice", password: "secret" })
 ```
@@ -451,7 +451,7 @@ FTP connections use separate handle ids (not the TCP handle table).
 | `net_ftp_put(handle, remote, content)` | `int`, `string`, `string` | `nil` or `error` | Upload string content |
 | `net_ftp_close(handle)` | `int` | `nil` or `error` | Quit and close |
 
-```neko
+```niao
 let ftp = net_ftp_connect("ftp.example.com", 21)
 net_ftp_login(ftp, "user", "pass")
 let data = net_ftp_get(ftp, "/pub/readme.txt")
@@ -463,7 +463,7 @@ net_ftp_close(ftp)
 
 ## Async background networking
 
-Async functions spawn work on a background thread and return a **task id** (`int`). Poll or block for the result. The task pool is shared with `io_async_*` (`async_tasks` in `neko_runtime`).
+Async functions spawn work on a background thread and return a **task id** (`int`). Poll or block for the result. The task pool is shared with `io_async_*` (`async_tasks` in `niao_runtime`).
 
 | Function | Arguments | Returns | Description |
 |----------|-----------|---------|-------------|
@@ -483,7 +483,7 @@ Async functions spawn work on a background thread and return a **task id** (`int
 | Failure | `error` value (`E1401`) |
 | Cancelled | `error` value (cancelled message) |
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -527,7 +527,7 @@ All builtins registered by `import "net"`:
 
 ### HTTP client
 
-```neko
+```niao
 import "net"
 
 fn main() {
@@ -543,11 +543,11 @@ fn main() {
 
 ### TCP echo-style exchange
 
-See [tests/net_tcp.neko](../tests/net_tcp.neko).
+See [tests/net_tcp.niao](../tests/net_tcp.niao).
 
 ### Combined client + JSON
 
-```neko
+```niao
 import "net"
 import "json"
 
@@ -563,14 +563,14 @@ fn main() {
 ### Demo and tests
 
 ```bash
-neko run examples/net_http_client.neko
-neko run examples/net_demo.neko --mode interp   # includes network I/O
-neko run --mode interp tests/net_server.neko
-neko run tests/net_url.neko
-neko run tests/net_tcp.neko
+niao run examples/net_http_client.niao
+niao run examples/net_demo.niao --mode interp   # includes network I/O
+niao run --mode interp tests/net_server.niao
+niao run tests/net_url.niao
+niao run tests/net_tcp.niao
 ```
 
-Network integration tests that use HTTP server handlers require the interpreter (`neko test` or `--mode interp`).
+Network integration tests that use HTTP server handlers require the interpreter (`niao test` or `--mode interp`).
 
 ---
 
@@ -590,9 +590,9 @@ Network integration tests that use HTTP server handlers require the interpreter 
 
 ## Implementation notes
 
-- **Runtime:** `crates/neko_runtime/src/net/` (submodules: `url`, `dns`, `http_client`, `http_server`, `socket`, `tls`, `websocket`, `smtp`, `ftp`, `handles`)
-- **Async pool:** `crates/neko_runtime/src/async_tasks.rs` (shared with `io_*`)
-- **Interpreter bridge:** `set_neko_call_hook` / `call_neko_function` in `neko_runtime`; registered by `neko_interpreter` for HTTP handler dispatch
+- **Runtime:** `crates/niao_runtime/src/net/` (submodules: `url`, `dns`, `http_client`, `http_server`, `socket`, `tls`, `websocket`, `smtp`, `ftp`, `handles`)
+- **Async pool:** `crates/niao_runtime/src/async_tasks.rs` (shared with `io_*`)
+- **Interpreter bridge:** `set_niao_call_hook` / `call_niao_function` in `niao_runtime`; registered by `niao_interpreter` for HTTP handler dispatch
 - **Registration:** `net::builtins()` in `builtin_table()`; virtual module paths `net`, `std/net`
 - **Binary data:** packed `IntArray` (bytes 0–255) for socket I/O and `body_bytes` fields
 - **HTTPS:** `ureq` + `rustls` + native roots; no OpenSSL

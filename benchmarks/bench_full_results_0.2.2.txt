@@ -1,0 +1,80 @@
+ENVIRONMENT
+  Neko:   niao 0.2.2 (C:\Risu\Neko\target\release\niao.exe)
+  Python: 3.11.6
+  Node:   v24.15.0
+  OS:     win32
+
+CORRECTNESS CHECK
+  All implementations return 31101423
+
+Running 5 timed iterations each (warmup included)...
+========================================================================
+ARITHMETIC BENCHMARK (10M iterations, mod 1_000_000_007)
+========================================================================
+Expected result: 31101423
+Runs per language: 5
+
+Language                    Best       Avg    Peak RSS    Idle RSS    Ratio
+---------------------------------------------------------------------------
+Niao 0.2.2 (VM)           115.8ms    116.7ms      14.3 MB      14.2 MB    1.00x
+JavaScript (Node)         120.1ms    121.6ms      37.5 MB      31.7 MB    1.04x
+Python 3                 2162.9ms   3084.1ms      20.6 MB      20.6 MB   18.67x
+
+Per-run times (ms):
+  Python 3
+    time:   2162.9    3352.1    3224.9    3289.6    3390.9
+    peak:    20.6MB
+  JavaScript (Node)
+    time:    122.7     122.7     121.4     121.3     120.1
+    peak:    37.5MB     37.1MB     37.3MB     37.4MB     36.5MB
+  Niao 0.2.2 (VM)
+    time:    115.8     117.1     117.2     116.4     116.9
+    peak:    14.3MB     14.3MB     14.3MB     14.3MB     14.3MB
+
+Throughput (best run):
+  Niao 0.2.2 (VM)        345,333,679 ops/s
+  JavaScript (Node)      333,028,335 ops/s
+  Python 3               18,493,724 ops/s
+
+========================================================================
+NIAO FIBONACCI BENCH (fib(40), recursion)
+========================================================================
+  C:\Risu\Neko\examples\fibonacci.niao: best 0.08 ms, avg 0.09 ms (5 runs)
+compile/cache: 1.81 ms
+
+========================================================================
+NIAO TEST SUITE
+========================================================================
+  test tests\ahiru_builtins.niao ... ahiru builtins okok
+  test tests\basic.niao ... all tests passedok
+  test tests\dsa_arrays.niao ... dsa array tests passedok
+  test tests\dsa_graph.niao ... dsa graph tests passedok
+  test tests\dsa_heap.niao ... dsa heap tests passedok
+  test tests\dsa_list.niao ... dsa list tests passedok
+  test tests\dsa_set_map.niao ... dsa set/map tests passedok
+  test tests\dsa_stack_queue.niao ... dsa stack/queue/deque tests passedok
+  test tests\errors_typed.niao ... all error tests passedok
+  test tests\gc_heap.niao ... ok
+  test tests\io.niao ... io tests passedok
+  test tests\json.niao ... all json tests passedok
+  test tests\ncl_frame.niao ... ncl_frame okok
+  test tests\ncl_math.niao ... ncl_math okok
+  test tests\ncl_series.niao ... ncl_series okok
+  test tests\nenv.niao ... nenv tests passedok
+  test tests\net_server.niao ... ok
+  test tests\net_tcp.niao ... ok
+  test tests\net_url.niao ... ok
+  test tests\nmongo.niao ... skip: NIAO_MONGO_URL not setok
+  test tests\nos.niao ... nos tests passedok
+  test tests\npg.niao ... skip: NIAO_PG_URL not setok
+  test tests\nsqlite.niao ... nsqlite tests passedok
+  test tests\oop_classes.niao ... ok
+  test tests\oop_traits.niao ... ok
+  test tests\oop_vm.niao ... animal
+  test tests\parallel_channel.niao ... ok
+  test tests\parallel_mutex.niao ... ok
+  test tests\parallel_pool.niao ... ok
+  test tests\re.niao ... all re tests passedok
+  test tests\time.niao ... all time tests passedok
+
+  TOTAL: 31 passed, 0 failed

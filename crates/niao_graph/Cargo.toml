@@ -1,0 +1,8 @@
+[package]
+name = "niao_graph"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_tensor = { workspace = true }
+rand = "0.8"

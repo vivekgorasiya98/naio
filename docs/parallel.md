@@ -1,6 +1,6 @@
 # `parallel` standard library
 
-Threading, mutexes, channels, worker pools, and cooperative job polling for Neko programs.
+Threading, mutexes, channels, worker pools, and cooperative job polling for Niao programs.
 
 The `parallel` module provides three layers:
 
@@ -14,7 +14,7 @@ The `parallel` module provides three layers:
 
 ## Import
 
-```neko
+```niao
 import "parallel"
 ```
 
@@ -22,7 +22,7 @@ import "parallel"
 
 Importing `parallel` registers all `parallel_*` builtins globally and the `parallel` namespace object:
 
-```neko
+```niao
 import "parallel" as p
 
 let pool = p.Pool.new(4)
@@ -34,11 +34,11 @@ let pool = p.Pool.new(4)
 
 ### GIL mode (interpreter — default)
 
-When running with the tree-walking interpreter (`neko run --mode interp` or default for programs with imports), OS threads are used and Neko callbacks execute under a **global interpreter lock** (Python-style). Only one Neko function runs at a time; threads still help overlap blocking I/O and organize worker pools.
+When running with the tree-walking interpreter (`niao run --mode interp` or default for programs with imports), OS threads are used and Niao callbacks execute under a **global interpreter lock** (Python-style). Only one Niao function runs at a time; threads still help overlap blocking I/O and organize worker pools.
 
 ### Poll mode (VM / no call hook)
 
-When no interpreter call hook is active, `parallel_thread_spawn` and `parallel_pool_submit` enqueue jobs on a **main-thread queue**. Call `parallel_poll()` or `parallel_poll_all()` from the main loop to run queued Neko callbacks cooperatively.
+When no interpreter call hook is active, `parallel_thread_spawn` and `parallel_pool_submit` enqueue jobs on a **main-thread queue**. Call `parallel_poll()` or `parallel_poll_all()` from the main loop to run queued Niao callbacks cooperatively.
 
 ---
 
@@ -61,7 +61,7 @@ Violations return error `E1504` (`parallel_error`, kind `"parallel_error"`).
 
 | Method | Description |
 |--------|-------------|
-| `spawn(fn, ...args)` | Start a thread running a Neko function |
+| `spawn(fn, ...args)` | Start a thread running a Niao function |
 | `join(handle)` | Wait for result |
 | `detach(handle)` | Detach without joining |
 | `is_alive(handle)` | Whether thread is still running |
@@ -134,16 +134,16 @@ See [ERRORS.md](ERRORS.md) for the full registry.
 ## Examples
 
 ```bash
-neko run --mode interp examples/parallel_demo.neko
-neko run tests/parallel_mutex.neko
-neko run tests/parallel_channel.neko
-neko run --mode interp tests/parallel_pool.neko
+niao run --mode interp examples/parallel_demo.niao
+niao run tests/parallel_mutex.niao
+niao run tests/parallel_channel.niao
+niao run --mode interp tests/parallel_pool.niao
 ```
 
 ---
 
 ## Limitations
 
-- Parallel Neko bytecode is serialized by the GIL; use pools/threads to split work and return sendable results.
+- Parallel Niao bytecode is serialized by the GIL; use pools/threads to split work and return sendable results.
 - VM mode: sync primitives work; thread spawn uses poll queue — call `parallel_poll()` while waiting.
 - Functions and native handles cannot be sent across threads.

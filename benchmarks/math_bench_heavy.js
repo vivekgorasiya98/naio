@@ -1,4 +1,4 @@
-// JavaScript twin of math_bench_heavy.neko (same integer semantics).
+// JavaScript twin of math_bench_heavy.niao (same integer semantics).
 // Run:  node benchmarks/math_bench_heavy.js
 
 const MOD = 1000000007;

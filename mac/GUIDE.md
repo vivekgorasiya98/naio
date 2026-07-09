@@ -1,12 +1,12 @@
-# Complete Neko User Guide
+# Complete Niao User Guide
 
-Everything you need to install, run, and write programs in the Neko programming language.
+Everything you need to install, run, and write programs in the Niao programming language.
 
 ---
 
 ## Table of contents
 
-1. [What is Neko?](#what-is-neko)
+1. [What is Niao?](#what-is-niao)
 2. [Install on MacBook](#install-on-macbook)
 3. [Your first program](#your-first-program)
 4. [CLI commands](#cli-commands)
@@ -22,15 +22,15 @@ Everything you need to install, run, and write programs in the Neko programming 
 
 ---
 
-## What is Neko?
+## What is Niao?
 
-Neko is a modern programming language with a built-in runtime, bytecode VM, and standard libraries for JSON, I/O, networking, databases, regex, threading, and more.
+Niao is a modern programming language with a built-in runtime, bytecode VM, and standard libraries for JSON, I/O, networking, databases, regex, threading, and more.
 
 ```
-.neko source  →  Lexer  →  Parser  →  AST  →  VM (fast) or Interpreter
+.niao source  →  Lexer  →  Parser  →  AST  →  VM (fast) or Interpreter
 ```
 
-- **File extension:** `.neko`
+- **File extension:** `.niao`
 - **Default execution:** bytecode VM (fast)
 - **Entry point:** top-level statements run in order (Python-style), or a `main()` function if you define one
 
@@ -50,31 +50,31 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
 ```
 
-### Step 2 — Build Neko (one time, ~5–10 minutes)
+### Step 2 — Build Niao (one time, ~5–10 minutes)
 
 ```bash
 cd mac
-chmod +x setup.sh neko test.sh
+chmod +x setup.sh niao test.sh
 ./setup.sh
 ```
 
-This compiles `neko` and `nm` into `neko_home/bin/`. All standard libraries are already registered — no extra install step.
+This compiles `niao` and `nm` into `niao_home/bin/`. All standard libraries are already registered — no extra install step.
 
 ### Step 3 — Verify
 
 ```bash
-./neko version
-./neko run examples/hello.neko
+./niao version
+./niao run examples/hello.niao
 ./test.sh
 ```
 
-### Use `neko` from anywhere (optional)
+### Use `niao` from anywhere (optional)
 
 Add to `~/.zshrc`:
 
 ```bash
-export NEKO_HOME="/full/path/to/mac/neko_home"
-export PATH="/full/path/to/mac/neko_home/bin:$PATH"
+export NIAO_HOME="/full/path/to/mac/niao_home"
+export PATH="/full/path/to/mac/niao_home/bin:$PATH"
 ```
 
 Reload: `source ~/.zshrc`
@@ -82,8 +82,8 @@ Reload: `source ~/.zshrc`
 Then:
 
 ```bash
-neko version
-neko run myprogram.neko
+niao version
+niao run myprogram.niao
 ```
 
 ### Without PATH setup
@@ -91,36 +91,36 @@ neko run myprogram.neko
 Always use the launcher from inside `mac/`:
 
 ```bash
-./neko run examples/hello.neko
+./niao run examples/hello.niao
 ```
 
 ---
 
 ## Your first program
 
-Create `hello.neko`:
+Create `hello.niao`:
 
-```neko
+```niao
 fn greet(name: string) -> string {
     return "Hello, " + name
 }
 
 fn main() {
-    print(greet("Neko"))
+    print(greet("Niao"))
 }
 ```
 
 Run it:
 
 ```bash
-./neko run hello.neko
+./niao run hello.niao
 # or shorthand:
-./neko hello.neko
+./niao hello.niao
 ```
 
 **Script style** — no `main` required:
 
-```neko
+```niao
 let x = 10
 let y = 32
 print(x + y)
@@ -129,7 +129,7 @@ print(x + y)
 Run:
 
 ```bash
-./neko run script.neko
+./niao run script.niao
 ```
 
 ---
@@ -138,33 +138,33 @@ Run:
 
 | Command | Description |
 |---------|-------------|
-| `neko run <file>` | Run a `.neko` program |
-| `neko <file>` | Shorthand for `neko run <file>` |
-| `neko <file> time` | Run and print execution time |
-| `neko run <file> -t` | Same as above |
-| `neko run <file> --mode interp` | Use interpreter (required for file imports) |
-| `neko version` | Print version |
-| `neko new <name>` | Create a new project |
-| `neko test` | Run all `.neko` files in `tests/` |
-| `neko format <file>` | Print formatted source |
-| `neko format <file> --write` | Format file in place |
-| `neko lint <file>` | Lint source |
-| `neko build <file>` | Compile to bytecode (`.nekobc` cache) |
-| `neko bench <file>` | Benchmark VM runs |
-| `neko serve <file>` | Run web server DSL |
-| `neko docs <file>` | Generate HTML documentation |
-| `neko ahiru create <name>` | Create backend project |
-| `neko ahiru serve` | Run ahiru backend |
+| `niao run <file>` | Run a `.niao` program |
+| `niao <file>` | Shorthand for `niao run <file>` |
+| `niao <file> time` | Run and print execution time |
+| `niao run <file> -t` | Same as above |
+| `niao run <file> --mode interp` | Use interpreter (required for file imports) |
+| `niao version` | Print version |
+| `niao new <name>` | Create a new project |
+| `niao test` | Run all `.niao` files in `tests/` |
+| `niao format <file>` | Print formatted source |
+| `niao format <file> --write` | Format file in place |
+| `niao lint <file>` | Lint source |
+| `niao build <file>` | Compile to bytecode (`.niaobc` cache) |
+| `niao bench <file>` | Benchmark VM runs |
+| `niao serve <file>` | Run web server DSL |
+| `niao docs <file>` | Generate HTML documentation |
+| `niao ahiru create <name>` | Create backend project |
+| `niao ahiru serve` | Run ahiru backend |
 
 ### Pass arguments to your script
 
 ```bash
-./neko run app.neko arg1 arg2
+./niao run app.niao arg1 arg2
 ```
 
 Inside the program, use the `nos` library:
 
-```neko
+```niao
 import "nos"
 
 fn main() {
@@ -181,24 +181,24 @@ fn main() {
 ### VM mode (default)
 
 ```bash
-./neko run program.neko
+./niao run program.niao
 # same as:
-./neko run program.neko --mode vm
+./niao run program.niao --mode vm
 ```
 
 - Fast bytecode execution
-- Caches compiled bytecode in `.neko-build/` (in the current directory)
+- Caches compiled bytecode in `.niao-build/` (in the current directory)
 - Best for: math, loops, classes, most standalone programs
 
 ### Interpreter mode
 
 ```bash
-./neko run program.neko --mode interp
+./niao run program.niao --mode interp
 ```
 
 Required when your program:
 
-- `import`s another `.neko` file (e.g. `import "utils.neko"`)
+- `import`s another `.niao` file (e.g. `import "utils.niao"`)
 - Uses the web server DSL or ahiru imports
 
 The CLI auto-switches to interpreter when it detects file imports.
@@ -206,8 +206,8 @@ The CLI auto-switches to interpreter when it detects file imports.
 ### Execution time
 
 ```bash
-./neko run fibonacci.neko --time
-./neko fibonacci.neko time
+./niao run fibonacci.niao --time
+./niao fibonacci.niao time
 ```
 
 ---
@@ -216,17 +216,17 @@ The CLI auto-switches to interpreter when it detects file imports.
 
 ### Variables
 
-```neko
+```niao
 let x = 42
-let name = "Neko"
+let name = "Niao"
 let ok = true
 ```
 
 ### Types
 
-Neko uses gradual typing — types are optional but supported:
+Niao uses gradual typing — types are optional but supported:
 
-```neko
+```niao
 fn add(a: int, b: int) -> int {
     return a + b
 }
@@ -236,22 +236,22 @@ Common types: `int`, `float`, `string`, `bool`, `array`, `object`, `nil`, `error
 
 Check a value's type:
 
-```neko
+```niao
 print(type(42))       // int
 print(type("hello"))  // string
 ```
 
 ### Strings
 
-```neko
+```niao
 let s = "Hello"
-let combined = s + ", Neko"
+let combined = s + ", Niao"
 let escaped = "line one\nline two"
 ```
 
 ### Arrays
 
-```neko
+```niao
 let nums = [1, 2, 3]
 print(nums[0])
 print(len(nums))
@@ -259,7 +259,7 @@ print(len(nums))
 
 ### Objects
 
-```neko
+```niao
 let user = { name: "Alice", age: 30 }
 print(user.name)
 user.age = 31
@@ -267,7 +267,7 @@ user.age = 31
 
 ### Control flow
 
-```neko
+```niao
 if x > 0 {
     print("positive")
 } else {
@@ -285,7 +285,7 @@ for item in [1, 2, 3] {
 
 ### Functions
 
-```neko
+```niao
 fn square(n: int) -> int {
     return n * n
 }
@@ -295,7 +295,7 @@ print(square(5))
 
 ### Structs (data records)
 
-```neko
+```niao
 struct Point {
     x: int
     y: int
@@ -321,9 +321,9 @@ fn main() {
 
 ## Imports and modules
 
-### Standard library (built into `neko`)
+### Standard library (built into `niao`)
 
-```neko
+```niao
 import "json"
 import "re"
 import "io"
@@ -331,24 +331,24 @@ import "io"
 
 Also works with `std/` prefix:
 
-```neko
+```niao
 import "std/json"
 ```
 
 ### Custom alias
 
-```neko
+```niao
 import "re" as rx
 print(rx.test("\\d+", "x42"))
 ```
 
-### Import another `.neko` file
+### Import another `.niao` file
 
-```neko
-import "math.neko"
+```niao
+import "math.niao"
 
 fn main() {
-    print(add(2, 3))   // function exported from math.neko
+    print(add(2, 3))   // function exported from math.niao
 }
 ```
 
@@ -380,11 +380,11 @@ All libraries below are **pre-installed** in this Mac bundle. Import and use dir
 
 ### Example — JSON
 
-```neko
+```niao
 import "json"
 
 fn main() {
-    let data = json.parse("{\"name\": \"Neko\"}")
+    let data = json.parse("{\"name\": \"Niao\"}")
     print(data.name)
     print(json.stringify(data))
 }
@@ -392,7 +392,7 @@ fn main() {
 
 ### Example — Regex
 
-```neko
+```niao
 import "re"
 
 fn main() {
@@ -405,11 +405,11 @@ fn main() {
 
 ### Example — File I/O
 
-```neko
+```niao
 import "io"
 
 fn main() {
-    io.write_text("out.txt", "Hello from Neko")
+    io.write_text("out.txt", "Hello from Niao")
     print(io.read_text("out.txt"))
 }
 ```
@@ -417,7 +417,7 @@ fn main() {
 ### Test all libraries at once
 
 ```bash
-./neko run examples/libs_smoke.neko
+./niao run examples/libs_smoke.niao
 ```
 
 ---
@@ -426,7 +426,7 @@ fn main() {
 
 ### Class
 
-```neko
+```niao
 class Animal {
     name: string;
 
@@ -443,7 +443,7 @@ fn main() {
 
 ### Inheritance
 
-```neko
+```niao
 class Dog extends Animal {
     fn speak(self) -> string {
         return self.name + " barks"
@@ -453,7 +453,7 @@ class Dog extends Animal {
 
 ### Traits
 
-```neko
+```niao
 trait Drawable {
     fn draw(self) -> string
 }
@@ -473,7 +473,7 @@ Keywords: `class`, `trait`, `extends`, `implements`, `self`, `super`, `static`, 
 
 ## Error handling
 
-```neko
+```niao
 fn risky() -> int {
     throw error("something went wrong")
 }
@@ -490,7 +490,7 @@ fn main() {
 
 Create errors:
 
-```neko
+```niao
 let e = error("failed")
 let e2 = error(4001, "invalid input")
 ```
@@ -502,7 +502,7 @@ let e2 = error(4001, "invalid input")
 ### Create a project
 
 ```bash
-./neko new myapp
+./niao new myapp
 ```
 
 Creates a project folder with starter files.
@@ -512,8 +512,8 @@ Creates a project folder with starter files.
 Put test files in `tests/` and run:
 
 ```bash
-./neko test
-./neko test path/to/tests
+./niao test
+./niao test path/to/tests
 ```
 
 Tests use `assert()` — the program exits with an error if any assertion fails.
@@ -521,17 +521,17 @@ Tests use `assert()` — the program exits with an error if any assertion fails.
 ### Format code
 
 ```bash
-./neko format myfile.neko
-./neko format myfile.neko --write
+./niao format myfile.niao
+./niao format myfile.niao --write
 ```
 
 ### Compile to bytecode
 
 ```bash
-./neko build myfile.neko
+./niao build myfile.niao
 ```
 
-Bytecode is cached under `.neko-build/` in the current working directory.
+Bytecode is cached under `.niao-build/` in the current working directory.
 
 ---
 
@@ -540,8 +540,8 @@ Bytecode is cached under `.neko-build/` in the current working directory.
 `nm` manages library installs. In this Mac bundle, everything is already installed.
 
 ```bash
-./neko_home/bin/nm list
-./neko_home/bin/nm list --installed
+./niao_home/bin/nm list
+./niao_home/bin/nm list --installed
 ```
 
 If you use global PATH:
@@ -554,18 +554,18 @@ nm list --installed
 
 ## Tips and troubleshooting
 
-### `neko: command not found`
+### `niao: command not found`
 
-You have not added Neko to PATH. Either:
+You have not added Niao to PATH. Either:
 
 ```bash
 cd mac
-./neko run examples/hello.neko
+./niao run examples/hello.niao
 ```
 
-Or add `mac/neko_home/bin` to PATH (see [Install on MacBook](#install-on-macbook)).
+Or add `mac/niao_home/bin` to PATH (see [Install on MacBook](#install-on-macbook)).
 
-### `Neko not built yet`
+### `Niao not built yet`
 
 Run setup first:
 
@@ -586,25 +586,25 @@ source "$HOME/.cargo/env"
 
 ### Import errors / module not found
 
-- Standard libs: use `import "json"` not `import "json.neko"`
+- Standard libs: use `import "json"` not `import "json.niao"`
 - File imports: file must be in the same folder or correct relative path
 - File imports need interpreter mode (auto-selected by CLI)
 
 ### Program runs slow the first time
 
-The first `neko run` compiles to bytecode and caches it. Later runs are faster.
+The first `niao run` compiles to bytecode and caches it. Later runs are faster.
 
 ### Use the binary directly for benchmarks
 
 `cargo` adds startup overhead. After setup, benchmark with:
 
 ```bash
-./neko_home/bin/neko bench examples/fibonacci.neko
+./niao_home/bin/niao bench examples/fibonacci.niao
 ```
 
 ### Refresh the Mac bundle (on Windows)
 
-From the main Neko repo:
+From the main Niao repo:
 
 ```powershell
 powershell -File mac/prepare-bundle.ps1
@@ -621,9 +621,9 @@ Then copy the updated `mac/` folder to your MacBook again.
 ./setup.sh
 
 # Run
-./neko run program.neko
-./neko program.neko
-./neko program.neko time
+./niao run program.niao
+./niao program.niao
+./niao program.niao time
 
 # Libraries
 import "json"
@@ -631,7 +631,7 @@ import "re"
 import "io"
 
 # Check install
-./neko version
+./niao version
 ./test.sh
 ```
 
@@ -644,14 +644,14 @@ mac/
   GUIDE.md          ← this file
   README.md         ← short install notes
   setup.sh          ← one-time Mac build
-  neko              ← launcher script
+  niao              ← launcher script
   test.sh           ← smoke tests
   examples/         ← demo programs
   engine/           ← compiler source (for setup.sh)
-  neko_home/
-    bin/            ← neko + nm (after setup)
-    neko_libs/      ← all libraries pre-registered
+  niao_home/
+    bin/            ← niao + nm (after setup)
+    niao_libs/      ← all libraries pre-registered
     install.json
 ```
 
-Happy coding with Neko.
+Happy coding with Niao.

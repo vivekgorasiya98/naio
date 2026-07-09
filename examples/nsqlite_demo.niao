@@ -1,0 +1,48 @@
+import "nsqlite"
+import "io"
+
+fn main() {
+    print("=== Niao nsqlite demo ===")
+
+    let demo_dir = io_join(io_temp_dir(), "niao_nsqlite_demo")
+    io_create_dir_all(demo_dir)
+    io_chdir(demo_dir)
+
+    print("cwd: " + io_cwd())
+
+    let db = nsqlite.open("app.db")
+    print("opened: " + nsqlite.path(db))
+
+    nsqlite.migrate(db, [
+        {
+            version: 1,
+            sql: "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT)"
+        },
+        {
+            version: 2,
+            sql: "CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)"
+        }
+    ])
+
+    nsqlite.insert(db, "users", {name: "Niao", email: "niao@example.com"})
+    nsqlite.insert(db, "users", {name: "Mittens", email: "mittens@example.com"})
+
+    let rows = nsqlite.query(db, "SELECT id, name, email FROM users ORDER BY id")
+    print("users: " + len(rows))
+    print(rows[0].name + " <" + rows[0].email + ">")
+    print(rows[1].name + " <" + rows[1].email + ">")
+
+    let task = nsqlite_async_query(db, "SELECT count(*) AS n FROM users")
+    nsqlite_task_wait(task)
+    let rows = nsqlite_task_result(task)
+    print("async count: " + rows[0].n)
+
+    print("SQLite version: " + nsqlite.version())
+
+    nsqlite.close(db)
+
+    io_remove_file(io_join(demo_dir, "app.db"))
+    io_remove_dir(demo_dir)
+
+    print("done")
+}

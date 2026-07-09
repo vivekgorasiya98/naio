@@ -1,0 +1,25 @@
+trait Greeter {
+    fn greet(self)
+}
+
+class Person implements Greeter {
+    name: string
+
+    static fn new(name: string) -> Person {
+        return Person { name: name }
+    }
+
+    fn greet(self) {
+        print("Hello, " + self.name)
+    }
+}
+
+fn say_hello(g: Greeter) {
+    g.greet()
+}
+
+fn main() {
+    let p = Person.new("Niao")
+    say_hello(p)
+    print(has_trait(p, "Greeter"))
+}

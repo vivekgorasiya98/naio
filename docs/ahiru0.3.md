@@ -5,7 +5,7 @@ Framework expansion release — shared state, custom middleware, route groups, c
 | | |
 |---|---|
 | **Library version** | `0.3.0` |
-| **v3 helpers** | `stdlib/ahiru/v3.neko` → `"3.0.0"` |
+| **v3 helpers** | `stdlib/ahiru/v3.niao` → `"3.0.0"` |
 | **Builtins** | 36 |
 | **Verify** | `nm info ahiru` |
 
@@ -28,18 +28,18 @@ Framework expansion release — shared state, custom middleware, route groups, c
 
 | Command | Description |
 |---------|-------------|
-| `neko ahiru db migrate` | Apply migrations |
-| `neko ahiru db status` | Applied vs pending |
-| `neko ahiru db seed` | Run `seeds/*.sql` |
-| `neko ahiru db rollback` | Roll back last migration (`.down.sql`) |
-| `neko ahiru db reset --force` | Drop SQLite + re-migrate |
-| `neko ahiru doctor` | Config + DB + port checks |
-| `neko ahiru add <feature>` | auth, db, websocket, cache |
-| `neko ahiru generate resource <name>` | Handler + migration scaffold |
-| `neko ahiru openapi` | Emit `public/openapi.json` |
-| `neko ahiru test` | Run `tests/**/*.neko` |
-| `neko ahiru console` | Project REPL stub |
-| `neko ahiru worker` | Job worker entry |
+| `niao ahiru db migrate` | Apply migrations |
+| `niao ahiru db status` | Applied vs pending |
+| `niao ahiru db seed` | Run `seeds/*.sql` |
+| `niao ahiru db rollback` | Roll back last migration (`.down.sql`) |
+| `niao ahiru db reset --force` | Drop SQLite + re-migrate |
+| `niao ahiru doctor` | Config + DB + port checks |
+| `niao ahiru add <feature>` | auth, db, websocket, cache |
+| `niao ahiru generate resource <name>` | Handler + migration scaffold |
+| `niao ahiru openapi` | Emit `public/openapi.json` |
+| `niao ahiru test` | Run `tests/**/*.niao` |
+| `niao ahiru console` | Project REPL stub |
+| `niao ahiru worker` | Job worker entry |
 
 ## Config additions
 

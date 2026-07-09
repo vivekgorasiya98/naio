@@ -1,0 +1,80 @@
+import "nmongo"
+import "nenv"
+import "json"
+
+fn main() {
+    let uri = nenv.get("NIAO_MONGO_URL")
+    if uri == nil {
+        uri = nenv.get("MONGO_URL")
+    }
+    if uri == nil || uri == "" {
+        print("skip: NIAO_MONGO_URL not set")
+        return
+    }
+
+    let client = nmongo.connect_uri(uri)
+    if is_error(client) {
+        print("skip: cannot connect to MongoDB")
+        return
+    }
+    assert(type(client) == "int", "connect returns handle")
+
+    nmongo.ping(client)
+
+    let db = "niao_nmongo_test"
+    let coll = "items"
+
+    nmongo.drop_collection(client, db, coll)
+
+    let ins = nmongo.insert_one(client, db, coll, {name: "alpha", n: 1})
+    assert(!is_error(ins), "insert_one")
+    assert(ins.inserted_id != nil, "inserted_id")
+
+    nmongo.insert_many(client, db, coll, [{name: "beta", n: 2}, {name: "gamma", n: 3}])
+
+    let rows = nmongo.find(client, db, coll, {}, {sort: {n: 1}})
+    assert(len(rows) == 3, "find count")
+    assert(rows[0].name == "alpha", "find sort")
+
+    let one = nmongo.find_one(client, db, coll, {name: "beta"})
+    assert(one.name == "beta", "find_one")
+
+    let cnt = nmongo.count_documents(client, db, coll, json.parse("{\"n\":{\"$gte\":2}}"))
+    assert(cnt == 2, "count_documents")
+
+    let upd = nmongo.update_one(client, db, coll, {name: "gamma"}, json.parse("{\"$set\":{\"n\":99}}"))
+    assert(upd.modified == 1, "update_one")
+
+    nmongo.create_index(client, db, coll, {name: 1})
+    let idx = nmongo.list_indexes(client, db, coll)
+    assert(len(idx) >= 2, "list_indexes")
+
+    let bulk = nmongo.bulk_write(client, db, coll, [
+        {insert_one: {document: {name: "delta", n: 4}}},
+        {delete_one: {filter: {name: "alpha"}}}
+    ])
+    assert(bulk.inserted_count == 1, "bulk insert")
+    assert(bulk.deleted_count == 1, "bulk delete")
+
+    let agg = nmongo.aggregate(client, db, coll, json.parse("[{\"$match\":{\"n\":{\"$gte\":2}}},{\"$count\":\"c\"}]"))
+    assert(len(agg) == 1, "aggregate")
+
+    let oid = nmongo.object_id("507f1f77bcf86cd799439011")
+    assert(nmongo.is_object_id("507f1f77bcf86cd799439011"), "is_object_id")
+
+    nmongo.gridfs_upload(client, db, "t.bin", "testdata")
+    let bin = nmongo.gridfs_download(client, db, "t.bin")
+    assert(len(bin) == 8, "gridfs download")
+    nmongo.gridfs_delete(client, db, "t.bin")
+
+    let task = nmongo_async_find(client, db, coll, {}, {limit: 5})
+    nmongo_task_wait(task)
+    let task_rows = nmongo_task_result(task)
+    assert(!is_error(task_rows), "async find result")
+    assert(len(task_rows) >= 1, "async find rows")
+
+    nmongo.drop_collection(client, db, coll)
+    nmongo.close(client)
+
+    print("nmongo tests ok")
+}

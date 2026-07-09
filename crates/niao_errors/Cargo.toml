@@ -1,0 +1,7 @@
+[package]
+name = "niao_errors"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }

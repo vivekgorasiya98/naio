@@ -1,4 +1,4 @@
-# Run every .neko example/test and measure execution time.
+# Run every .niao example/test and measure execution time.
 # Usage (from repo root):
 #   .\scripts\run-all.ps1
 #   .\scripts\run-all.ps1 -Mode vm
@@ -15,28 +15,28 @@ Set-Location $Root
 $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
 Remove-Item Env:CARGO_TARGET_DIR -ErrorAction SilentlyContinue
 
-$Neko = Join-Path $Root "target\release\neko.exe"
-if (-not (Test-Path $Neko)) {
-    Write-Host "Building neko..." -ForegroundColor Yellow
+$Niao = Join-Path $Root "target\release\niao.exe"
+if (-not (Test-Path $Niao)) {
+    Write-Host "Building niao..." -ForegroundColor Yellow
     cargo build --release
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
 $Skip = @(
-    "examples\web_server.neko"   # long-running server - use: neko serve examples/web_server.neko
+    "examples\web_server.niao"   # long-running server - use: niao serve examples/web_server.niao
 )
 
 $Files = @(
-    Get-ChildItem -Path "examples", "tests" -Filter "*.neko" -File -ErrorAction SilentlyContinue
+    Get-ChildItem -Path "examples", "tests" -Filter "*.niao" -File -ErrorAction SilentlyContinue
 ) | Sort-Object FullName
 
 if ($Files.Count -eq 0) {
-    Write-Error "No .neko files found under examples/ or tests/"
+    Write-Error "No .niao files found under examples/ or tests/"
     exit 1
 }
 
 Write-Host ""
-Write-Host "Neko run-all  (mode: $Mode)" -ForegroundColor Cyan
+Write-Host "Niao run-all  (mode: $Mode)" -ForegroundColor Cyan
 Write-Host ("=" * 60)
 Write-Host ""
 
@@ -56,7 +56,7 @@ foreach ($File in $Files) {
     }
 
     $Sw = [System.Diagnostics.Stopwatch]::StartNew()
-    & $Neko run $File.FullName --mode $Mode 2>&1 | Out-Null
+    & $Niao run $File.FullName --mode $Mode 2>&1 | Out-Null
     $Exit = $LASTEXITCODE
     $Sw.Stop()
     $Ms = $Sw.Elapsed.TotalMilliseconds

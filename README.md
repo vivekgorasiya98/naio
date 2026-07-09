@@ -1,4 +1,4 @@
-# Neko
+# Niao
 
 A modern programming language and complete development ecosystem.
 
@@ -7,49 +7,49 @@ A modern programming language and complete development ecosystem.
 ## Quick Start
 
 ```bash
-cargo build --release
-cargo run --release --bin neko -- run examples/hello.neko
+cargo build --release --no-default-features -p niao_cli -p niao_nm
+cargo run --release --no-default-features --bin niao -- run examples/hello.niao
 # or shorthand:
-cargo run --release --bin neko -- examples/hello.neko
-cargo run --release --bin neko -- examples/hello.neko time   # print execution time
+cargo run --release --bin niao -- examples/hello.niao
+cargo run --release --bin niao -- examples/hello.niao time   # print execution time
 ```
 
-Programs run on the bytecode VM by default (much faster than the AST interpreter). Use `--mode interp` for file `import`s and web DSL features. Classes, traits, structs, objects, `for`-loops, and `try/catch` run on both the VM and interpreter. The first `neko run` compiles to a `.nekobc` cache under `.neko-build/` in the current working directory; later runs skip recompilation when the source file is unchanged. See [docs/VM_MEMORY_AND_CACHE.md](docs/VM_MEMORY_AND_CACHE.md) for VM garbage collection and cache behavior.
+Programs run on the bytecode VM by default (much faster than the AST interpreter). Use `--mode interp` for file `import`s and web DSL features. Classes, traits, structs, objects, `for`-loops, and `try/catch` run on both the VM and interpreter. The first `niao run` compiles to a `.niaobc` cache under `.niao-build/` in the current working directory; later runs skip recompilation when the source file is unchanged. See [docs/VM_MEMORY_AND_CACHE.md](docs/VM_MEMORY_AND_CACHE.md) for VM garbage collection and cache behavior.
 
 Entry points are flexible: statements can live at the top level and run in order, Python-style — no `main` required. If a `main` function is defined, it runs as the entry point (after any top-level statements).
 
 **Benchmark correctly** — `cargo run` adds ~300ms startup. Build once, then use the binary directly:
 
 ```bash
-cargo build --release
-./target/release/neko bench examples/fibonacci.neko
-./target/release/neko run examples/fibonacci.neko
+cargo build --release --no-default-features -p niao_cli
+./target/release/niao bench examples/fibonacci.niao
+./target/release/niao run examples/fibonacci.niao
 ```
 
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `neko run <file>` | Run a .neko program |
-| `neko version` | Print version |
-| `neko new <name>` | Create a new project |
-| `neko test` | Run tests in `tests/` |
-| `neko format <file>` | Format source code |
-| `neko lint <file>` | Lint source code |
-| `neko docs <file>` | Generate HTML docs |
-| `neko build <file>` | Compile to bytecode |
-| `neko serve <file>` | Run web server DSL |
-| `neko ahiru create <name>` | Create ahiru-server backend project (wizard) |
-| `neko ahiru serve` | Run ahiru project |
+| `niao run <file>` | Run a .niao program |
+| `niao version` | Print version |
+| `niao new <name>` | Create a new project |
+| `niao test` | Run tests in `tests/` |
+| `niao format <file>` | Format source code |
+| `niao lint <file>` | Lint source code |
+| `niao docs <file>` | Generate HTML docs |
+| `niao build <file>` | Compile to bytecode |
+| `niao serve <file>` | Run web server DSL |
+| `niao ahiru create <name>` | Create ahiru-server backend project (wizard) |
+| `niao ahiru serve` | Run ahiru project |
 
 See [docs/AHIRU.md](docs/AHIRU.md) for the ahiru-server framework.
 
 ## Project Structure
 
 ```
-Neko/
+Niao/
   crates/          # Rust implementation (NFE engine + CLI)
-  examples/        # Example .neko programs
+  examples/        # Example .niao programs
   tests/           # Test programs
   docs/            # Language spec and decisions
 ```
@@ -57,12 +57,12 @@ Neko/
 ## Architecture
 
 ```
-.neko source → Lexer → Parser → AST → Interpreter / VM
+.niao source → Lexer → Parser → AST → Interpreter / VM
 ```
 
 See [docs/DECISIONS.md](docs/DECISIONS.md) for design decisions.
 
-- [VM memory & bytecode cache](docs/VM_MEMORY_AND_CACHE.md) — mark-compact GC, `.nekobc` / `.neko-build/`
+- [VM memory & bytecode cache](docs/VM_MEMORY_AND_CACHE.md) — mark-compact GC, `.niaobc` / `.niao-build/`
 - [Error codes](docs/ERRORS.md)
 - [Object-oriented programming](docs/OOP.md) — classes, traits, inheritance, `super`, VM opcodes
 - [JSON module](docs/JSON.md)

@@ -1,7 +1,7 @@
 # VM memory management and bytecode cache
 
-This document describes how the Neko bytecode VM reclaims memory under load and how compiled
-programs are cached on disk as `.nekobc` files.
+This document describes how the Niao bytecode VM reclaims memory under load and how compiled
+programs are cached on disk as `.niaobc` files.
 
 For high-level architecture, see [DECISIONS.md](DECISIONS.md). For error codes, see
 [ERRORS.md](ERRORS.md).
@@ -10,7 +10,7 @@ For high-level architecture, see [DECISIONS.md](DECISIONS.md). For error codes, 
 
 ## Overview
 
-Neko uses a **two-layer** memory model on the bytecode VM:
+Niao uses a **two-layer** memory model on the bytecode VM:
 
 | Layer | Mechanism | What it manages |
 |-------|-----------|-----------------|
@@ -25,12 +25,12 @@ Before mark-and-compact GC, arena slots were never freed during a run — loops 
 allocated and discarded values could grow memory until process exit. GC compacts unreachable
 arena slots while the program is still running.
 
-**Bytecode cache** — `neko run` and `neko build` share a project-local cache directory
-(`.neko-build/` by default) so re-runs skip parse → IR → bytecode when the source is
+**Bytecode cache** — `niao run` and `niao build` share a project-local cache directory
+(`.niao-build/` by default) so re-runs skip parse → IR → bytecode when the source is
 unchanged.
 
 **Turbo JIT** — hot integer loops may compile to native code via Cranelift. Set
-`NEKO_NO_JIT=1` to disable JIT and use the micro-op turbo tier only (useful for debugging).
+`NIAO_NO_JIT=1` to disable JIT and use the micro-op turbo tier only (useful for debugging).
 
 ---
 
@@ -52,7 +52,7 @@ drop cleans up nested `Rc` data.
 
 ### Algorithm: mark-and-compact
 
-Implemented in [`crates/neko_vm/src/gc.rs`](../crates/neko_vm/src/gc.rs).
+Implemented in [`crates/niao_vm/src/gc.rs`](../crates/niao_vm/src/gc.rs).
 
 ```
 1. Mark   — set bits for every Heap/Native index reachable from roots
@@ -117,20 +117,20 @@ at **65 536** entries (`MEMO_CACHE_CAP`). When full, the **oldest** entry is e
 ### Verifying GC behavior
 
 ```bash
-cargo test -p neko_vm gc
-cargo run --release --bin neko -- run tests/gc_heap.neko
+cargo test -p niao_vm gc
+cargo run --release --bin niao -- run tests/gc_heap.niao
 ```
 
-`tests/gc_heap.neko` loops 100 000 times creating small arrays that go out of scope each
+`tests/gc_heap.niao` loops 100 000 times creating small arrays that go out of scope each
 iteration. Rust tests assert `heap_len() < 10_000` after the run.
 
 ---
 
-## Bytecode cache (`.nekobc`)
+## Bytecode cache (`.niaobc`)
 
-### What is a `.nekobc` file?
+### What is a `.niaobc` file?
 
-A **JSON-serialized** [`BytecodeModule`](../crates/neko_bytecode/src/lib.rs): opcode
+A **JSON-serialized** [`BytecodeModule`](../crates/niao_bytecode/src/lib.rs): opcode
 streams, constants, call targets, optional whole-program fast path, and cache metadata.
 
 It is **not** a raw binary opcode dump. The on-disk format is UTF-8 JSON for debuggability
@@ -140,42 +140,42 @@ and forward-compatible serde fields.
 
 | Command | Default output directory | Example |
 |---------|------------------------|---------|
-| `neko run <file>` | `<cwd>/.neko-build/` | `examples/factorial.neko` → `.neko-build/examples_factorial.nekobc` |
-| `neko build <file>` | `<cwd>/.neko-build/` (override with `-o`) | same path rule |
+| `niao run <file>` | `<cwd>/.niao-build/` | `examples/factorial.niao` → `.niao-build/examples_factorial.niaobc` |
+| `niao build <file>` | `<cwd>/.niao-build/` (override with `-o`) | same path rule |
 
 **Path key** — relative path from current working directory, with `/` and `\` replaced by
-`_`, and `.neko` stripped from the stem:
+`_`, and `.niao` stripped from the stem:
 
 ```
-examples/factorial.neko  →  .neko-build/examples_factorial.nekobc
-src/main.neko            →  .neko-build/src_main.nekobc
-a/foo.neko vs b/foo.neko →  distinct keys (no stem collision)
+examples/factorial.niao  →  .niao-build/examples_factorial.niaobc
+src/main.niao            →  .niao-build/src_main.niaobc
+a/foo.niao vs b/foo.niao →  distinct keys (no stem collision)
 ```
 
-Sidecar `source.nekobc` files next to `.neko` sources are **no longer written** by
-`neko run`. Old sidecar files are ignored.
+Sidecar `source.niaobc` files next to `.niao` sources are **no longer written** by
+`niao run`. Old sidecar files are ignored.
 
-Both `.neko-build/` and `*.nekobc` are listed in [`.gitignore`](../.gitignore).
+Both `.niao-build/` and `*.niaobc` are listed in [`.gitignore`](../.gitignore).
 
 ### Load / compile flow
 
 ```
-neko run file.neko
-  → cache_path(file, .neko-build/)
+niao run file.niao
+  → cache_path(file, .niao-build/)
   → if cache exists AND mtime fresh AND deserialize valid
        → load BytecodeModule, ensure_fast_path()
   → else
        → parse → compile_to_bytecode → write cache → run VM
 ```
 
-Implemented in [`crates/neko_cli/src/cache.rs`](../crates/neko_cli/src/cache.rs).
+Implemented in [`crates/niao_cli/src/cache.rs`](../crates/niao_cli/src/cache.rs).
 
 ### Cache invalidation
 
 A cached module is reused only when **all** of the following hold:
 
 1. **Source mtime** — cache file modified time ≥ source modified time
-2. **`cache_version`** — matches `BYTECODE_CACHE_VERSION` in `neko_bytecode`
+2. **`cache_version`** — matches `BYTECODE_CACHE_VERSION` in `niao_bytecode`
 3. **`builtin_fingerprint`** — matches current runtime builtin table
 4. **Call targets** — builtin names at compile-time indices still match runtime order
 
@@ -183,10 +183,10 @@ If any check fails, the cache is recompiled and overwritten.
 
 ### Atomic writes
 
-Cache files are written as `*.nekobc.tmp` then renamed to `*.nekobc`. If the write fails
-(e.g. permissions), `neko run` prints a **warning** and still executes the program.
+Cache files are written as `*.niaobc.tmp` then renamed to `*.niaobc`. If the write fails
+(e.g. permissions), `niao run` prints a **warning** and still executes the program.
 
-`neko build` propagates write errors (uses `write_cache_atomic` with `Result`).
+`niao build` propagates write errors (uses `write_cache_atomic` with `Result`).
 
 ### Metadata
 
@@ -198,16 +198,16 @@ version + fingerprint.
 
 | Command | Cache behavior |
 |---------|----------------|
-| `neko bench` | Compiles in memory only |
-| `neko test` | Interpreter path |
-| `--mode interp` | No bytecode / no `.nekobc` |
+| `niao bench` | Compiles in memory only |
+| `niao test` | Interpreter path |
+| `--mode interp` | No bytecode / no `.niaobc` |
 
 ### Verifying cache behavior
 
 ```bash
-cargo test -p neko_cli cache
-neko run examples/factorial.neko    # creates .neko-build/examples_factorial.nekobc
-neko build examples/factorial.neko  # same path under default -o .neko-build
+cargo test -p niao_cli cache
+niao run examples/factorial.niao    # creates .niao-build/examples_factorial.niaobc
+niao build examples/factorial.niao  # same path under default -o .niao-build
 ```
 
 ---
@@ -216,13 +216,13 @@ neko build examples/factorial.neko  # same path under default -o .neko-build
 
 | File | Responsibility |
 |------|----------------|
-| [`crates/neko_vm/src/gc.rs`](../crates/neko_vm/src/gc.rs) | Mark-compact GC, memo cap, GC tests |
-| [`crates/neko_vm/src/lib.rs`](../crates/neko_vm/src/lib.rs) | VM dispatch, `maybe_collect`, allocation sites |
-| [`crates/neko_vm/src/fast_val.rs`](../crates/neko_vm/src/fast_val.rs) | `FastVal`, `HeapAlloc`, stack representations |
-| [`crates/neko_cli/src/cache.rs`](../crates/neko_cli/src/cache.rs) | Cache path, load/compile, atomic I/O, tests |
-| [`crates/neko_cli/src/main.rs`](../crates/neko_cli/src/main.rs) | `run` / `build` wiring |
-| [`crates/neko_bytecode/src/lib.rs`](../crates/neko_bytecode/src/lib.rs) | `BytecodeModule`, serialize, `BYTECODE_CACHE_VERSION` |
-| [`tests/gc_heap.neko`](../tests/gc_heap.neko) | GC load smoke program |
+| [`crates/niao_vm/src/gc.rs`](../crates/niao_vm/src/gc.rs) | Mark-compact GC, memo cap, GC tests |
+| [`crates/niao_vm/src/lib.rs`](../crates/niao_vm/src/lib.rs) | VM dispatch, `maybe_collect`, allocation sites |
+| [`crates/niao_vm/src/fast_val.rs`](../crates/niao_vm/src/fast_val.rs) | `FastVal`, `HeapAlloc`, stack representations |
+| [`crates/niao_cli/src/cache.rs`](../crates/niao_cli/src/cache.rs) | Cache path, load/compile, atomic I/O, tests |
+| [`crates/niao_cli/src/main.rs`](../crates/niao_cli/src/main.rs) | `run` / `build` wiring |
+| [`crates/niao_bytecode/src/lib.rs`](../crates/niao_bytecode/src/lib.rs) | `BytecodeModule`, serialize, `BYTECODE_CACHE_VERSION` |
+| [`tests/gc_heap.niao`](../tests/gc_heap.niao) | GC load smoke program |
 
 ---
 
@@ -251,8 +251,8 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    Source[".neko source"]
-    Cache[".neko-build/*.nekobc"]
+    Source[".niao source"]
+    Cache[".niao-build/*.niaobc"]
     Compile["parse → IR → bytecode"]
     VM["Bytecode VM + GC"]
 

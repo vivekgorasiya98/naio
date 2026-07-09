@@ -1,17 +1,17 @@
-# Neko Error Handling
+# Niao Error Handling
 
-Complete reference for Neko’s typed error system — from language-level `try/catch` to the Rust `neko_errors` crate used by the toolchain.
+Complete reference for Niao’s typed error system — from language-level `try/catch` to the Rust `niao_errors` crate used by the toolchain.
 
 ---
 
 ## Overview
 
-Neko provides **structured errors** at two levels:
+Niao provides **structured errors** at two levels:
 
 | Layer | Type | Purpose |
 |-------|------|---------|
 | **Language** | `error` value type | User programs catch, inspect, and throw errors |
-| **Rust toolchain** | `neko_errors` crate | Lexer, parser, compiler, VM, and CLI diagnostics |
+| **Rust toolchain** | `niao_errors` crate | Lexer, parser, compiler, VM, and CLI diagnostics |
 
 All runtime failures use a consistent **`E####`** code format with optional source location (`line`, `col`).
 
@@ -33,7 +33,7 @@ Errors are first-class values with type `error`. Each error exposes these fields
 
 Access fields with member syntax:
 
-```neko
+```niao
 catch (e) {
     print(e.message)
     print(e.code)
@@ -42,7 +42,7 @@ catch (e) {
 
 Use `type(value)` to confirm a value is an error:
 
-```neko
+```niao
 if is_error(e) {
     print("got an error: " + e.message)
 }
@@ -50,7 +50,7 @@ if is_error(e) {
 
 ### Creating errors — `error()`
 
-```neko
+```niao
 // Message only (code E2007, kind "thrown")
 let e1 = error("something failed")
 
@@ -60,7 +60,7 @@ let e2 = error(4001, "invalid input")
 
 ### Throwing errors — `throw`
 
-```neko
+```niao
 fn require_positive(n: int) {
     if n <= 0 {
         throw error("expected positive number")
@@ -72,7 +72,7 @@ You may `throw` any value. Non-error values are automatically wrapped as a throw
 
 ### Catching errors — `try/catch`
 
-```neko
+```niao
 try {
     let result = risky_operation()
     print(result)
@@ -88,7 +88,7 @@ Runtime failures (division by zero, undefined variables, type errors, failed ass
 
 ### Assertions — `assert()`
 
-```neko
+```niao
 assert(condition)
 assert(condition, "custom message")
 ```
@@ -247,42 +247,42 @@ error[E2001]: division by zero at line 4, col 15
 Use interpreter mode for full error-handling features:
 
 ```bash
-neko run examples/errors.neko --mode interp
+niao run examples/errors.niao --mode interp
 ```
 
 ---
 
-## Rust API — `neko_errors` crate
+## Rust API — `niao_errors` crate
 
-The `neko_errors` crate is the single source of truth for error types across the Neko toolchain.
+The `niao_errors` crate is the single source of truth for error types across the Niao toolchain.
 
 ### Module layout
 
 ```
-neko_errors/
+niao_errors/
   codes.rs       — Error code constants (E0001, E2001, …)
   diagnostic.rs  — Diagnostic, Severity, ErrorCategory
-  runtime.rs     — RuntimeError, NekoResult<T>
-  value.rs       — NekoErrorValue (language-level error struct)
-  neko_error.rs  — NekoError, LexError, ParseError, CompileError, VmError
+  runtime.rs     — RuntimeError, NiaoResult<T>
+  value.rs       — NiaoErrorValue (language-level error struct)
+  niao_error.rs  — NiaoError, LexError, ParseError, CompileError, VmError
   handler.rs     — ErrorHandler (formatting and reporting)
 ```
 
 ### Quick example
 
 ```rust
-use neko_errors::{RuntimeError, ErrorHandler, NekoError};
-use neko_ast::Span;
+use niao_errors::{RuntimeError, ErrorHandler, NiaoError};
+use niao_ast::Span;
 
 // Create a runtime error
 let err = RuntimeError::division_by_zero(Span { line: 4, col: 15, ..Span::dummy() });
 
 // Convert to top-level error
-let neko_err = NekoError::Runtime(err);
+let niao_err = NiaoError::Runtime(err);
 
 // Format for stderr
 let handler = ErrorHandler::new();
-eprintln!("{}", handler.format_error(&neko_err));
+eprintln!("{}", handler.format_error(&niao_err));
 // → error[E2001]: division by zero at line 4, col 15
 ```
 
@@ -290,7 +290,7 @@ eprintln!("{}", handler.format_error(&neko_err));
 
 #### `RuntimeError`
 
-Primary execution error. Variants include `DivisionByZero`, `UndefinedVar`, `TypeError`, `AssertFailed`, `Thrown(NekoErrorValue)`, and more.
+Primary execution error. Variants include `DivisionByZero`, `UndefinedVar`, `TypeError`, `AssertFailed`, `Thrown(NiaoErrorValue)`, and more.
 
 Methods:
 
@@ -298,19 +298,19 @@ Methods:
 - `RuntimeError::division_by_zero(span)`
 - `RuntimeError::undefined_var(name, span)`
 - `RuntimeError::type_error(message, span)`
-- `RuntimeError::thrown(NekoErrorValue)`
+- `RuntimeError::thrown(NiaoErrorValue)`
 - `.code() -> u32`
 - `.span() -> Option<Span>`
 - `.kind_name() -> &str`
 - `.diagnostic() -> Diagnostic`
-- `.to_neko_error_value() -> NekoErrorValue`
+- `.to_niao_error_value() -> NiaoErrorValue`
 
-#### `NekoErrorValue`
+#### `NiaoErrorValue`
 
 Language-level error struct stored in `Value::Error`:
 
 ```rust
-pub struct NekoErrorValue {
+pub struct NiaoErrorValue {
     pub code: u32,
     pub kind: String,
     pub message: String,
@@ -319,12 +319,12 @@ pub struct NekoErrorValue {
 }
 ```
 
-#### `NekoError`
+#### `NiaoError`
 
 Top-level enum composing all toolchain errors:
 
 ```rust
-pub enum NekoError {
+pub enum NiaoError {
     Lex(LexError),
     Parse(ParseError),
     Compile(CompileError),
@@ -340,7 +340,7 @@ Formats and reports errors consistently:
 
 ```rust
 let handler = ErrorHandler::new().with_color(true);
-handler.report(&neko_err)?;
+handler.report(&niao_err)?;
 ```
 
 #### `Diagnostic`
@@ -353,30 +353,30 @@ Structured diagnostic with code, category, severity, message, span, and optional
 
 | Crate | Uses |
 |-------|------|
-| `neko_lexer` | Re-exports `LexError` from `neko_errors` |
-| `neko_parser` | Re-exports `ParseError`; lex errors preserve line/col |
-| `neko_runtime` | Re-exports `RuntimeError`; adds `Value::Error` |
-| `neko_interpreter` | `try/catch`, `throw`, error field access |
-| `neko_vm` | Propagates `RuntimeError` with E#### codes |
-| `neko_cli` | Displays formatted errors to stderr |
+| `niao_lexer` | Re-exports `LexError` from `niao_errors` |
+| `niao_parser` | Re-exports `ParseError`; lex errors preserve line/col |
+| `niao_runtime` | Re-exports `RuntimeError`; adds `Value::Error` |
+| `niao_interpreter` | `try/catch`, `throw`, error field access |
+| `niao_vm` | Propagates `RuntimeError` with E#### codes |
+| `niao_cli` | Displays formatted errors to stderr |
 
 ---
 
 ## Examples
 
-- [`examples/errors.neko`](../examples/errors.neko) — try/catch, throw, error fields
-- [`tests/errors_typed.neko`](../tests/errors_typed.neko) — automated typed error tests
+- [`examples/errors.niao`](../examples/errors.niao) — try/catch, throw, error fields
+- [`tests/errors_typed.niao`](../tests/errors_typed.niao) — automated typed error tests
 
 Run the example:
 
 ```bash
-neko run examples/errors.neko --mode interp
+niao run examples/errors.niao --mode interp
 ```
 
 Run typed error tests:
 
 ```bash
-neko run tests/errors_typed.neko --mode interp
+niao run tests/errors_typed.niao --mode interp
 ```
 
 ---
@@ -397,6 +397,6 @@ See [`grammar.ebnf`](grammar.ebnf) for the full grammar.
 
 1. **Consistent codes** — Every error has an `E####` code; no silent format differences.
 2. **Structured catch** — Catch blocks receive typed `error` values, not strings.
-3. **Single crate** — `neko_errors` centralizes codes, diagnostics, and formatting.
+3. **Single crate** — `niao_errors` centralizes codes, diagnostics, and formatting.
 4. **Backward compatible** — Existing `RuntimeError` call sites continue to work; Display output is now uniform.
 5. **Progressive enhancement** — VM path gets runtime errors; interpreter path gets full try/catch/throw.

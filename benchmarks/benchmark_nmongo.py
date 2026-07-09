@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-language MongoDB benchmark: Neko vs Python vs Node."""
+"""Cross-language MongoDB benchmark: Niao vs Python vs Node."""
 
 from __future__ import annotations
 
@@ -15,9 +15,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-NEKO_BENCH = ROOT / "nmongo_bench.neko"
-MONGO_URI = os.environ.get("NEKO_MONGO_URL", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
-DB = "neko_bench"
+NIAO_BENCH = ROOT / "nmongo_bench.niao"
+MONGO_URI = os.environ.get("NIAO_MONGO_URL", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+DB = "niao_bench"
 
 BENCHMARKS = [
     ("insert_one_loop", [1_000, 10_000]),
@@ -44,16 +44,16 @@ class BenchResult:
         return min(self.times_ms) if self.times_ms else float("inf")
 
 
-def find_neko() -> str:
+def find_niao() -> str:
     for candidate in (
-        shutil.which("neko"),
-        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "neko.exe",
-        ROOT.parent / "target" / "release" / "neko.exe",
-        ROOT.parent / "target" / "debug" / "neko.exe",
+        shutil.which("niao"),
+        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "niao.exe",
+        ROOT.parent / "target" / "release" / "niao.exe",
+        ROOT.parent / "target" / "debug" / "niao.exe",
     ):
         if candidate and Path(candidate).is_file():
             return str(candidate)
-    raise FileNotFoundError("neko not found")
+    raise FileNotFoundError("niao not found")
 
 
 def mongo_available() -> bool:
@@ -68,9 +68,9 @@ def mongo_available() -> bool:
         return False
 
 
-def time_neko(neko: str, bench: str, n: int, runs: int) -> BenchResult:
-    result = BenchResult(f"neko:{bench}:{n}")
-    cmd = [neko, "run", "--mode", "vm", str(NEKO_BENCH), bench, str(n)]
+def time_niao(niao: str, bench: str, n: int, runs: int) -> BenchResult:
+    result = BenchResult(f"niao:{bench}:{n}")
+    cmd = [niao, "run", "--mode", "vm", str(NIAO_BENCH), bench, str(n)]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
     for _ in range(runs):
         start = time.perf_counter()
@@ -113,9 +113,9 @@ def time_node(bench: str, n: int, runs: int) -> BenchResult:
     return result
 
 
-def neko_version(neko: str) -> str:
+def niao_version(niao: str) -> str:
     try:
-        out = subprocess.check_output([neko, "--version"], text=True).strip()
+        out = subprocess.check_output([niao, "--version"], text=True).strip()
         return out
     except Exception:
         return "unknown"
@@ -131,38 +131,38 @@ def main() -> int:
         print("MongoDB not available at", MONGO_URI)
         return 1
 
-    neko = find_neko()
+    niao = find_niao()
     runs = 1 if args.quick else args.runs
     benches = BENCHMARKS
     if args.quick:
         benches = [(name, [1_000]) for name, _ in BENCHMARKS]
 
-    print(f"Neko: {neko_version(neko)} (mode=vm)")
+    print(f"Niao: {niao_version(niao)} (mode=vm)")
     print(f"MongoDB URI: {MONGO_URI}")
 
     rows: list[tuple[str, int, float, float, float, str]] = []
-    totals = {"Neko": 0.0, "Python": 0.0, "Node": 0.0}
-    wins = {"Neko": 0, "Python": 0, "Node": 0}
+    totals = {"Niao": 0.0, "Python": 0.0, "Node": 0.0}
+    wins = {"Niao": 0, "Python": 0, "Node": 0}
 
     for bench, sizes in benches:
         for n in sizes:
-            nk = time_neko(neko, bench, n, runs).best_ms
+            nk = time_niao(niao, bench, n, runs).best_ms
             py = time_python(bench, n, runs).best_ms
             nd = time_node(bench, n, runs).best_ms
-            totals["Neko"] += nk
+            totals["Niao"] += nk
             totals["Python"] += py
             totals["Node"] += nd
             best = min(nk, py, nd)
-            winner = "Neko" if best == nk else "Python" if best == py else "Node"
+            winner = "Niao" if best == nk else "Python" if best == py else "Node"
             wins[winner] += 1
             rows.append((bench, n, nk, py, nd, winner))
 
     overall = min(totals, key=totals.get)
     print()
     print(f"Overall winner: {overall} ({totals[overall]:,.1f} ms total)")
-    print(f"Wins: Neko={wins['Neko']} Python={wins['Python']} Node={wins['Node']}")
+    print(f"Wins: Niao={wins['Niao']} Python={wins['Python']} Node={wins['Node']}")
     print()
-    print(f"{'Benchmark':<24} {'n':>8} {'Neko':>10} {'Python':>10} {'Node':>10}  Winner")
+    print(f"{'Benchmark':<24} {'n':>8} {'Niao':>10} {'Python':>10} {'Node':>10}  Winner")
     for bench, n, nk, py, nd, winner in rows:
         print(f"{bench:<24} {n:>8,} {nk:>10.2f} {py:>10.2f} {nd:>10.2f}  {winner}")
 

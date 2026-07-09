@@ -1,0 +1,78 @@
+// DSA library benchmark: native structures under heavy load.
+// Run:  niao run benchmarks/dsa_bench.niao
+import "dsa"
+
+fn main() {
+    // heap: 200k pushes + 200k pops (heap sort of random data)
+    let t0 = now_ms()
+    let data = make_random_int_array(200000)
+    let h = heap_new_min()
+    let i = 0
+    let n = len(data)
+    while i < n {
+        heap_push(h, data[i])
+        i = i + 1
+    }
+    let prev = heap_pop(h)
+    let ok = true
+    while !heap_is_empty(h) {
+        let cur = heap_pop(h)
+        if cur < prev {
+            ok = false
+        }
+        prev = cur
+    }
+    assert(ok, "heap produced sorted order")
+    print("heap 200k push+pop: " + (now_ms() - t0) + " ms")
+
+    // queue: 500k enqueue/dequeue
+    let t1 = now_ms()
+    let q = queue_new()
+    i = 0
+    while i < 500000 {
+        queue_push(q, i)
+        i = i + 1
+    }
+    let total = 0
+    while !queue_is_empty(q) {
+        total = total + queue_pop(q)
+    }
+    assert(total == 124999750000, "queue sum")
+    print("queue 500k push+pop: " + (now_ms() - t1) + " ms")
+
+    // set: 200k inserts + 200k lookups
+    let t2 = now_ms()
+    let s = set_new()
+    i = 0
+    while i < 200000 {
+        set_add(s, i * 7)
+        i = i + 1
+    }
+    let hits = 0
+    i = 0
+    while i < 200000 {
+        if set_contains(s, i) {
+            hits = hits + 1
+        }
+        i = i + 1
+    }
+    assert(hits > 0, "set lookups")
+    print("set 200k add + 200k lookup: " + (now_ms() - t2) + " ms")
+
+    // native sort + binary search on 1M ints
+    let t3 = now_ms()
+    let big = make_random_int_array(1000000)
+    sort(big)
+    assert(is_sorted(big), "1M sort")
+    i = 0
+    let found = 0
+    while i < 100000 {
+        if binary_search(big, i * 10) >= 0 {
+            found = found + 1
+        }
+        i = i + 1
+    }
+    print("sort 1M + 100k binary searches: " + (now_ms() - t3) + " ms")
+
+    print("dsa bench done")
+}

@@ -1,0 +1,10 @@
+[package]
+name = "niao_lexer"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_errors = { workspace = true }
+
+[dev-dependencies]

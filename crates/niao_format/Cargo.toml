@@ -1,0 +1,8 @@
+[package]
+name = "niao_format"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_parser = { workspace = true }

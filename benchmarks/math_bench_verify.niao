@@ -1,0 +1,18 @@
+// Correctness check for benchmark_math.py — same loop as math_bench.niao.
+
+fn heavy_math(n: int) -> int {
+    let acc = 12345
+    let i = 0
+    while i < n {
+        acc = (acc + i) % 1000000007
+        acc = (acc - (i % 997) + 1000000007) % 1000000007
+        acc = (acc * 3) % 1000000007
+        acc = acc // 2
+        i = i + 1
+    }
+    return acc
+}
+
+fn main() {
+    print(heavy_math(10000000))
+}

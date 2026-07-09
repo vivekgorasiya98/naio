@@ -3,7 +3,7 @@ use std::any::Any;
 use std::collections::HashMap;
 use std::sync::Arc;
 
-/// Shared application state — string values round-trip to Neko; native handles for Rust subsystems.
+/// Shared application state — string values round-trip to Niao; native handles for Rust subsystems.
 #[derive(Clone, Default)]
 pub struct AppStateStore {
     pub values: Arc<DashMap<String, String>>,

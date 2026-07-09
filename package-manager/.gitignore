@@ -1,0 +1,8 @@
+node_modules/
+data/
+.env
+.credentials.local
+*.log
+.DS_Store
+.test-tmp/
+.test-niao-home/

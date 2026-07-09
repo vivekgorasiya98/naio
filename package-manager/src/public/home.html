@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Download Niao — language runtime (VM + NFE), nm package manager. Libraries install via nm only." />
+  <title>Niao — Download</title>
+  <!--SITE_DATA-->
+  <style>
+    :root {
+      --bg: #0a0e14;
+      --bg-elevated: #111820;
+      --card: #151d28;
+      --card-hover: #1a2433;
+      --border: #243044;
+      --accent: #3d9eff;
+      --accent-dim: rgba(61, 158, 255, 0.12);
+      --green: #3dd68c;
+      --green-dim: rgba(61, 214, 140, 0.12);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167, 139, 250, 0.12);
+      --text: #e8eef5;
+      --muted: #8b9cb3;
+      --muted-2: #5c6d82;
+      --radius: 14px;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(61, 158, 255, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(167, 139, 250, 0.08), transparent),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    nav { display: flex; gap: 1.25rem; font-size: 0.9rem; }
+    nav a { color: var(--muted); }
+    nav a:hover { color: var(--text); text-decoration: none; }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 0 3rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 1.75rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 8px 24px rgba(61, 158, 255, 0.25); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+    section { margin-bottom: 3rem; }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 { font-size: 1.35rem; font-weight: 700; }
+    .section-head p { color: var(--muted); font-size: 0.9rem; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.85rem; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .card:hover { background: var(--card-hover); border-color: #2f4058; }
+
+    .card h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .card p { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.85rem; }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .pill-native { background: var(--accent-dim); color: var(--accent); }
+    .pill-remote { background: var(--purple-dim); color: var(--purple); }
+    .pill-ver { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+    .download-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .btn-sm {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(61,158,255,0.35); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    pre, code {
+      font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+      font-size: 0.82rem;
+    }
+
+    pre {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      overflow-x: auto;
+      color: #c5d4e8;
+    }
+
+    .copy-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .copy-row pre { flex: 1; margin: 0; }
+
+    .copy-btn {
+      align-self: stretch;
+      padding: 0 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover { color: var(--text); }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .platform {
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      text-align: center;
+    }
+
+    .platform strong { display: block; margin-bottom: 0.35rem; }
+    .platform span { color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 0.75rem; }
+    .platform-btns { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; }
+    .platform-curl { color: var(--muted-2); font-size: 0.68rem; margin-top: 0.5rem; word-break: break-all; line-height: 1.35; }
+    .platform-recommended { border-color: var(--purple); border-style: solid; box-shadow: 0 0 0 1px rgba(139,92,246,0.15); }
+
+    .search {
+      width: 100%;
+      max-width: 320px;
+      padding: 0.6rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .search:focus { outline: 2px solid var(--accent-dim); border-color: var(--accent); }
+
+    .api-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .api-links a {
+      padding: 0.55rem 0.9rem;
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted-2);
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .loading { color: var(--muted); text-align: center; padding: 2rem; }
+
+    @media (max-width: 640px) {
+      nav { display: none; }
+      header { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">N</div>
+        <span id="brand-name">Niao</span>
+      </div>
+      <nav>
+        <a href="#download">Download Niao</a>
+        <a href="#libraries">Libraries (nm)</a>
+        <a href="#api">API</a>
+        <a href="/admin/" id="admin-link">Admin</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="badge" id="version-badge">v0.2.2</div>
+      <h1>Download Niao</h1>
+      <p id="tagline">Language runtime (VM + NFE), nm package manager — one-click installers for every platform</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#download" id="hero-download">↓ Download installer</a>
+        <a class="btn btn-secondary" href="#libraries">Install libraries with nm</a>
+        <a class="btn btn-ghost" id="hero-github" href="#" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="section-head">
+        <div>
+          <h2>Download Niao toolchain</h2>
+          <p><code>niao</code> runtime + <code>nm</code> package manager for every platform</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;">
+          <label style="color:var(--muted);font-size:0.85rem;">Version</label>
+          <select id="release-select" class="search" style="max-width:200px;"></select>
+          <span id="release-status" class="pill pill-ver">latest</span>
+        </div>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem;padding:0.65rem 0.85rem;background:var(--bg-elevated);border-radius:8px;border:1px solid var(--border);">
+          <strong>One-click installers</strong> put <code>niao</code> and <code>nm</code> on your PATH automatically.
+          Windows installer also includes standard libraries. Optional libraries: <code>nm install &lt;library&gt;</code>.
+        </p>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="binaries" type="button">Installers</button>
+          <button class="tab" data-tab="source" type="button">Source code</button>
+          <button class="tab" data-tab="install" type="button">nm setup</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-binaries">
+          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">
+            Run the installer for your OS — <code>niao</code> and <code>nm</code> are added to PATH.
+            Portable archives are available as an advanced option.
+          </p>
+          <div class="platform-grid" id="binary-grid"></div>
+        </div>
+
+        <div class="tab-panel" id="panel-source">
+          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">
+            Full language source from GitHub — compiler, VM, runtime, and NFE engine.
+          </p>
+          <div class="download-row" id="source-downloads"></div>
+          <div class="copy-row" style="margin-top:1rem;">
+            <pre id="cmd-clone">git clone https://github.com/vivekgorasiya98/naio.git</pre>
+            <button class="copy-btn" data-copy="cmd-clone" type="button">Copy</button>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-top:0.85rem;">
+            Build from source: <code>cargo build --release --no-default-features -p niao_cli -p niao_nm</code>
+          </p>
+        </div>
+
+        <div class="tab-panel" id="panel-install">
+          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">
+            After installing <code>niao</code> and <code>nm</code>, install the standard library bundle to <code>~/.niao</code>:
+          </p>
+          <div class="copy-row">
+            <pre id="cmd-global">nm install --global</pre>
+            <button class="copy-btn" data-copy="cmd-global" type="button">Copy</button>
+          </div>
+          <p style="color:var(--muted);font-size:0.85rem;margin:1rem 0 0.5rem;">Then install optional libraries (fetched by nm from registry API):</p>
+          <div id="install-examples"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="libraries">
+      <div class="section-head">
+        <div>
+          <h2>Libraries — install with nm</h2>
+          <p id="lib-count">Loading catalog…</p>
+        </div>
+        <input class="search" id="lib-search" type="search" placeholder="Search libraries…" autocomplete="off" />
+      </div>
+      <p style="color:var(--muted);font-size:0.88rem;margin:-0.5rem 0 1.25rem;max-width:720px;">
+        Package libraries are <strong>not</strong> available as direct downloads on this site.
+        Use <code>nm install &lt;name&gt;</code> — nm resolves versions from the registry API and installs to your toolchain.
+      </p>
+      <div id="remote-section" style="display:none;margin-bottom:1.25rem;">
+        <h3 style="font-size:0.95rem;color:var(--purple);margin-bottom:0.65rem;">Remote libraries (via nm)</h3>
+        <div class="grid-2" id="remote-libs"></div>
+      </div>
+      <h3 style="font-size:0.95rem;color:var(--muted);margin-bottom:0.65rem;">Standard libraries (via nm)</h3>
+      <div class="grid-3" id="standard-libs">
+        <div class="loading">Loading…</div>
+      </div>
+    </section>
+
+    <section id="api">
+      <div class="section-head">
+        <div>
+          <h2>Registry API</h2>
+          <p>For <code>nm</code> clients and automation</p>
+        </div>
+      </div>
+      <div class="api-links" id="api-links"></div>
+    </section>
+
+    <footer>
+      <span id="footer-left">Niao package registry</span>
+      <span id="footer-right"></span>
+    </footer>
+  </div>
+
+  <script>
+    const site = JSON.parse(document.getElementById('site-data')?.textContent || '{}');
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = s ?? '';
+      return d.innerHTML;
+    }
+
+    function libCard(name, lib, remote) {
+      const versions = lib.versions || [lib.version];
+      const latest = lib.version || versions[versions.length - 1];
+      const pillClass = remote ? 'pill-remote' : 'pill-native';
+      const label = remote ? 'remote' : 'bundled';
+      const installCmd = `nm install ${name}`;
+      return `
+        <article class="card" data-name="${esc(name)}">
+          <h3>${esc(name)}</h3>
+          <div class="card-meta">
+            <span class="pill ${pillClass}">${label}</span>
+            <span class="pill pill-ver">v${esc(latest)}</span>
+            ${lib.builtin_count ? `<span class="pill pill-ver">${lib.builtin_count} builtins</span>` : ''}
+          </div>
+          <p>${esc(lib.description || '')}</p>
+          <div class="copy-row">
+            <pre>${esc(installCmd)}</pre>
+            <button class="copy-btn" data-copy-text="${esc(installCmd)}" type="button">Copy</button>
+          </div>
+        </article>`;
+    }
+
+    let selectedRelease = null;
+
+    function detectPlatformId() {
+      const ua = navigator.userAgent || '';
+      const plat = navigator.platform || '';
+      if (/Win/i.test(ua) || /Win/i.test(plat)) return 'windows-x64';
+      if (/Mac/i.test(plat) || /Mac/i.test(ua)) {
+        return navigator.userAgent.includes('Intel') ? 'macos-x64' : 'macos-arm64';
+      }
+      if (/Linux/i.test(plat) || /Linux/i.test(ua)) {
+        return ua.includes('aarch64') || ua.includes('arm64') ? 'linux-arm64' : 'linux-x64';
+      }
+      return null;
+    }
+
+    function renderReleasePanel() {
+      const releases = site.releases || [];
+      const sel = document.getElementById('release-select');
+      sel.innerHTML = releases.map((r) => `<option value="${esc(r.version)}" ${r.is_latest ? 'selected' : ''}>v${esc(r.version)}${r.is_latest ? ' (latest)' : ''}${r.status !== 'active' ? ` — ${r.status}` : ''}</option>`).join('');
+      selectedRelease = releases.find((r) => r.version === sel.value) || releases[0];
+      if (!selectedRelease) return;
+
+      document.getElementById('release-status').textContent = selectedRelease.is_latest ? 'latest' : (selectedRelease.status || 'release');
+      const src = selectedRelease.source || {};
+      const gh = site.github;
+      const tag = `v${selectedRelease.version}`;
+      document.getElementById('source-downloads').innerHTML = `
+        <a class="btn btn-primary btn-sm" href="${esc(src.zip_url || `${gh}/archive/refs/tags/${tag}.zip`)}">↓ ZIP (GitHub)</a>
+        <a class="btn btn-secondary btn-sm" href="${esc(src.tarball_url || `${gh}/archive/refs/tags/${tag}.tar.gz`)}">↓ tar.gz</a>
+        <a class="btn btn-ghost btn-sm" href="${esc(src.github || gh)}/tree/${tag}" target="_blank" rel="noopener">Browse source</a>`;
+
+      const variants = selectedRelease.variants || [];
+      const recommended = detectPlatformId();
+      document.getElementById('binary-grid').innerHTML = variants.map((v) => {
+        const isRec = recommended && v.id === recommended;
+        const installerLabel = v.installer_label || (v.installer_ext === 'exe' ? 'NiaoSetup.exe' : 'install.sh');
+        const installerBtn = v.installer_url
+          ? `<a class="btn btn-primary btn-sm" href="${esc(v.installer_url)}">↓ ${esc(installerLabel)}</a>`
+          : '';
+        const archiveBtn = v.url && v.size
+          ? `<a class="btn btn-secondary btn-sm" href="${esc(v.url)}">Portable .${esc(v.ext || 'zip')}</a>`
+          : '';
+        const curlHint = v.installer_ext === 'sh' && v.installer_url
+          ? `<code class="platform-curl">curl -fsSL ${esc(v.installer_url)} | bash</code>`
+          : '';
+        const winHint = v.installer_ext === 'exe'
+          ? '<span style="font-size:0.72rem;color:var(--muted-2);">Double-click to install</span>'
+          : '';
+        const hasInstaller = installerBtn || archiveBtn;
+        return `
+        <div class="platform${isRec ? ' platform-recommended' : ''}">
+          <strong>${esc(v.label || v.id)}${isRec ? ' ★' : ''}</strong>
+          <span>${isRec ? 'Recommended for your system · ' : ''}${v.status !== 'active' ? esc(v.status) : 'niao + nm + VM/NFE'}</span>
+          ${hasInstaller
+            ? `<div class="platform-btns">${installerBtn}${archiveBtn}${winHint}${curlHint}</div>`
+            : `<span style="color:var(--muted-2);font-size:0.8rem;">Build from source<br><code>cargo build --release</code></span>`}
+        </div>`;
+      }).join('') || '<p style="color:var(--muted)">No installers for this version yet — build from source or check back soon.</p>';
+    }
+
+    function render() {
+      document.getElementById('version-badge').textContent = `v${site.latestRelease || site.version || '0.2.2'}`;
+      document.getElementById('tagline').textContent = site.tagline || '';
+      document.getElementById('hero-github').href = site.github || '#';
+
+      document.getElementById('cmd-global').textContent = site.install?.global || 'nm install --global';
+      document.getElementById('cmd-clone').textContent = `git clone ${site.github || ''}.git`;
+
+      const examples = document.getElementById('install-examples');
+      examples.innerHTML = (site.install?.examples || []).map((cmd) => `
+        <div class="copy-row" style="margin-top:0.5rem;">
+          <pre>${esc(cmd)}</pre>
+          <button class="copy-btn" data-copy-text="${esc(cmd)}" type="button">Copy</button>
+        </div>`).join('');
+
+      renderReleasePanel();
+
+      const catalog = site.catalog;
+      const libs = catalog?.libs || {};
+      const remoteSet = new Set(catalog?.remote_libs || []);
+      const names = Object.keys(libs).sort();
+      document.getElementById('lib-count').textContent = `${names.length} libraries · toolchain ${catalog?.niao_version || site.version}`;
+
+      const remoteNames = names.filter((n) => remoteSet.has(n));
+      const stdNames = names.filter((n) => !remoteSet.has(n));
+
+      if (remoteNames.length) {
+        document.getElementById('remote-section').style.display = 'block';
+        document.getElementById('remote-libs').innerHTML = remoteNames.map((n) => libCard(n, libs[n], true)).join('');
+      }
+
+      document.getElementById('standard-libs').innerHTML = stdNames.length
+        ? stdNames.map((n) => libCard(n, libs[n], false)).join('')
+        : '<p class="loading">No libraries in catalog.</p>';
+
+      const docs = site.docs || {};
+      document.getElementById('api-links').innerHTML = [
+        ['Catalog', docs.catalog],
+        ['Packages', docs.packages],
+        ['Health', docs.health],
+        ['Releases', docs.releases],
+        ['Site meta', `${site.registry}/v1/site`],
+      ].filter(([, u]) => u).map(([label, url]) => `<a href="${esc(url)}">${label}</a>`).join('');
+
+      document.getElementById('footer-right').textContent = site.registry || '';
+    }
+
+    document.querySelectorAll('.tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+      });
+    });
+
+    document.getElementById('release-select')?.addEventListener('change', (e) => {
+      const releases = site.releases || [];
+      selectedRelease = releases.find((r) => r.version === e.target.value);
+      renderReleasePanel();
+    });
+
+    document.body.addEventListener('click', (e) => {
+      const btn = e.target.closest('.copy-btn');
+      if (!btn) return;
+      const id = btn.dataset.copy;
+      const text = id ? document.getElementById(id)?.textContent : btn.dataset.copyText;
+      if (text) navigator.clipboard.writeText(text).then(() => { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 1200); });
+    });
+
+    document.getElementById('lib-search')?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#standard-libs .card, #remote-libs .card').forEach((card) => {
+        const name = card.dataset.name?.toLowerCase() || '';
+        const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+        card.style.display = !q || name.includes(q) || desc.includes(q) ? '' : 'none';
+      });
+    });
+
+    if (!site.catalog) {
+      fetch('/v1/catalog')
+        .then((r) => r.json())
+        .then((catalog) => { site.catalog = catalog; render(); })
+        .catch(() => render());
+    } else {
+      render();
+    }
+  </script>
+</body>
+</html>

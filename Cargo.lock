@@ -1934,6 +1934,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "filetime"
+version = "0.2.29"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c287a33c7f0a620c38e641e7f60827713987b3c0f26e8ddc9462cc69cf75759"
+dependencies = [
+ "cfg-if",
+ "libc",
+]
+
+[[package]]
 name = "find-msvc-tools"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3797,132 +3807,138 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "27b02d87554356db9e9a873add8782d4ea6e3e58ea071a9adb9a2e8ddb884a8b"
 
 [[package]]
-name = "neko_ast"
+name = "new_debug_unreachable"
+version = "1.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
+
+[[package]]
+name = "niao_ast"
 version = "0.2.2"
 dependencies = [
  "serde",
 ]
 
 [[package]]
-name = "neko_bytecode"
+name = "niao_bytecode"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_ir",
- "neko_parser",
- "neko_runtime",
+ "niao_ast",
+ "niao_ir",
+ "niao_parser",
+ "niao_runtime",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "neko_classic"
+name = "niao_classic"
 version = "0.2.2"
 dependencies = [
- "neko_tensor",
+ "niao_tensor",
  "rand 0.8.6",
  "rayon",
 ]
 
 [[package]]
-name = "neko_cli"
+name = "niao_cli"
 version = "0.2.2"
 dependencies = [
  "ahiru_core",
  "axum",
  "clap",
- "neko_ast",
- "neko_bytecode",
- "neko_docs",
- "neko_format",
- "neko_interpreter",
- "neko_ir",
- "neko_lexer",
- "neko_lint",
- "neko_parser",
- "neko_runtime",
- "neko_vm",
- "neko_web",
+ "niao_ast",
+ "niao_bytecode",
+ "niao_docs",
+ "niao_format",
+ "niao_interpreter",
+ "niao_ir",
+ "niao_lexer",
+ "niao_lint",
+ "niao_parser",
+ "niao_runtime",
+ "niao_vm",
+ "niao_web",
  "tokio",
  "toml",
 ]
 
 [[package]]
-name = "neko_data"
+name = "niao_data"
 version = "0.2.2"
 dependencies = [
- "neko_tensor",
+ "niao_tensor",
  "rand 0.8.6",
  "serde",
  "serde_json",
 ]
 
 [[package]]
-name = "neko_docs"
+name = "niao_docs"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_parser",
+ "niao_ast",
+ "niao_parser",
 ]
 
 [[package]]
-name = "neko_errors"
+name = "niao_errors"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
+ "niao_ast",
 ]
 
 [[package]]
-name = "neko_format"
+name = "niao_format"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_parser",
+ "niao_ast",
+ "niao_parser",
 ]
 
 [[package]]
-name = "neko_graph"
+name = "niao_graph"
 version = "0.2.2"
 dependencies = [
- "neko_tensor",
+ "niao_tensor",
  "rand 0.8.6",
 ]
 
 [[package]]
-name = "neko_interpreter"
+name = "niao_interpreter"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_parser",
- "neko_runtime",
+ "niao_ast",
+ "niao_parser",
+ "niao_runtime",
 ]
 
 [[package]]
-name = "neko_ir"
+name = "niao_ir"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_runtime",
+ "niao_ast",
+ "niao_runtime",
 ]
 
 [[package]]
-name = "neko_lexer"
+name = "niao_lexer"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_errors",
+ "niao_ast",
+ "niao_errors",
 ]
 
 [[package]]
-name = "neko_lint"
+name = "niao_lint"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_parser",
+ "niao_ast",
+ "niao_parser",
 ]
 
 [[package]]
-name = "neko_llm"
+name = "niao_llm"
 version = "0.2.2"
 dependencies = [
  "candle-core",
@@ -3930,6 +3946,7 @@ dependencies = [
  "encoding_rs",
  "hf-hub 0.4.3",
  "llama-cpp-2",
+ "llama-cpp-sys-2",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -3937,12 +3954,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "neko_ml"
+name = "niao_ml"
 version = "0.2.2"
 dependencies = [
- "neko_data",
- "neko_graph",
- "neko_tensor",
+ "niao_data",
+ "niao_graph",
+ "niao_tensor",
  "rand 0.8.6",
  "rand_distr 0.4.3",
  "rayon",
@@ -3950,43 +3967,50 @@ dependencies = [
 ]
 
 [[package]]
-name = "neko_nm"
+name = "niao_nm"
 version = "0.2.2"
 dependencies = [
  "clap",
- "neko_pkg",
+ "niao_pkg",
  "serde_json",
 ]
 
 [[package]]
-name = "neko_parser"
+name = "niao_parser"
 version = "0.2.2"
 dependencies = [
- "neko_ast",
- "neko_errors",
- "neko_lexer",
+ "niao_ast",
+ "niao_errors",
+ "niao_lexer",
 ]
 
 [[package]]
-name = "neko_pkg"
+name = "niao_pkg"
 version = "0.2.2"
 dependencies = [
+ "flate2",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
+ "tar",
+ "ureq 2.12.1",
 ]
 
 [[package]]
-name = "neko_rag"
+name = "niao_rag"
 version = "0.2.2"
 dependencies = [
  "fastembed",
+ "ort",
+ "rayon",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
+ "ureq 2.12.1",
 ]
 
 [[package]]
-name = "neko_runtime"
+name = "niao_runtime"
 version = "0.2.2"
 dependencies = [
  "ahash",
@@ -4001,15 +4025,15 @@ dependencies = [
  "lettre",
  "mongodb",
  "native-tls",
- "neko_ast",
- "neko_classic",
- "neko_data",
- "neko_errors",
- "neko_graph",
- "neko_llm",
- "neko_ml",
- "neko_rag",
- "neko_tensor",
+ "niao_ast",
+ "niao_classic",
+ "niao_data",
+ "niao_errors",
+ "niao_graph",
+ "niao_llm",
+ "niao_ml",
+ "niao_rag",
+ "niao_tensor",
  "num-bigint",
  "num-traits",
  "postgres",
@@ -4034,7 +4058,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "neko_tensor"
+name = "niao_tensor"
 version = "0.2.2"
 dependencies = [
  "candle-core",
@@ -4046,7 +4070,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "neko_vm"
+name = "niao_vm"
 version = "0.2.2"
 dependencies = [
  "ahiru_core",
@@ -4055,32 +4079,27 @@ dependencies = [
  "cranelift-jit",
  "cranelift-module",
  "cranelift-native",
- "neko_ast",
- "neko_bytecode",
- "neko_errors",
- "neko_ir",
- "neko_parser",
- "neko_runtime",
+ "niao_ast",
+ "niao_bytecode",
+ "niao_errors",
+ "niao_ir",
+ "niao_llm",
+ "niao_parser",
+ "niao_runtime",
  "num-bigint",
 ]
 
 [[package]]
-name = "neko_web"
+name = "niao_web"
 version = "0.2.2"
 dependencies = [
  "axum",
- "neko_ast",
- "neko_interpreter",
- "neko_parser",
- "neko_runtime",
+ "niao_ast",
+ "niao_interpreter",
+ "niao_parser",
+ "niao_runtime",
  "tokio",
 ]
-
-[[package]]
-name = "new_debug_unreachable"
-version = "1.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
 name = "no_std_io2"
@@ -6185,6 +6204,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 
 [[package]]
+name = "tar"
+version = "0.4.46"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f6221d9a6003c78398e3b239969f352578258df48c8eb051caadae0015bc840"
+dependencies = [
+ "filetime",
+ "libc",
+ "xattr",
+]
+
+[[package]]
 name = "target-lexicon"
 version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7650,6 +7680,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
 dependencies = [
  "tap",
+]
+
+[[package]]
+name = "xattr"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32e45ad4206f6d2479085147f02bc2ef834ac85886624a23575ae137c8aa8156"
+dependencies = [
+ "libc",
+ "rustix",
 ]
 
 [[package]]

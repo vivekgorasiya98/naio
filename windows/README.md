@@ -1,4 +1,4 @@
-# Neko for Windows
+# Niao for Windows
 
 Complete Windows distribution with a **single installer EXE** — like Python setup.
 
@@ -10,16 +10,16 @@ Complete Windows distribution with a **single installer EXE** — like Python se
    powershell -File windows\build.ps1
    ```
 
-2. Double-click **`windows\NekoSetup.exe`**
+2. Double-click **`windows\NiaoSetup.exe`**
 
 3. Open a **new** Command Prompt or PowerShell:
 
    ```cmd
-   neko version
-   neko run examples\hello.neko
+   niao version
+   niao run examples\hello.niao
    ```
 
-Installs to `%USERPROFILE%\.neko` with `neko.exe`, `nm.exe`, and **all 15 standard libraries** pre-registered. No `nm install` needed.
+Installs to `%USERPROFILE%\.niao` with `niao.exe`, `nm.exe`, and **all 15 standard libraries** pre-registered. No `nm install` needed.
 
 ## Portable mode (no install)
 
@@ -27,7 +27,7 @@ After running `build.ps1`:
 
 ```cmd
 cd windows
-neko.cmd run examples\hello.neko
+niao.cmd run examples\hello.niao
 test.cmd
 ```
 
@@ -35,9 +35,9 @@ test.cmd
 
 | Item | Location |
 |------|----------|
-| **NekoSetup.exe** | One-click installer (embeds everything) |
-| **neko.cmd** | Portable launcher |
-| **neko_home/** | Portable runtime (neko, nm, all libs) |
+| **NiaoSetup.exe** | One-click installer (embeds everything) |
+| **niao.cmd** | Portable launcher |
+| **niao_home/** | Portable runtime (niao, nm, all libs) |
 | **examples/** | Demo programs |
 
 ## Pre-installed libraries
@@ -54,4 +54,4 @@ See [GUIDE.md](GUIDE.md) for CLI, language basics, and troubleshooting.
 powershell -File windows\build.ps1
 ```
 
-Output: `windows\NekoSetup.exe`
+Output: `windows\NiaoSetup.exe`

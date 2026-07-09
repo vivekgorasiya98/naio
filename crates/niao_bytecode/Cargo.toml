@@ -1,0 +1,14 @@
+[package]
+name = "niao_bytecode"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_ir = { workspace = true }
+niao_runtime = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+niao_parser = { workspace = true }

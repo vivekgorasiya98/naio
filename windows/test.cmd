@@ -1,22 +1,22 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo == Neko Windows smoke tests ==
-call neko.cmd version
+echo == Niao Windows smoke tests ==
+call niao.cmd version
 if errorlevel 1 exit /b 1
 echo.
 
-call neko.cmd run examples\hello.neko
+call niao.cmd run examples\hello.niao
 if errorlevel 1 exit /b 1
-echo hello.neko OK
+echo hello.niao OK
 
-call neko.cmd run examples\re_demo.neko
+call niao.cmd run examples\re_demo.niao
 if errorlevel 1 exit /b 1
-echo re_demo.neko OK
+echo re_demo.niao OK
 
-call neko.cmd run examples\libs_smoke.neko
+call niao.cmd run examples\libs_smoke.niao
 if errorlevel 1 exit /b 1
-echo libs_smoke.neko OK
+echo libs_smoke.niao OK
 
 echo.
 echo All smoke tests passed.

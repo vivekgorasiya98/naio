@@ -1,8 +1,0 @@
-{
-  "name": "re",
-  "version": "0.2.0",
-  "kind": "native",
-  "description": "Regular expressions: match, find, replace, split",
-  "import_paths": ["re", "std/re"],
-  "builtin_count": 22
-}

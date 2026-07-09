@@ -1,6 +1,6 @@
-# Complete Neko User Guide (Windows)
+# Complete Niao User Guide (Windows)
 
-Everything you need to install, run, and write Neko programs on Windows.
+Everything you need to install, run, and write Niao programs on Windows.
 
 ---
 
@@ -8,23 +8,23 @@ Everything you need to install, run, and write Neko programs on Windows.
 
 ### Option A — Installer (recommended)
 
-1. Run **`NekoSetup.exe`** (double-click)
+1. Run **`NiaoSetup.exe`** (double-click)
 2. Open a **new** Command Prompt or PowerShell
 3. Run:
 
 ```cmd
-neko version
-neko run examples\hello.neko
+niao version
+niao run examples\hello.niao
 ```
 
-Installs to `%USERPROFILE%\.neko`:
+Installs to `%USERPROFILE%\.niao`:
 
 ```
-C:\Users\You\.neko\
-  bin\neko.exe
+C:\Users\You\.niao\
+  bin\niao.exe
   bin\nm.exe
   install.json
-  neko_libs\     ← all 15 libraries pre-installed
+  niao_libs\     ← all 15 libraries pre-installed
   examples\
 ```
 
@@ -35,41 +35,41 @@ PATH is updated automatically. No Rust, no build step, no `nm install`.
 From the `windows\` folder after `build.ps1`:
 
 ```cmd
-neko.cmd run examples\hello.neko
+niao.cmd run examples\hello.niao
 test.cmd
 ```
 
 ### Build the installer yourself
 
-From the Neko repo:
+From the Niao repo:
 
 ```powershell
 powershell -File windows\build.ps1
 ```
 
-Creates `windows\NekoSetup.exe`.
+Creates `windows\NiaoSetup.exe`.
 
 ---
 
 ## Your first program
 
-Create `hello.neko`:
+Create `hello.niao`:
 
-```neko
+```niao
 fn greet(name: string) -> string {
     return "Hello, " + name
 }
 
 fn main() {
-    print(greet("Neko"))
+    print(greet("Niao"))
 }
 ```
 
 Run:
 
 ```cmd
-neko run hello.neko
-neko hello.neko
+niao run hello.niao
+niao hello.niao
 ```
 
 ---
@@ -78,18 +78,18 @@ neko hello.neko
 
 | Command | Description |
 |---------|-------------|
-| `neko run <file>` | Run a program |
-| `neko <file>` | Shorthand for run |
-| `neko <file> time` | Run and show execution time |
-| `neko version` | Print version |
-| `neko new <name>` | Create project |
-| `neko test` | Run tests in `tests\` |
-| `neko format <file>` | Format source |
-| `neko format <file> --write` | Format in place |
-| `neko lint <file>` | Lint source |
-| `neko build <file>` | Compile to bytecode |
-| `neko bench <file>` | Benchmark |
-| `neko serve <file>` | Web server DSL |
+| `niao run <file>` | Run a program |
+| `niao <file>` | Shorthand for run |
+| `niao <file> time` | Run and show execution time |
+| `niao version` | Print version |
+| `niao new <name>` | Create project |
+| `niao test` | Run tests in `tests\` |
+| `niao format <file>` | Format source |
+| `niao format <file> --write` | Format in place |
+| `niao lint <file>` | Lint source |
+| `niao build <file>` | Compile to bytecode |
+| `niao bench <file>` | Benchmark |
+| `niao serve <file>` | Web server DSL |
 | `nm list --installed` | List installed libraries |
 
 ---
@@ -115,7 +115,7 @@ neko hello.neko
 
 Example:
 
-```neko
+```niao
 import "json"
 import "re"
 
@@ -129,9 +129,9 @@ fn main() {
 
 ## Language basics
 
-```neko
+```niao
 let x = 42
-let name = "Neko"
+let name = "Niao"
 
 if x > 0 {
     print(name)
@@ -152,17 +152,17 @@ Top-level statements run without `main()` (script style).
 
 ## Imports
 
-```neko
+```niao
 import "json"           // standard library
 import "re" as rx       // alias
-import "utils.neko"     // local file (uses interpreter)
+import "utils.niao"     // local file (uses interpreter)
 ```
 
 ---
 
 ## Error handling
 
-```neko
+```niao
 try {
     throw error("failed")
 } catch (e) {
@@ -174,19 +174,19 @@ try {
 
 ## Troubleshooting
 
-### `neko` is not recognized
+### `niao` is not recognized
 
-- Run `NekoSetup.exe` again, or
+- Run `NiaoSetup.exe` again, or
 - Open a **new** terminal after install (PATH refresh), or
-- Use portable: `neko.cmd run examples\hello.neko`
+- Use portable: `niao.cmd run examples\hello.niao`
 
 ### Libraries not found
 
-All libs are built into `neko.exe`. The `neko_libs` folder is for `nm list` — already populated by the installer.
+All libs are built into `niao.exe`. The `niao_libs` folder is for `nm list` — already populated by the installer.
 
 ### Reinstall
 
-Run `NekoSetup.exe` again. It overwrites `%USERPROFILE%\.neko`.
+Run `NiaoSetup.exe` again. It overwrites `%USERPROFILE%\.niao`.
 
 ---
 
@@ -194,10 +194,10 @@ Run `NekoSetup.exe` again. It overwrites `%USERPROFILE%\.neko`.
 
 ```
 windows/
-  NekoSetup.exe     ← double-click to install
-  neko.cmd          ← portable launcher
+  NiaoSetup.exe     ← double-click to install
+  niao.cmd          ← portable launcher
   test.cmd          ← smoke tests
-  neko_home/        ← portable runtime
+  niao_home/        ← portable runtime
   examples/
   GUIDE.md          ← this file
   build.ps1         ← rebuild installer

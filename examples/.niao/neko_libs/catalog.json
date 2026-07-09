@@ -1,0 +1,30 @@
+{
+  "niao_version": "0.1.0",
+  "updated_at": "1783010906379",
+  "libs": {
+    "io": {
+      "name": "io",
+      "version": "0.1.0",
+      "kind": "native",
+      "description": "File I/O, paths, streaming handles, async background tasks",
+      "import_paths": [
+        "io",
+        "std/io"
+      ],
+      "builtin_count": 55,
+      "installed_at": "1783010906376"
+    },
+    "json": {
+      "name": "json",
+      "version": "0.1.0",
+      "kind": "native",
+      "description": "JSON parse, stringify, and object utilities",
+      "import_paths": [
+        "json",
+        "std/json"
+      ],
+      "builtin_count": 15,
+      "installed_at": "1783010906379"
+    }
+  }
+}

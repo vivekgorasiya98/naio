@@ -1,4 +1,4 @@
-//! Neko Windows installer — extracts embedded payload to %USERPROFILE%\.neko
+//! Niao Windows installer — extracts embedded payload to %USERPROFILE%\.niao
 //! and adds the bin directory to the user PATH.
 
 use rust_embed::RustEmbed;
@@ -25,7 +25,7 @@ fn main() {
 }
 
 fn run() -> io::Result<()> {
-    println!("Neko {VERSION} Setup");
+    println!("Niao {VERSION} Setup");
     println!("====================\n");
 
     let install_root = default_install_dir();
@@ -38,11 +38,11 @@ fn run() -> io::Result<()> {
 
     println!("\nInstalled to: {}", install_root.display());
     println!("  Files:      {file_count}");
-    println!("  neko.exe:   {}", bin_dir.join("neko.exe").display());
+    println!("  niao.exe:   {}", bin_dir.join("niao.exe").display());
     println!("  nm.exe:     {}", bin_dir.join("nm.exe").display());
     println!("  Libraries:  15 standard libs (pre-installed)");
 
-    if let Ok(out) = Command::new(bin_dir.join("neko.exe"))
+    if let Ok(out) = Command::new(bin_dir.join("niao.exe"))
         .arg("version")
         .output()
     {
@@ -53,21 +53,21 @@ fn run() -> io::Result<()> {
     }
 
     println!("\nOpen a NEW Command Prompt or PowerShell window, then run:");
-    println!("  neko version");
-    println!("  neko run examples\\hello.neko");
+    println!("  niao version");
+    println!("  niao run examples\\hello.niao");
     println!("\nDone.");
     pause();
     Ok(())
 }
 
 fn default_install_dir() -> PathBuf {
-    if let Ok(dir) = env::var("NEKO_INSTALL_DIR") {
+    if let Ok(dir) = env::var("NIAO_INSTALL_DIR") {
         return PathBuf::from(dir);
     }
     if let Ok(profile) = env::var("USERPROFILE") {
-        return PathBuf::from(profile).join(".neko");
+        return PathBuf::from(profile).join(".niao");
     }
-    PathBuf::from(".neko")
+    PathBuf::from(".niao")
 }
 
 fn extract_all(root: &Path) -> io::Result<usize> {
@@ -98,8 +98,8 @@ fn patch_install_json(root: &Path) -> io::Result<()> {
     }
     let text = fs::read_to_string(&path)?;
     let root_str = root.to_string_lossy().replace('\\', "\\\\");
-    let patched = text.replace("%USERPROFILE%\\\\.neko", &root_str);
-    let patched = patched.replace("%USERPROFILE%\\.neko", &root.display().to_string());
+    let patched = text.replace("%USERPROFILE%\\\\.niao", &root_str);
+    let patched = patched.replace("%USERPROFILE%\\.niao", &root.display().to_string());
     fs::write(path, patched)
 }
 

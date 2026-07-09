@@ -1,0 +1,19 @@
+Verifying arithmetic loop correctness...
+python : Traceback (most recent call last):
+At C:\Users\vivek\AppData\Local\Temp\ps-script-2558b318-9bb0-4ba3-a314-9adb5445ef5d.ps1:82 char:18
++ ... \Risu\Neko; python benchmarks\benchmark_math.py 10000000 5 2>&1 | Tee ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Risu\Neko\benchmarks\benchmark_math.py", line 233, in <module>
+    main()
+  File "C:\Risu\Neko\benchmarks\benchmark_math.py", line 216, in main
+    verify_niao(niao)
+  File "C:\Risu\Neko\benchmarks\benchmark_math.py", line 84, in verify_niao
+    proc = subprocess.run(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\vivek\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\vivek\\.cargo\\bin\\niao.EXE', 
+'C:\\Risu\\Neko\\benchmarks\\math_bench_verify.niao']' returned non-zero exit status 1.

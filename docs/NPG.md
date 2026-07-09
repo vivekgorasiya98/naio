@@ -1,16 +1,16 @@
 # npg standard library
 
-Fast PostgreSQL for Neko programs: connection pools, schema migrations, prepared statements, transactions, introspection, LISTEN/NOTIFY, COPY bulk load, and async background queries. Implemented in Rust via the `postgres` crate (pure Rust wire protocol) with `postgres-native-tls` and `r2d2` pooling.
+Fast PostgreSQL for Niao programs: connection pools, schema migrations, prepared statements, transactions, introspection, LISTEN/NOTIFY, COPY bulk load, and async background queries. Implemented in Rust via the `postgres` crate (pure Rust wire protocol) with `postgres-native-tls` and `r2d2` pooling.
 
 ## Import
 
-```neko
+```niao
 import "npg"
 ```
 
 Use the **`npg`** namespace for short names:
 
-```neko
+```niao
 let db = npg.connect("postgresql://user:pass@localhost:5432/mydb")
 npg.migrate(db, [{version: 1, sql: "CREATE TABLE t (id SERIAL PRIMARY KEY)"}])
 ```
@@ -131,23 +131,23 @@ Background tasks reopen the database by connection string in a worker thread.
 
 ## Example
 
-```neko
+```niao
 import "npg"
 import "nenv"
 
 fn main() {
-    let db = npg.connect(nenv.require("NEKO_PG_URL"))
+    let db = npg.connect(nenv.require("NIAO_PG_URL"))
     npg.migrate(db, [
         {version: 1, sql: "CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT NOT NULL)"}
     ])
-    npg.insert(db, "users", {name: "Neko"})
+    npg.insert(db, "users", {name: "Niao"})
     let rows = npg.query(db, "SELECT id, name FROM users WHERE id > $1", [0])
     print(rows[0].name)
     npg.close(db)
 }
 ```
 
-Set `NEKO_PG_URL` for integration tests (`tests/npg.neko` skips when unset).
+Set `NIAO_PG_URL` for integration tests (`tests/npg.niao` skips when unset).
 
 ## Error codes
 
@@ -162,4 +162,4 @@ Set `NEKO_PG_URL` for integration tests (`tests/npg.neko` skips when unset).
 | E1906 | Invalid bind value |
 | E1907 | TLS / connection error |
 
-Errors surface as Neko error values with `kind: "npg_error"`.
+Errors surface as Niao error values with `kind: "npg_error"`.

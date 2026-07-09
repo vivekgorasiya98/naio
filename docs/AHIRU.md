@@ -1,6 +1,6 @@
 # ahiru-server
 
-High-performance HTTP/WebSocket backend framework for Neko — Tokio/Axum native core with Neko route handlers, middleware, multi-database support, and project scaffolding.
+High-performance HTTP/WebSocket backend framework for Niao — Tokio/Axum native core with Niao route handlers, middleware, multi-database support, and project scaffolding.
 
 **Library version:** `0.3.0` (`nm info ahiru`)
 
@@ -10,20 +10,20 @@ High-performance HTTP/WebSocket backend framework for Neko — Tokio/Axum native
 cargo build --release
 
 # Create a project (interactive wizard)
-./target/release/neko ahiru create myapi
+./target/release/niao ahiru create myapi
 
 # Or non-interactive defaults
-./target/release/neko ahiru create myapi --yes
+./target/release/niao ahiru create myapi --yes
 
 cd myapi
-../target/release/neko ahiru serve          # VM mode (default, fastest)
-../target/release/neko ahiru serve --mode interp   # interpreter fallback
+../target/release/niao ahiru serve          # VM mode (default, fastest)
+../target/release/niao ahiru serve --mode interp   # interpreter fallback
 ```
 
 ## Hello example
 
 ```bash
-./target/release/neko run --mode interp examples/ahiru_hello.neko
+./target/release/niao run --mode interp examples/ahiru_hello.niao
 curl http://localhost:3000/health
 ```
 
@@ -31,24 +31,24 @@ curl http://localhost:3000/health
 
 | Command | Description |
 |---------|-------------|
-| `neko ahiru create <name>` | Interactive wizard — DB, auth, WebSocket, security |
-| `neko ahiru serve` | Run project entry with **VM bytecode** (default) |
-| `neko ahiru serve --mode interp` | Interpreter mode (multi-file imports, dev side-effects) |
-| `neko ahiru serve --dev` | Auto-reload on file changes |
-| `neko ahiru serve --net` | Bind `0.0.0.0` and show LAN URL |
-| `neko ahiru serve --port 3000` | Use port 3000 (prompts if busy) |
-| `neko ahiru bench --routes health,ping` | Handler throughput micro-benchmark |
-| `neko ahiru migrate` | Apply SQL migrations from `migrations/` |
-| `neko ahiru routes` | Show `ahiru.config.toml` server/DB/auth settings |
+| `niao ahiru create <name>` | Interactive wizard — DB, auth, WebSocket, security |
+| `niao ahiru serve` | Run project entry with **VM bytecode** (default) |
+| `niao ahiru serve --mode interp` | Interpreter mode (multi-file imports, dev side-effects) |
+| `niao ahiru serve --dev` | Auto-reload on file changes |
+| `niao ahiru serve --net` | Bind `0.0.0.0` and show LAN URL |
+| `niao ahiru serve --port 3000` | Use port 3000 (prompts if busy) |
+| `niao ahiru bench --routes health,ping` | Handler throughput micro-benchmark |
+| `niao ahiru migrate` | Apply SQL migrations from `migrations/` |
+| `niao ahiru routes` | Show `ahiru.config.toml` server/DB/auth settings |
 
 ## Performance (0.2.2)
 
 | Layer | What changed |
 |-------|----------------|
-| **VM default** | `neko ahiru serve` compiles entry to bytecode and dispatches handlers via the VM |
+| **VM default** | `niao ahiru serve` compiles entry to bytecode and dispatches handlers via the VM |
 | **Per-worker VMs** | Each worker thread owns a VM instance — no global interpreter GIL on the hot path |
 | **Fast bridge** | Reusable ctx field buffer; handlers invoked by bytecode index when resolved |
-| **Native probes** | `/health` and `/ping` can register zero-Neko Rust handlers (`native_routes = true`) |
+| **Native probes** | `/health` and `/ping` can register zero-Niao Rust handlers (`native_routes = true`) |
 | **Lazy body** | GET/HEAD/OPTIONS skip body buffering |
 
 Tune worker count in `ahiru.config.toml`:
@@ -59,15 +59,15 @@ workers = 8   # defaults to CPU count
 native_routes = true   # native /health and /ping (default)
 ```
 
-## ahiru v3 helpers (`stdlib/ahiru/v3.neko`)
+## ahiru v3 helpers (`stdlib/ahiru/v3.niao`)
 
 Import with `import "std/ahiru/v3"` (v2 helpers remain available).
 
 See [ahiru0.3.md](ahiru0.3.md) for the full 0.3.0 reference.
 
-## ahiru v2 helpers (`stdlib/ahiru/v2.neko`)
+## ahiru v2 helpers (`stdlib/ahiru/v2.niao`)
 
-Import with `import "std/ahiru/v2"` (requires `neko ahiru serve` or stdlib on `NEKO_STDLIB` path):
+Import with `import "std/ahiru/v2"` (requires `niao ahiru serve` or stdlib on `NIAO_STDLIB` path):
 
 | Helper | Description |
 |--------|-------------|
@@ -88,9 +88,9 @@ Import with `import "std/ahiru/v2"` (requires `neko ahiru serve` or stdlib on `N
 - **Default port from config**: if busy, the next free port is used automatically (`3000` → `3001`, …).
 - **`--port` or `ahiru_app_listen(app, host, port)`**: interactive prompt — use next free port, enter custom port, or quit.
 
-Rebuild after pulling changes: `cargo build -p neko_cli` (or use `target/debug/neko.exe`).
+Rebuild after pulling changes: `cargo build -p niao_cli` (or use `target/debug/niao.exe`).
 
-## Neko API (builtins)
+## Niao API (builtins)
 
 Import with `import "ahiru"` or use flat `ahiru_*` builtins:
 
@@ -125,7 +125,7 @@ Import with `import "ahiru"` or use flat `ahiru_*` builtins:
 
 ### Route options
 
-```neko
+```niao
 ahiru_app_get(app, "/api/users", list_users, {
     permission: "users.read",
     is_public: false,
@@ -135,7 +135,7 @@ ahiru_app_get(app, "/api/users", list_users, {
 
 ## Configuration (`ahiru.config.toml`)
 
-Generated by `neko ahiru create`. Key sections:
+Generated by `niao ahiru create`. Key sections:
 
 - **`[server]`** — host, port, workers, TLS paths, body limit
 - **`[[databases]]`** — SQLite, PostgreSQL, MySQL, or multiple named pools
@@ -171,7 +171,7 @@ Wizard supports:
 Run migrations:
 
 ```bash
-neko ahiru migrate
+niao ahiru migrate
 ```
 
 Migrations are SQL files in `migrations/` tracked in `_ahiru_migrations` (SQLite) or applied per driver.
@@ -193,26 +193,26 @@ Register with `ahiru_app_ws`. Wizard sets `[websocket].mode` to `global` or `per
 
 | Mode | Command | Handlers |
 |------|---------|----------|
-| Interpreter (default for servers) | `neko run --mode interp` or `neko ahiru serve` | Shared interpreter + `call_neko_function` |
-| VM (experimental) | `neko run --mode vm` with VM call hook | `neko_vm::call_bridge` |
+| Interpreter (default for servers) | `niao run --mode interp` or `niao ahiru serve` | Shared interpreter + `call_niao_function` |
+| VM (experimental) | `niao run --mode vm` with VM call hook | `niao_vm::call_bridge` |
 
 HTTP route handlers require the interpreter or VM call hook — use `--mode interp` for `import` and ahiru apps.
 
 ## Architecture
 
 ```
-Client → Tokio/Axum (ahiru_core) → Rust middleware → Neko handler bridge → your .neko code
+Client → Tokio/Axum (ahiru_core) → Rust middleware → Niao handler bridge → your .niao code
 ```
 
 - **ahiru_core** — Rust server engine (routing, auth, DB pools, WebSocket)
-- **neko_runtime/ahiru** — Neko builtins
+- **niao_runtime/ahiru** — Niao builtins
 - **stdlib/ahiru** — optional helper functions
 
 ## Performance notes
 
 - Middleware runs entirely in Rust (no interpreter overhead).
 - Handlers run via `tokio::task::spawn_blocking` on a multi-thread Tokio runtime (`server.workers`).
-- When `server.workers > 1`, a handler worker pool dispatches Neko calls in parallel (GIL still serializes interpreter access per worker thread).
+- When `server.workers > 1`, a handler worker pool dispatches Niao calls in parallel (GIL still serializes interpreter access per worker thread).
 - Request body UTF-8 decoding is lazy — only when the handler reads `ctx.body`.
 - Disable access logging with `[logging].access_log = false` or `ahiru_v2_use_quiet_middleware` to reduce per-request overhead.
 
@@ -228,7 +228,7 @@ Targets vs baseline: simple/bridge routes ≥5x RPS with worker pool; full-stack
 
 ## Legacy
 
-- `neko serve` (web DSL) — use ahiru for new projects
+- `niao serve` (web DSL) — use ahiru for new projects
 - `net_http_*` — low-level programmatic server; still available
 
 ## Error codes

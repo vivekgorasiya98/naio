@@ -1,7 +1,0 @@
-fn greet(name: string) -> string {
-    return "Hello, " + name
-}
-
-fn main() {
-    print(greet("Neko"))
-}

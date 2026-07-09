@@ -1,62 +1,62 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/neko_ast",
-    "crates/neko_errors",
-    "crates/neko_lexer",
-    "crates/neko_parser",
-    "crates/neko_runtime",
-    "crates/neko_interpreter",
-    "crates/neko_ir",
-    "crates/neko_bytecode",
-    "crates/neko_vm",
-    "crates/neko_format",
-    "crates/neko_lint",
-    "crates/neko_docs",
-    "crates/neko_web",
-    "crates/neko_cli",
-    "crates/neko_pkg",
-    "crates/neko_nm",
+    "crates/niao_ast",
+    "crates/niao_errors",
+    "crates/niao_lexer",
+    "crates/niao_parser",
+    "crates/niao_runtime",
+    "crates/niao_interpreter",
+    "crates/niao_ir",
+    "crates/niao_bytecode",
+    "crates/niao_vm",
+    "crates/niao_format",
+    "crates/niao_lint",
+    "crates/niao_docs",
+    "crates/niao_web",
+    "crates/niao_cli",
+    "crates/niao_pkg",
+    "crates/niao_nm",
     "crates/ahiru_core",
-    "crates/neko_tensor",
-    "crates/neko_ml",
-    "crates/neko_classic",
-    "crates/neko_data",
-    "crates/neko_graph",
-    "crates/neko_rag",
-    "crates/neko_llm",
+    "crates/niao_tensor",
+    "crates/niao_ml",
+    "crates/niao_classic",
+    "crates/niao_data",
+    "crates/niao_graph",
+    "crates/niao_rag",
+    "crates/niao_llm",
 ]
 
 [workspace.package]
 version = "0.2.2"
 edition = "2021"
 license = "MIT"
-authors = ["Neko Contributors"]
+authors = ["Niao Contributors"]
 
 [workspace.dependencies]
-neko_ast = { path = "crates/neko_ast" }
-neko_errors = { path = "crates/neko_errors" }
-neko_lexer = { path = "crates/neko_lexer" }
-neko_parser = { path = "crates/neko_parser" }
-neko_runtime = { path = "crates/neko_runtime", features = ["nmongo", "nrag", "nllm"] }
-neko_interpreter = { path = "crates/neko_interpreter" }
-neko_ir = { path = "crates/neko_ir" }
-neko_bytecode = { path = "crates/neko_bytecode" }
-neko_vm = { path = "crates/neko_vm" }
-neko_format = { path = "crates/neko_format" }
-neko_lint = { path = "crates/neko_lint" }
-neko_docs = { path = "crates/neko_docs" }
-neko_web = { path = "crates/neko_web" }
-neko_pkg = { path = "crates/neko_pkg" }
+niao_ast = { path = "crates/niao_ast" }
+niao_errors = { path = "crates/niao_errors" }
+niao_lexer = { path = "crates/niao_lexer" }
+niao_parser = { path = "crates/niao_parser" }
+niao_runtime = { path = "crates/niao_runtime", features = ["nmongo", "nrag", "nllm"] }
+niao_interpreter = { path = "crates/niao_interpreter" }
+niao_ir = { path = "crates/niao_ir" }
+niao_bytecode = { path = "crates/niao_bytecode" }
+niao_vm = { path = "crates/niao_vm" }
+niao_format = { path = "crates/niao_format" }
+niao_lint = { path = "crates/niao_lint" }
+niao_docs = { path = "crates/niao_docs" }
+niao_web = { path = "crates/niao_web" }
+niao_pkg = { path = "crates/niao_pkg" }
 ahiru_core = { path = "crates/ahiru_core" }
-neko_nm = { path = "crates/neko_nm" }
-neko_tensor = { path = "crates/neko_tensor" }
-neko_ml = { path = "crates/neko_ml" }
-neko_classic = { path = "crates/neko_classic" }
-neko_data = { path = "crates/neko_data" }
-neko_graph = { path = "crates/neko_graph" }
-neko_rag = { path = "crates/neko_rag" }
-neko_llm = { path = "crates/neko_llm" }
+niao_nm = { path = "crates/niao_nm" }
+niao_tensor = { path = "crates/niao_tensor" }
+niao_ml = { path = "crates/niao_ml" }
+niao_classic = { path = "crates/niao_classic" }
+niao_data = { path = "crates/niao_data" }
+niao_graph = { path = "crates/niao_graph" }
+niao_rag = { path = "crates/niao_rag" }
+niao_llm = { path = "crates/niao_llm" }
 clap = { version = "4", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 axum = "0.8"

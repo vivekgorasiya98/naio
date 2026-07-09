@@ -4,14 +4,14 @@ Graph neural network support: DSA graphs → sparse adjacency → GCN / GraphSAG
 
 ## Import
 
-```neko
+```niao
 import "nml"
 import "dsa"
 ```
 
 ## Workflow
 
-```neko
+```niao
 let g = graph_new(6)
 graph_add_edge(g, 0, 1)
 graph_add_edge(g, 1, 2)
@@ -42,4 +42,4 @@ let out = nml_graph_forward(layer, features, adj_norm)
 
 ## Example
 
-See `examples/ml/gnn_cora_style.neko` for a synthetic node-classification-style forward pass.
+See `examples/ml/gnn_cora_style.niao` for a synthetic node-classification-style forward pass.

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Run niao from this folder — no PATH setup required.
+set -euo pipefail
+
+MAC_DIR="$(cd "$(dirname "$0")" && pwd)"
+export NIAO_HOME="$MAC_DIR/niao_home"
+BIN="$NIAO_HOME/bin/niao"
+
+if [[ ! -x "$BIN" ]]; then
+    echo "Niao not built yet. In this folder run once:"
+    echo "  chmod +x setup.sh niao test.sh"
+    echo "  ./setup.sh"
+    exit 1
+fi
+
+exec "$BIN" "$@"

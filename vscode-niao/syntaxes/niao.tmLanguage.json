@@ -1,0 +1,193 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Niao",
+  "scopeName": "source.niao",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#http-methods" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#builtins" },
+    { "include": "#function-def" },
+    { "include": "#method-call" },
+    { "include": "#member-access" },
+    { "include": "#operators" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.niao",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.niao",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.niao",
+              "match": "\\\\([ntr\\\\\"]|.)"
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.niao",
+          "match": "\\b\\d+\\.\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.niao",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "http-methods": {
+      "patterns": [
+        {
+          "name": "keyword.other.http.niao",
+          "match": "\\b(GET|POST|PUT|DELETE|PATCH)\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.niao",
+          "match": "\\b(if|else|while|for|in|return|break|continue|try|catch|throw)\\b"
+        },
+        {
+          "name": "keyword.declaration.niao",
+          "match": "\\b(fn|let|import|as|struct|class|trait|extends|implements|static|public|private|server)\\b"
+        },
+        {
+          "name": "keyword.other.niao",
+          "match": "\\b(self|super)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.niao",
+          "match": "\\b(int|float|string|bool|void|array)\\b"
+        },
+        {
+          "name": "storage.type.error.niao",
+          "match": "\\berror\\b(?=\\s*[,)\\]\\}])"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.niao",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.language.nil.niao",
+          "match": "\\bnil\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.niao",
+          "match": "\\b(print|len|type|has_trait|assert|error|is_error|now_ms|now_us|make_int_array|make_random_int_array|super_booster_sort|is_sorted|super_boom_factorial|print_super_boom_factorial|super_boom_math|print_super_boom_math)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.builtin.niao",
+          "match": "\\b(push|pop|sort|sort_desc|binary_search|reverse|sum|min|max|index_of|contains|unique)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.builtin.niao",
+          "match": "\\b(list|stack|queue|deque|heap|set|map|graph|json|io|re|net)_[a-z][a-z0-9_]*\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.builtin.niao",
+          "match": "\\bjson_[a-z][a-z0-9_]*\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "function-def": {
+      "patterns": [
+        {
+          "name": "entity.name.function.niao",
+          "match": "(?<=\\bfn\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
+        },
+        {
+          "name": "entity.name.function.static.niao",
+          "match": "(?<=\\bstatic\\s+fn\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
+        }
+      ]
+    },
+    "method-call": {
+      "patterns": [
+        {
+          "name": "entity.name.function.member.niao",
+          "match": "(?<=\\.)[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\()"
+        }
+      ]
+    },
+    "member-access": {
+      "patterns": [
+        {
+          "name": "variable.other.property.niao",
+          "match": "(?<=\\.)[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arrow.niao",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.assignment.niao",
+          "match": "\\+=|-=|="
+        },
+        {
+          "name": "keyword.operator.comparison.niao",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.logical.niao",
+          "match": "&&|\\|\\||!"
+        },
+        {
+          "name": "keyword.operator.arithmetic.niao",
+          "match": "\\+|-|\\*|/|%"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "entity.name.type.niao",
+          "match": "(?<=\\b(struct|class|trait)\\s+)[A-Z][a-zA-Z0-9_]*"
+        },
+        {
+          "name": "entity.name.type.niao",
+          "match": "(?<=->\\s+)[A-Z][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "variable.other.niao",
+          "match": "[a-zA-Z_][a-zA-Z0-9_]*"
+        }
+      ]
+    }
+  }
+}

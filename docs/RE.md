@@ -1,18 +1,18 @@
 # Regular expression standard library
 
-Pattern matching, capture groups, search/replace, and splitting for Neko programs. Implemented in Rust via the [`regex`](https://docs.rs/regex) crate.
+Pattern matching, capture groups, search/replace, and splitting for Niao programs. Implemented in Rust via the [`regex`](https://docs.rs/regex) crate.
 
 Stateless functions compile the pattern on each call. For hot loops, use `re.compile` / `re_*_h` handle APIs to reuse a compiled regex.
 
 ## Import
 
-```neko
+```niao
 import "re"
 ```
 
 Use the **`re`** namespace object for short names:
 
-```neko
+```niao
 if re.test("\\d+", "x42") {
     print(re.search("(\\d+)", "x42").groups[1])
 }
@@ -20,7 +20,7 @@ if re.test("\\d+", "x42") {
 
 ### Custom alias
 
-```neko
+```niao
 import "re" as rx
 
 let ok = rx.valid("^\\w+@\\w+\\.\\w+$")
@@ -125,7 +125,7 @@ Global builtins with `re_` prefix mirror the namespace API:
 
 ## Examples
 
-```neko
+```niao
 import "re" as rx
 
 fn main() {
@@ -149,7 +149,7 @@ fn main() {
 
     // Compiled handle for repeated use
     let word = rx.compile("[A-Za-z]+", "i")
-    let hits = rx.find_all_strings_h(word, "Neko runs FAST")
+    let hits = rx.find_all_strings_h(word, "Niao runs FAST")
     rx.close(word)
 }
 ```
@@ -157,13 +157,13 @@ fn main() {
 Run the demo:
 
 ```bash
-neko run examples/re_demo.neko
+niao run examples/re_demo.niao
 ```
 
 Run tests:
 
 ```bash
-neko run tests/re.neko
+niao run tests/re.niao
 ```
 
 ## Errors

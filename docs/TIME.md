@@ -1,25 +1,25 @@
 # Time standard library
 
-Wall-clock timestamps, formatting, parsing, IANA time zones, and date arithmetic for Neko programs. Implemented in Rust via `chrono` and `chrono-tz`.
+Wall-clock timestamps, formatting, parsing, IANA time zones, and date arithmetic for Niao programs. Implemented in Rust via `chrono` and `chrono-tz`.
 
 > **Note:** Core builtins `now_ms()` and `now_us()` measure **monotonic** elapsed time since process start (good for benchmarks). The `time` library provides **wall-clock** Unix timestamps.
 
 ## Import
 
-```neko
+```niao
 import "time"
 ```
 
 Use the **`time`** namespace object for short names:
 
-```neko
+```niao
 let now = time.now_unix_ms()
 print(time.format(now, "%Y-%m-%d %H:%M:%S", "UTC"))
 ```
 
 ### Custom alias
 
-```neko
+```niao
 import "time" as t
 
 let dt = t.now("local")
@@ -140,7 +140,7 @@ Parse failures, unknown timezones, and invalid dates return **error values** (no
 
 ## Examples
 
-```neko
+```niao
 import "time" as t
 
 fn main() {
@@ -158,11 +158,11 @@ fn main() {
 Run the demo:
 
 ```bash
-neko run examples/time_demo.neko
+niao run examples/time_demo.niao
 ```
 
 Run tests:
 
 ```bash
-neko run tests/time.neko
+niao run tests/time.niao
 ```

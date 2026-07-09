@@ -1,0 +1,21 @@
+[package]
+name = "niao_ml"
+version.workspace = true
+edition.workspace = true
+description = "Deep learning: autograd, layers, training for NML"
+
+[dependencies]
+niao_tensor = { path = "../niao_tensor" }
+niao_data = { path = "../niao_data" }
+niao_graph = { path = "../niao_graph" }
+rayon = "1"
+serde = { version = "1", features = ["derive"] }
+rand = "0.8"
+rand_distr = "0.4"
+
+[features]
+default = ["cpu"]
+cpu = ["niao_tensor/cpu"]
+cuda = ["niao_tensor/cuda"]
+cuda-f16 = ["niao_tensor/cuda-f16"]
+wgpu = ["niao_tensor/wgpu"]

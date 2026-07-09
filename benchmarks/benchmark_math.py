@@ -13,16 +13,16 @@ MOD = 1_000_000_007
 EXPECTED = 31_101_423
 RUNS = 5
 ROOT = Path(__file__).resolve().parent
-NEKO_FILE = ROOT / "math_bench.neko"
-NEKO_TIME_RE = re.compile(
+NIAO_FILE = ROOT / "math_bench.niao"
+NIAO_TIME_RE = re.compile(
     r"(?:run: ([\d.]+) ms(?: \(compile: [\d.]+ ms\))?|finished in ([\d.]+) ms)"
 )
 
 
-def parse_neko_time(stderr: str) -> float:
-    match = NEKO_TIME_RE.search(stderr)
+def parse_niao_time(stderr: str) -> float:
+    match = NIAO_TIME_RE.search(stderr)
     if not match:
-        raise RuntimeError(f"could not parse neko timing: {stderr!r}")
+        raise RuntimeError(f"could not parse niao timing: {stderr!r}")
     return float(match.group(1) or match.group(2))
 
 
@@ -44,16 +44,16 @@ class BenchResult:
         return max(self.times_ms)
 
 
-def find_neko() -> str:
+def find_niao() -> str:
     for candidate in (
-        shutil.which("neko"),
-        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "neko.exe",
-        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "neko",
-        ROOT.parent / "target" / "release" / "neko.exe",
+        shutil.which("niao"),
+        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "niao.exe",
+        Path(os.environ.get("USERPROFILE", "")) / ".cargo" / "bin" / "niao",
+        ROOT.parent / "target" / "release" / "niao.exe",
     ):
         if candidate and Path(candidate).is_file():
             return str(candidate)
-    raise FileNotFoundError("neko not found (install or add ~/.cargo/bin to PATH)")
+    raise FileNotFoundError("niao not found (install or add ~/.cargo/bin to PATH)")
 
 
 def find_node() -> str:
@@ -80,15 +80,15 @@ def verify_python(n: int = ITERATIONS) -> None:
         raise ValueError(f"Python math checksum mismatch")
 
 
-def verify_neko(neko: str) -> None:
+def verify_niao(niao: str) -> None:
     proc = subprocess.run(
-        [neko, str(ROOT / "math_bench_verify.neko")],
+        [niao, str(ROOT / "math_bench_verify.niao")],
         capture_output=True,
         text=True,
         check=True,
     )
     if int(proc.stdout.strip()) != EXPECTED:
-        raise ValueError(f"Neko math checksum mismatch: {proc.stdout.strip()!r}")
+        raise ValueError(f"Niao math checksum mismatch: {proc.stdout.strip()!r}")
 
 
 def verify_javascript(node: str) -> None:
@@ -140,12 +140,12 @@ def time_javascript(node: str, iterations: int, runs: int) -> BenchResult:
     return BenchResult("JavaScript (Node)", data["times_ms"])
 
 
-def time_neko(neko: str, iterations: int, runs: int) -> BenchResult:
-    if not NEKO_FILE.is_file():
-        raise FileNotFoundError(f"missing {NEKO_FILE}")
+def time_niao(niao: str, iterations: int, runs: int) -> BenchResult:
+    if not NIAO_FILE.is_file():
+        raise FileNotFoundError(f"missing {NIAO_FILE}")
 
     subprocess.run(
-        [neko, str(NEKO_FILE), "time"],
+        [niao, str(NIAO_FILE), "time"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         check=True,
@@ -154,15 +154,15 @@ def time_neko(neko: str, iterations: int, runs: int) -> BenchResult:
     times: list[float] = []
     for _ in range(runs):
         proc = subprocess.run(
-            [neko, str(NEKO_FILE), "time"],
+            [niao, str(NIAO_FILE), "time"],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.PIPE,
             text=True,
             check=True,
         )
-        times.append(parse_neko_time(proc.stderr))
+        times.append(parse_niao_time(proc.stderr))
 
-    return BenchResult("Neko", times)
+    return BenchResult("Niao", times)
 
 
 def print_report(results: list[BenchResult], runs: int, iterations: int) -> None:
@@ -208,12 +208,12 @@ def main():
     iterations = int(sys.argv[1]) if len(sys.argv) > 1 else ITERATIONS
     runs = int(sys.argv[2]) if len(sys.argv) > 2 else RUNS
 
-    neko = find_neko()
+    niao = find_niao()
     node = find_node()
 
     print("Verifying arithmetic loop correctness...")
     verify_python(iterations)
-    verify_neko(neko)
+    verify_niao(niao)
     verify_javascript(node)
     print(f"All implementations return {EXPECTED}")
     print()
@@ -224,7 +224,7 @@ def main():
     results = [
         time_python(iterations, runs),
         time_javascript(node, iterations, runs),
-        time_neko(neko, iterations, runs),
+        time_niao(niao, iterations, runs),
     ]
     print_report(results, runs, iterations)
 

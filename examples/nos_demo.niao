@@ -1,0 +1,26 @@
+import "nos" as os
+
+fn main() {
+    print("Platform: " + os.platform() + " (" + os.arch() + ")")
+    print("PID: " + os.getpid())
+    print("CPUs: " + os.cpu_count())
+    print("CWD: " + os.getcwd())
+    print("Path sep: '" + os.sep + "'")
+
+    let user = os.username()
+    if !is_error(user) {
+        print("User: " + user)
+    }
+
+    let host = os.hostname()
+    if !is_error(host) {
+        print("Host: " + host)
+    }
+
+    let args = os.argv()
+    if len(args) > 0 {
+        print("Script args: " + json_stringify(args))
+    } else {
+        print("No script args (try: niao run examples/nos_demo.niao hello world)")
+    }
+}

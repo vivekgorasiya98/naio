@@ -4,7 +4,7 @@ Environment variables, `.env` file loading, typed accessors, schema validation, 
 
 ## Import
 
-```neko
+```niao
 import "nenv"
 ```
 
@@ -14,7 +14,7 @@ Flat builtins (`nenv_get`, `nenv_load`, …) are also available globally after i
 
 ## Quick start
 
-```neko
+```niao
 import "nenv"
 
 nenv.load_defaults()
@@ -84,4 +84,4 @@ Use stores when you need env config without polluting the global process environ
 
 ## Example
 
-See [`examples/nenv_demo.neko`](../examples/nenv_demo.neko) and [`tests/nenv.neko`](../tests/nenv.neko).
+See [`examples/nenv_demo.niao`](../examples/nenv_demo.niao) and [`tests/nenv.niao`](../tests/nenv.niao).

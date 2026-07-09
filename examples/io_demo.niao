@@ -1,0 +1,47 @@
+import "io"
+
+fn main() {
+    print("=== Niao I/O library demo ===")
+
+    // Paths
+    print("cwd: " + io_cwd())
+    print("temp: " + io_temp_dir())
+    print("home: " + io_home_dir())
+
+    let demo_dir = io_join(io_temp_dir(), "niao_io_demo")
+    io_create_dir_all(demo_dir)
+    print("demo dir: " + demo_dir)
+
+    // Fast sync read/write
+    let path = io_join(demo_dir, "greeting.txt")
+    io_write_file(path, "Hello from Niao I/O!\n")
+    print("wrote: " + path)
+    print("content: " + io_read_file(path))
+
+    // Line-based I/O
+    io_write_lines(io_join(demo_dir, "lines.txt"), ["alpha", "beta", "gamma"])
+    let lines = io_read_lines(io_join(demo_dir, "lines.txt"))
+    print("lines: " + lines[0] + lines[1] + lines[2])
+
+    // Streaming (buffered, good for large files)
+    let h = io_open(path, "a")
+    io_write(h, "Appended line.\n")
+    io_close(h)
+    print("after append: " + io_read_file(path))
+
+    // Re-read file (sync). For background I/O use io_async_read + io_task_wait
+    // after rebuilding niao from source (older binaries may hang on async wait).
+    let async_content = io_read_file(path)
+    print("read back: " + async_content)
+
+    // Metadata
+    print("size: " + io_file_size(path))
+    print("modified_ms: " + io_modified_ms(path))
+
+    // Cleanup
+    io_remove_file(io_join(demo_dir, "lines.txt"))
+    io_remove_file(path)
+    io_remove_dir(demo_dir)
+
+    print("done")
+}

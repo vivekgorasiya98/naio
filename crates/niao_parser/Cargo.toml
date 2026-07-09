@@ -1,0 +1,11 @@
+[package]
+name = "niao_parser"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_errors = { workspace = true }
+niao_lexer = { workspace = true }
+
+[dev-dependencies]

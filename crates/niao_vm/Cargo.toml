@@ -1,0 +1,22 @@
+[package]
+name = "niao_vm"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+cranelift-codegen = "0.133.1"
+cranelift-frontend = "0.133.1"
+cranelift-jit = "0.133.1"
+cranelift-module = "0.133.1"
+cranelift-native = "0.133.1"
+ahiru_core = { workspace = true }
+niao_ast = { workspace = true }
+niao_bytecode = { workspace = true }
+niao_ir = { workspace = true }
+niao_runtime = { workspace = true, features = ["nmongo", "nrag", "nllm"] }
+niao_llm = { workspace = true }
+niao_errors = { workspace = true }
+num-bigint = "0.4"
+
+[dev-dependencies]
+niao_parser = { workspace = true }

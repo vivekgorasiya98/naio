@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Niao Registry Admin</title>
+  <style>
+    :root { --bg:#0f1419; --card:#1a2332; --accent:#3d9eff; --text:#e8eef5; --muted:#8b9cb3; --ok:#3dd68c; --warn:#f0b429; --err:#ff6b6b; --border:#2a3548; }
+    * { box-sizing:border-box; }
+    body { font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); margin:0; padding:1.5rem; line-height:1.5; }
+    h1 { font-size:1.35rem; margin:0 0 0.25rem; }
+    .sub { color:var(--muted); margin-bottom:1.5rem; font-size:0.9rem; }
+    .tabs { display:flex; gap:0.35rem; margin-bottom:1rem; flex-wrap:wrap; }
+    .tab { padding:0.5rem 0.9rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-weight:600; }
+    .tab.active { background:rgba(61,158,255,0.15); color:var(--accent); border-color:rgba(61,158,255,0.35); }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .card { background:var(--card); border-radius:12px; padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border); }
+    label { display:block; font-size:0.82rem; color:var(--muted); margin:0.6rem 0 0.25rem; }
+    input, textarea, select { width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; background:#0f1419; color:var(--text); }
+    button { margin-top:0.75rem; padding:0.55rem 1rem; border:none; border-radius:8px; background:var(--accent); color:#fff; font-weight:600; cursor:pointer; }
+    button.secondary { background:#2a3548; margin-left:0.4rem; }
+    button.warn { background:var(--warn); color:#111; }
+    button.danger { background:var(--err); }
+    .row { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .row > * { flex:1; min-width:140px; }
+    pre { background:#0f1419; padding:0.75rem; border-radius:8px; overflow:auto; font-size:0.78rem; max-height:360px; }
+    .msg { margin-top:0.75rem; padding:0.65rem; border-radius:8px; font-size:0.88rem; }
+    .msg.ok { background:rgba(61,214,140,0.12); color:var(--ok); }
+    .msg.err { background:rgba(255,107,107,0.12); color:var(--err); }
+    .hidden { display:none; }
+    table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    th, td { text-align:left; padding:0.45rem 0.35rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    .pill { display:inline-block; font-size:0.7rem; padding:0.15rem 0.4rem; border-radius:5px; background:#2a3548; color:var(--muted); text-transform:uppercase; }
+    .pill.active { color:var(--ok); }
+    .pill.discontinued, .pill.yanked { color:var(--warn); }
+    .actions button { margin:0.15rem 0.15rem 0 0; padding:0.25rem 0.5rem; font-size:0.75rem; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="loginCard" class="card">
+    <h1>Registry Admin</h1>
+    <p class="sub">Manage packages, versions, and Niao releases</p>
+    <label>Username</label><input id="username" autocomplete="username" />
+    <label>Password</label><input id="password" type="password" autocomplete="current-password" />
+    <button id="loginBtn">Login</button>
+    <div id="loginMsg" class="msg hidden"></div>
+  </div>
+
+  <div id="dash" class="hidden">
+    <h1>Registry Admin</h1>
+    <p class="sub" id="statusLine">Loading…</p>
+    <div class="tabs">
+      <button class="tab active" data-panel="packages" type="button">Packages</button>
+      <button class="tab" data-panel="releases" type="button">Niao releases</button>
+      <button class="tab" data-panel="publish" type="button">Publish</button>
+      <button class="tab secondary" id="logoutBtn" type="button" style="margin-left:auto">Logout</button>
+    </div>
+
+    <div class="panel active" id="panel-packages">
+      <div class="card">
+        <div class="row">
+          <button id="refreshPkgs" class="secondary" type="button">Refresh</button>
+          <button id="rebuildCatalog" class="secondary" type="button">Rebuild catalog</button>
+          <button id="ftpSync" class="secondary" type="button">Sync FTP</button>
+        </div>
+        <div id="pkgTableWrap" style="margin-top:1rem;overflow:auto"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-releases">
+      <div class="card">
+        <h3 style="margin:0 0 0.75rem">Add / update release</h3>
+        <div class="row">
+          <div><label>Version</label><input id="relVersion" placeholder="0.2.3" /></div>
+          <div><label>Status</label><select id="relStatus"><option value="active">active</option><option value="discontinued">discontinued</option><option value="draft">draft</option></select></div>
+        </div>
+        <label><input type="checkbox" id="relLatest" /> Mark as latest</label>
+        <label>Changelog</label><textarea id="relChangelog" rows="3"></textarea>
+        <button id="saveRelease" type="button">Save release</button>
+        <div id="relMsg" class="msg hidden"></div>
+        <div id="relTableWrap" style="margin-top:1rem;overflow:auto"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-publish">
+      <div class="card">
+        <h3 style="margin:0 0 0.75rem">Publish library version</h3>
+        <div class="row">
+          <div><label>Name</label><input id="pkgName" placeholder="nllm" /></div>
+          <div><label>Version</label><input id="pkgVersion" placeholder="0.2.2" /></div>
+        </div>
+        <label>package.json</label>
+        <textarea id="pkgJson" rows="8"></textarea>
+        <button id="publishBtn" type="button">Publish</button>
+        <div id="dashMsg" class="msg hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenKey = 'niao_nm_admin_token';
+    const api = (path, opts = {}) => fetch(path, {
+      ...opts,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(opts.headers || {}),
+        ...(localStorage.getItem(tokenKey) ? { Authorization: 'Bearer ' + localStorage.getItem(tokenKey) } : {}),
+      },
+    });
+
+    function showMsg(el, text, ok) {
+      el.textContent = text;
+      el.className = 'msg ' + (ok ? 'ok' : 'err');
+      el.classList.remove('hidden');
+    }
+
+    async function loadStatus() {
+      const res = await api('/admin/status');
+      const data = await res.json();
+      document.getElementById('statusLine').textContent = `MongoDB: ${data.mongo ? 'on' : 'off'} · FTP: ${data.ftp ? 'on' : 'off'} · API: ${data.apiUrl}`;
+    }
+
+    function statusPill(s) {
+      return `<span class="pill ${s}">${s || 'active'}</span>`;
+    }
+
+    async function loadPackages() {
+      const res = await api('/admin/packages');
+      const data = await res.json();
+      const rows = (data.packages || []).flatMap((p) => {
+        const details = p.version_details || (p.versions || []).map((v) => ({ version: v, status: 'active' }));
+        if (!details.length) return [[p.name, p.version || '-', p.status || 'active', '-', '']];
+        return details.map((d) => [p.name, d.version, p.status || 'active', d.status || 'active', p.remote ? 'remote' : 'bundled']);
+      });
+      document.getElementById('pkgTableWrap').innerHTML = `<table>
+        <thead><tr><th>Package</th><th>Version</th><th>Pkg status</th><th>Ver status</th><th>Actions</th></tr></thead>
+        <tbody>${rows.map(([n,v,ps,vs]) => `<tr>
+          <td><strong>${n}</strong><br><span class="pill">${vs === 'remote' ? '' : ''}</span></td>
+          <td>${v}</td>
+          <td>${statusPill(ps)}</td>
+          <td>${statusPill(vs)}</td>
+          <td class="actions">
+            <button data-act="v-disc" data-n="${n}" data-v="${v}">Discontinue ver</button>
+            <button data-act="v-active" data-n="${n}" data-v="${v}">Activate ver</button>
+            <button class="danger" data-act="v-yank" data-n="${n}" data-v="${v}">Yank</button>
+            <button class="danger" data-act="v-del" data-n="${n}" data-v="${v}">Delete</button>
+            <button data-act="p-disc" data-n="${n}">Discontinue pkg</button>
+            <button data-act="p-hide" data-n="${n}">Hide pkg</button>
+          </td>
+        </tr>`).join('')}</tbody></table>`;
+    }
+
+    async function loadReleases() {
+      const res = await api('/admin/releases');
+      const data = await res.json();
+      document.getElementById('relTableWrap').innerHTML = `<table>
+        <thead><tr><th>Version</th><th>Status</th><th>Variants</th><th>Actions</th></tr></thead>
+        <tbody>${(data.releases || []).map((r) => `<tr>
+          <td>v${r.version} ${r.is_latest ? '<span class="pill active">latest</span>' : ''}</td>
+          <td>${statusPill(r.status)}</td>
+          <td>${(r.variants || []).map((v) => `${v.label}: ${v.url ? '<a href="'+v.url+'">file</a>' : 'no url'}`).join('<br>')}</td>
+          <td class="actions">
+            <button data-act="r-disc" data-v="${r.version}">Discontinue</button>
+            <button data-act="r-act" data-v="${r.version}">Activate</button>
+            <button class="danger" data-act="r-del" data-v="${r.version}">Delete</button>
+          </td>
+        </tr>`).join('')}</tbody></table>`;
+    }
+
+    document.getElementById('loginBtn').onclick = async () => {
+      const res = await fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username.value, password: password.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) return showMsg(loginMsg, data.error || 'login failed', false);
+      localStorage.setItem(tokenKey, data.token);
+      loginCard.classList.add('hidden');
+      dash.classList.remove('hidden');
+      await loadStatus();
+      await loadPackages();
+      await loadReleases();
+    };
+
+    document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem(tokenKey); location.reload(); };
+
+    document.querySelectorAll('.tab[data-panel]').forEach((btn) => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tab[data-panel]').forEach((t) => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+      };
+    });
+
+    document.getElementById('refreshPkgs').onclick = loadPackages;
+    document.getElementById('rebuildCatalog').onclick = async () => {
+      const res = await api('/admin/catalog/rebuild', { method: 'POST' });
+      const data = await res.json();
+      showMsg(dashMsg, res.ok ? 'Catalog rebuilt' : data.error, res.ok);
+      loadPackages();
+    };
+    document.getElementById('ftpSync').onclick = async () => {
+      const res = await api('/admin/sync/ftp', { method: 'POST' });
+      const data = await res.json();
+      showMsg(dashMsg, res.ok ? `FTP synced (${data.uploaded} files)` : data.error, res.ok);
+    };
+
+    document.getElementById('publishBtn').onclick = async () => {
+      const name = pkgName.value.trim();
+      const version = pkgVersion.value.trim();
+      const res = await api(`/admin/packages/${encodeURIComponent(name)}/${encodeURIComponent(version)}/publish-json`, {
+        method: 'POST',
+        body: JSON.stringify({ package: JSON.parse(pkgJson.value) }),
+      });
+      const data = await res.json();
+      showMsg(dashMsg, res.ok ? `Published ${name}@${version}` : data.error, res.ok);
+      if (res.ok) loadPackages();
+    };
+
+    document.getElementById('saveRelease').onclick = async () => {
+      const body = {
+        version: relVersion.value.trim(),
+        status: relStatus.value,
+        is_latest: relLatest.checked,
+        changelog: relChangelog.value,
+      };
+      const res = await api('/admin/releases', { method: 'POST', body: JSON.stringify(body) });
+      const data = await res.json();
+      showMsg(relMsg, res.ok ? `Saved release ${body.version}` : data.error, res.ok);
+      if (res.ok) loadReleases();
+    };
+
+    document.body.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const act = btn.dataset.act;
+      const n = btn.dataset.n;
+      const v = btn.dataset.v;
+      let res;
+      if (act === 'v-disc') res = await api(`/admin/packages/${n}/${v}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'discontinued' }) });
+      if (act === 'v-active') res = await api(`/admin/packages/${n}/${v}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) });
+      if (act === 'v-yank') res = await api(`/admin/packages/${n}/${v}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'yanked' }) });
+      if (act === 'v-del') res = await api(`/admin/packages/${n}/${v}?hard=true`, { method: 'DELETE' });
+      if (act === 'p-disc') res = await api(`/admin/packages/${n}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'discontinued' }) });
+      if (act === 'p-hide') res = await api(`/admin/packages/${n}/status`, { method: 'PATCH', body: JSON.stringify({ status: 'hidden' }) });
+      if (act === 'r-disc') res = await api(`/admin/releases/${v}`, { method: 'PATCH', body: JSON.stringify({ status: 'discontinued' }) });
+      if (act === 'r-act') res = await api(`/admin/releases/${v}`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) });
+      if (act === 'r-del') res = await api(`/admin/releases/${v}`, { method: 'DELETE' });
+      if (res) {
+        const data = await res.json();
+        showMsg(dashMsg, res.ok ? 'Updated' : data.error, res.ok);
+        loadPackages();
+        loadReleases();
+      }
+    });
+
+    if (localStorage.getItem(tokenKey)) {
+      loginCard.classList.add('hidden');
+      dash.classList.remove('hidden');
+      loadStatus();
+      loadPackages();
+      loadReleases();
+    }
+  </script>
+</body>
+</html>

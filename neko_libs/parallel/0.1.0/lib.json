@@ -1,8 +1,0 @@
-{
-  "name": "parallel",
-  "version": "0.1.0",
-  "kind": "native",
-  "description": "Threading, mutexes, channels, worker pools, and cooperative poll",
-  "import_paths": ["parallel", "std/parallel"],
-  "builtin_count": 38
-}

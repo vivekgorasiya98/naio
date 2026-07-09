@@ -1,4 +1,4 @@
-(* Neko Language Grammar v0.1 *)
+(* Niao Language Grammar v0.1 *)
 
 program        = { import_stmt | top_level } ;
 top_level      = fn_def | struct_def | class_def | trait_def | server_block | route_block ;

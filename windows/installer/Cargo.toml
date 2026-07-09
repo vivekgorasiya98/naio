@@ -1,13 +1,13 @@
 [workspace]
 
 [package]
-name = "neko_installer"
+name = "niao_installer"
 version = "0.2.2"
 edition = "2021"
 publish = false
 
 [[bin]]
-name = "NekoSetup"
+name = "NiaoSetup"
 path = "src/main.rs"
 
 [dependencies]

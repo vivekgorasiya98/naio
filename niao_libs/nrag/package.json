@@ -1,0 +1,11 @@
+{
+    "name": "nrag",
+    "version": "0.2.2",
+    "kind": "native",
+    "description": "Fast vector RAG: batch embeddings, parallel cosine search, index build/save",
+    "import_paths": [
+        "nrag",
+        "std/nrag"
+    ],
+    "builtin_count": 15
+}

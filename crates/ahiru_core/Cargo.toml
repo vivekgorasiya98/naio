@@ -2,7 +2,7 @@
 name = "ahiru_core"
 version.workspace = true
 edition.workspace = true
-description = "High-performance HTTP/WebSocket server core for Neko ahiru-server"
+description = "High-performance HTTP/WebSocket server core for Niao ahiru-server"
 
 [dependencies]
 axum = { workspace = true, features = ["ws", "multipart"] }

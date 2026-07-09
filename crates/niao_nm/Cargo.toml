@@ -1,0 +1,13 @@
+[package]
+name = "niao_nm"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "nm"
+path = "src/main.rs"
+
+[dependencies]
+niao_pkg = { workspace = true }
+clap = { workspace = true }
+serde_json = { workspace = true }

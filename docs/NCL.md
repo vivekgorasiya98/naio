@@ -1,10 +1,10 @@
-# NCL — Neko Column Library
+# NCL — Niao Column Library
 
-Fast **pandas + numpy**-style columnar data for Neko. Implemented in native Rust with packed `IntArray` / `FloatArray` / `BoolArray` columns, vectorized kernels, and optional Rayon parallel reductions.
+Fast **pandas + numpy**-style columnar data for Niao. Implemented in native Rust with packed `IntArray` / `FloatArray` / `BoolArray` columns, vectorized kernels, and optional Rayon parallel reductions.
 
 ## Import
 
-```neko
+```niao
 import "ncl"
 ```
 
@@ -18,7 +18,7 @@ Paths `import "std/ncl"` and `import "ncl"` are equivalent.
 | `ncl.ones(n, as_float?)` | Ones-filled packed array |
 | `ncl.arange(start, stop, step?)` | Integer range → `IntArray` |
 | `ncl.linspace(start, stop, n)` | Evenly spaced floats → `FloatArray` |
-| `ncl.array(data)` | Homogeneous array from Neko array literal |
+| `ncl.array(data)` | Homogeneous array from Niao array literal |
 | `ncl.slice(arr, start, end)` | Zero-copy-style slice (new buffer) |
 | `ncl.add(a, b)` / `sub` / `mul` / `div` | Element-wise ops on packed arrays |
 | `ncl.abs` / `sqrt` / `exp` / `log` / `sin` / `cos` | Unary math ufuncs |
@@ -88,7 +88,7 @@ Handles are opaque `ncl_*` objects (use `ncl.kind(h)` → `ncl_series`, `ncl_dat
 - Use **batch builtins** (`ncl.mul(a, 2)`) instead of per-element loops.
 - `ncl_sum` / `ncl_mean` have **VM fast paths** on the bytecode VM.
 - `parallel_sum` uses Rayon when length ≥ 65,536.
-- Benchmark: `./target/debug/neko bench benchmarks/ncl_bench.neko`
+- Benchmark: `./target/debug/niao bench benchmarks/ncl_bench.niao`
 
 ## Error codes
 
@@ -101,8 +101,8 @@ Handles are opaque `ncl_*` objects (use `ncl.kind(h)` → `ncl_series`, `ncl_dat
 | E1964 | Type mismatch |
 | E1965 | Shape error |
 
-Errors surface as Neko error values with `kind: "ncl_error"`.
+Errors surface as Niao error values with `kind: "ncl_error"`.
 
 ## Example
 
-See [examples/ncl_demo.neko](../examples/ncl_demo.neko).
+See [examples/ncl_demo.niao](../examples/ncl_demo.niao).

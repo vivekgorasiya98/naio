@@ -1,8 +1,0 @@
-﻿{
-  "name": "dsa",
-  "version": "0.1.0",
-  "kind": "native",
-  "description": "Data structures and algorithms: list, stack, queue, heap, map, graph, sort",
-  "import_paths": ["dsa", "std/dsa"],
-  "builtin_count": 90
-}

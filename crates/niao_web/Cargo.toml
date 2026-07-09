@@ -1,0 +1,12 @@
+[package]
+name = "niao_web"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+niao_ast = { workspace = true }
+niao_interpreter = { workspace = true }
+niao_parser = { workspace = true }
+niao_runtime = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true }

@@ -1,6 +1,6 @@
 # DSA standard library
 
-Native data structures and algorithms for Neko programs: linked list, stack, queue, deque, heap, hash set, hash map, graphs, and array utilities. Implemented in Rust for speed on both the bytecode VM and the tree-walking interpreter.
+Native data structures and algorithms for Niao programs: linked list, stack, queue, deque, heap, hash set, hash map, graphs, and array utilities. Implemented in Rust for speed on both the bytecode VM and the tree-walking interpreter.
 
 Unlike `json`, `time`, or `parallel`, the DSA module exposes **flat global builtins only** — there is no `dsa.list_new` namespace object. Call `list_new()`, `stack_push()`, and the rest directly after importing.
 
@@ -8,13 +8,13 @@ Unlike `json`, `time`, or `parallel`, the DSA module exposes **flat global built
 
 ## Import
 
-```neko
+```niao
 import "dsa"
 ```
 
 `import "std/dsa"` is equivalent.
 
-```neko
+```niao
 import "dsa"
 
 fn main() {
@@ -154,7 +154,7 @@ Keys must be **int**, **float**, **string**, or **bool**. Insertion order is pre
 
 ## Hash map
 
-Keys follow the same rules as sets. Values can be any Neko value. Insertion order is preserved for `map_keys` / `map_values`.
+Keys follow the same rules as sets. Values can be any Niao value. Insertion order is preserved for `map_keys` / `map_values`.
 
 | Function | Args | Returns | Description |
 |----------|------|---------|-------------|
@@ -207,7 +207,7 @@ Undirected edges are stored in both directions. Self-loops add one directed edge
 
 ## Array algorithms
 
-These operate on ordinary Neko **arrays** (`[1, 2, 3]`) and **int arrays**, mutating the array in place where noted. They are registered by the DSA module alongside native structures.
+These operate on ordinary Niao **arrays** (`[1, 2, 3]`) and **int arrays**, mutating the array in place where noted. They are registered by the DSA module alongside native structures.
 
 | Function | Args | Returns | Description |
 |----------|------|---------|-------------|
@@ -233,12 +233,12 @@ These operate on ordinary Neko **arrays** (`[1, 2, 3]`) and **int arrays**, muta
 Full walkthrough:
 
 ```bash
-neko run examples/dsa_demo.neko
+niao run examples/dsa_demo.niao
 ```
 
 Minimal graph + heap snippet:
 
-```neko
+```niao
 import "dsa"
 
 fn main() {
@@ -260,18 +260,18 @@ fn main() {
 ## Tests
 
 ```bash
-neko run tests/dsa_list.neko
-neko run tests/dsa_stack_queue.neko
-neko run tests/dsa_heap.neko
-neko run tests/dsa_set_map.neko
-neko run tests/dsa_graph.neko
-neko run tests/dsa_arrays.neko
+niao run tests/dsa_list.niao
+niao run tests/dsa_stack_queue.niao
+niao run tests/dsa_heap.niao
+niao run tests/dsa_set_map.niao
+niao run tests/dsa_graph.niao
+niao run tests/dsa_arrays.niao
 ```
 
 Benchmark:
 
 ```bash
-neko run benchmarks/dsa_bench.neko
+niao run benchmarks/dsa_bench.niao
 ```
 
 ---

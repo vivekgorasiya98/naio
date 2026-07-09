@@ -2,9 +2,9 @@
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
 $MacDir = $PSScriptRoot
-$MacHome = Join-Path $MacDir "neko_home"
-$LibsDest = Join-Path $MacHome "neko_libs"
-$SrcLibs = Join-Path $Root "neko_libs"
+$MacHome = Join-Path $MacDir "niao_home"
+$LibsDest = Join-Path $MacHome "niao_libs"
+$SrcLibs = Join-Path $Root "niao_libs"
 $Engine = Join-Path $MacDir "engine"
 
 $Version = "0.2.2"
@@ -89,9 +89,9 @@ function Copy-EngineSource {
     robocopy $cratesSrc $cratesDest /E /XD target .git /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
     if ($LASTEXITCODE -ge 8) { throw "robocopy crates failed: $LASTEXITCODE" }
 
-    $libsDest = Join-Path $Engine "neko_libs"
+    $libsDest = Join-Path $Engine "niao_libs"
     robocopy $SrcLibs $libsDest /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-    if ($LASTEXITCODE -ge 8) { throw "robocopy neko_libs failed: $LASTEXITCODE" }
+    if ($LASTEXITCODE -ge 8) { throw "robocopy niao_libs failed: $LASTEXITCODE" }
 }
 
 Write-Host "== Preparing self-contained mac/ bundle =="
@@ -126,17 +126,17 @@ foreach ($lib in ($libNames + @("ahiru"))) {
 }
 
 $catalog = @{
-    neko_version = $Version
+    niao_version = $Version
     updated_at = $Ts
     libs = $libs
 }
 $catalog | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $LibsDest "catalog.json") -Encoding UTF8
 
 $install = @{
-    neko_version = $Version
+    niao_version = $Version
     mode = "global"
     installed_at = $Ts
-    root = "neko_home"
+    root = "niao_home"
     source_root = "engine"
     libs = $libs
 }
@@ -144,8 +144,8 @@ $install | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $MacHome "install.js
 
 $ExDest = Join-Path $MacDir "examples"
 New-Item -ItemType Directory -Force -Path $ExDest | Out-Null
-Copy-Item (Join-Path $Root "examples\hello.neko") $ExDest -Force
-Copy-Item (Join-Path $Root "examples\re_demo.neko") $ExDest -Force
+Copy-Item (Join-Path $Root "examples\hello.niao") $ExDest -Force
+Copy-Item (Join-Path $Root "examples\re_demo.niao") $ExDest -Force
 
 Copy-EngineSource
 
@@ -155,5 +155,5 @@ Write-Host "  Libraries: $(($libs.Keys | Measure-Object).Count)"
 Write-Host "  Engine:    $Engine"
 Write-Host ""
 Write-Host "Copy the whole mac/ folder to your MacBook, then run:"
-Write-Host "  chmod +x setup.sh neko test.sh"
+Write-Host "  chmod +x setup.sh niao test.sh"
 Write-Host "  ./setup.sh"

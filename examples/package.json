@@ -1,7 +1,7 @@
 {
-  "name": "neko-examples",
+  "name": "niao-examples",
   "version": "1.0.0",
-  "neko": "0.1.0",
+  "niao": "0.1.0",
   "dependencies": {
     "io": "0.1.0",
     "json": "^0.1.0"

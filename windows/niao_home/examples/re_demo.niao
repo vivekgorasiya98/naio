@@ -1,0 +1,41 @@
+// Regular-expression standard library showcase.
+// Run:  niao run examples/re_demo.niao
+import "re"
+
+fn main() {
+    print("== validation ==")
+    print(re_valid("^\\w+@\\w+\\.\\w+$"))
+    print(re_escape("price: $9.99"))
+
+    print("== search & capture ==")
+    let email = "Contact: alice@niao.dev for info"
+    let m = re_search("(\\w+)@(\\w+)\\.(\\w+)", email)
+    if m != nil {
+        print(m.full)
+        print(m.groups[1])
+        print(m.groups[2] + "." + m.groups[3])
+    }
+
+    print("== find all ==")
+    let nums = re_find_all_strings("-?\\d+", "temps: -3, 0, 12, 99")
+    for n in nums {
+        print(n)
+    }
+
+    print("== replace & split ==")
+    print(re_replace("\\s+", "  too   many   spaces  ", " "))
+    let fields = re_split("[,;]\\s*", "name, age; city")
+    for f in fields {
+        print(f)
+    }
+
+    print("== compiled handle (fast loop) ==")
+    let word = re_compile("[A-Za-z]+", "i")
+    let text = "Niao runs FAST"
+    let hits = re_find_all_strings_h(word, text)
+    print("words: " + len(hits))
+    for w in hits {
+        print(w)
+    }
+    re_close(word)
+}
