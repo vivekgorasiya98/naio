@@ -1,9 +1,12 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/index.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "api/index.js" }
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "src/public/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.js" }
   ]
 }

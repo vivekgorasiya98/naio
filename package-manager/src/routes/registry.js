@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
   buildTarball,
   listPackages,
@@ -12,6 +11,7 @@ import {
 } from '../services/storage.js';
 import { remoteTarballUrl } from '../services/remote-registry.js';
 import { config } from '../config.js';
+import { publicDir } from '../lib/paths.js';
 import {
   buildSitePayload,
   hostedSourceExists,
@@ -27,8 +27,7 @@ import {
 } from '../db/registry-db.js';
 import { mongoEnabled, isDbReady } from '../db/mongo.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const homePage = path.join(__dirname, '../public/home.html');
+const homePage = path.join(publicDir, 'home.html');
 
 export async function registryRoutes(app) {
   app.get('/', async (_req, reply) => {

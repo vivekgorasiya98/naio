@@ -19,7 +19,8 @@
     "build-release": "node src/scripts/build-release.js",
     "write-manifest": "node src/scripts/write-manifest.js",
     "release": "node src/scripts/build-release.js",
-    "deploy": "npm run release"
+    "deploy": "npm run release",
+    "vercel-build": "node src/scripts/sync-public-assets.js"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.2",

@@ -68,18 +68,20 @@ Serverless runtimes have a **read-only** filesystem (`/var/task`). The app auto-
 **Do not set `DATA_DIR=./data` on serverless** — leave it unset so `/tmp` is used automatically.
 
 ```bash
-# Deploy to Vercel (from package-manager/)
+# Deploy to Vercel — set Root Directory to package-manager in project settings
 npm install -g vercel
+cd package-manager
 vercel
 
 # Set env vars in Vercel dashboard (or vercel env add):
-# API_URL, FILES_URL, MONGODB_URI, MONGODB_DB
+# API_URL=https://nms.taurus-tech.in
+# FILES_URL, MONGODB_URI, MONGODB_DB
 # ADMIN_USERNAME, ADMIN_PASSWORD, JWT_SECRET
 # FTP_HOST, FTP_USER, FTP_PASSWORD, FTP_REMOTE_DIR=/
 # FTP_AUTO_SYNC=false   # use manual Sync FTP from admin on serverless
 ```
 
-`vercel.json` routes all traffic to `api/index.js` (Fastify serverless handler).
+`vercel-build` copies `src/public/assets` → `public/assets` so CSS and brand files load on Vercel (without this, the site looks unstyled). `vercel.json` routes dynamic traffic to `api/index.js`.
 
 Static files must already exist on **nm.c4compare.com** (`npm run deploy` from your dev machine).
 

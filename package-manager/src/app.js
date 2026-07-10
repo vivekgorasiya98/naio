@@ -4,16 +4,13 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { config } from './config.js';
+import { assetsDir, publicDir } from './lib/paths.js';
 import { ensureDirs } from './services/storage.js';
 import { initAuth } from './services/auth.js';
 import { connectMongo, mongoEnabled } from './db/mongo.js';
 import { registryRoutes } from './routes/registry.js';
 import { adminRoutes } from './routes/admin.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export async function buildApp() {
   const app = Fastify({
@@ -62,13 +59,13 @@ export async function buildApp() {
   await adminRoutes(app);
 
   await app.register(fastifyStatic, {
-    root: path.join(__dirname, 'public/assets'),
+    root: assetsDir,
     prefix: '/assets/',
     decorateReply: false,
   });
 
   await app.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'),
+    root: publicDir,
     prefix: '/admin/',
     decorateReply: false,
   });
