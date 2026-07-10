@@ -1,7 +1,7 @@
 //! CRUD operations.
 
 use super::common::*;
-use super::handles::{parallel_client_pool, with_client, with_optional_session};
+use super::handles::{parallel_client_pool, with_client};
 use super::ops::*;
 use super::runtime::block_on;
 use super::types::{

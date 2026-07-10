@@ -2,14 +2,10 @@
 
 use super::handles::{alloc_handle, NmlHandle};
 use crate::ncl::handles::{with_handle, NclHandle};
-use crate::{Value, ValueRef};
+use crate::ValueRef;
 use niao_ast::Span;
 use niao_errors::codes;
 use niao_tensor::{Device, Tensor};
-
-pub fn tensor_from_float_array(data: &[f32], shape: &[usize], device: Device) -> Result<Tensor, String> {
-    Tensor::from_cpu_data(shape, data.to_vec(), device).map_err(|e| e.to_string())
-}
 
 pub fn tensor_to_float_array(t: &Tensor) -> Result<Vec<f32>, String> {
     t.to_cpu().map_err(|e| e.to_string())
@@ -43,11 +39,4 @@ pub fn from_packed_float_array(args: &[ValueRef], span: Span) -> Result<Tensor, 
     Tensor::from_cpu_data(&shape, data, niao_tensor::global_device()).map_err(|e| {
         crate::RuntimeError::at(span, codes::E1973_NML_SHAPE, e.to_string())
     })
-}
-
-pub fn tensor_as_value(t: &Tensor, span: Span) -> Result<ValueRef, crate::RuntimeError> {
-    let data = t.to_cpu().map_err(|e| {
-        crate::RuntimeError::at(span, codes::E1971_NML_ERROR, e.to_string())
-    })?;
-    Ok(Value::FloatArray(data.iter().map(|&x| x as f64).collect()).ref_cell())
 }

@@ -72,6 +72,13 @@ export const config = {
     autoSync: process.env.FTP_AUTO_SYNC !== 'false',
   },
   niaoVersion: process.env.NIAO_VERSION || '0.2.2',
+  websiteUrl: (process.env.NIAO_WEBSITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://niao.risu.in').replace(/\/$/, ''),
+  social: {
+    discord: process.env.NIAO_DISCORD_URL || process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/XwmcDqxtm',
+    instagram: process.env.NIAO_INSTAGRAM_URL || process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/risusolutions/',
+    linkedin: process.env.NIAO_LINKEDIN_URL || process.env.NEXT_PUBLIC_LINKEDIN_URL || 'https://www.linkedin.com/company/risu-solutions/',
+    x: process.env.NIAO_X_URL || process.env.NEXT_PUBLIC_X_URL || 'https://x.com/RisuSolutions',
+  },
   githubRepo: (process.env.NIAO_GITHUB_REPO || 'https://github.com/vivekgorasiya98/naio').replace(/\/$/, ''),
   releaseBinaries: {
     windows: process.env.NIAO_RELEASE_WINDOWS || '',

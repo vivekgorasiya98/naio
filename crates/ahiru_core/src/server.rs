@@ -1,7 +1,7 @@
 use crate::auth::AuthConfig;
 use crate::cache::{CacheManager, SharedCacheManager};
 use crate::config::AhiruConfig;
-use crate::context::{CookieOpts, RequestContext};
+use crate::context::RequestContext;
 use crate::db::{DbManager, SharedDbManager};
 use crate::groups::ScopeRegistry;
 use crate::handler::{HandlerFn, WsHandlerFn};
@@ -12,7 +12,7 @@ use crate::middleware::{
     apply_pre_middleware, check_permission, logging_enabled_in_chain, middleware_from_config,
     request_id_enabled_in_chain, sort_middleware, MiddlewareEntry, MiddlewareKind, RateLimiter,
 };
-use crate::native::{native_health_handler, native_ping_handler};
+use crate::native::native_health_handler;
 use crate::port::{bind_listener, PortBindError, PortBindPolicy};
 use crate::response::{AhiruResponse, ResponseBody};
 use crate::router::{

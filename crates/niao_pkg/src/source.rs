@@ -1,4 +1,4 @@
-use crate::catalog::{standard_libs, LibSpec, NIAO_TOOLCHAIN_VERSION};
+use crate::catalog::{standard_libs, LibSpec};
 use crate::error::{PkgError, PkgResult};
 use crate::package::{is_latest_request, latest_version, list_lib_versions, pick_version, read_lib_package, LibPackage};
 use std::env;
@@ -219,10 +219,6 @@ pub fn install_specs_from_source(
         out.push((pkg, dir));
     }
     Ok(out)
-}
-
-pub fn toolchain_version_from_source(_source_root: &Path) -> String {
-    NIAO_TOOLCHAIN_VERSION.to_string()
 }
 
 /// Fresh `niao` / `nm` from `cargo build --release` under the source tree.

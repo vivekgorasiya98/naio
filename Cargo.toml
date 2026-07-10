@@ -38,11 +38,11 @@ niao_ast = { path = "crates/niao_ast" }
 niao_errors = { path = "crates/niao_errors" }
 niao_lexer = { path = "crates/niao_lexer" }
 niao_parser = { path = "crates/niao_parser" }
-niao_runtime = { path = "crates/niao_runtime", features = ["nmongo", "nrag", "nllm"] }
+niao_runtime = { path = "crates/niao_runtime" }
 niao_interpreter = { path = "crates/niao_interpreter" }
 niao_ir = { path = "crates/niao_ir" }
 niao_bytecode = { path = "crates/niao_bytecode" }
-niao_vm = { path = "crates/niao_vm" }
+niao_vm = { path = "crates/niao_vm", default-features = false }
 niao_format = { path = "crates/niao_format" }
 niao_lint = { path = "crates/niao_lint" }
 niao_docs = { path = "crates/niao_docs" }
@@ -63,6 +63,9 @@ axum = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 regex = "1"
+
+[patch.crates-io]
+hf-hub = { path = "vendor/hf-hub" }
 
 [profile.release]
 opt-level = 3

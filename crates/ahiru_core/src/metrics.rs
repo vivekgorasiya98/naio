@@ -23,6 +23,3 @@ pub fn prometheus_text() -> String {
     )
 }
 
-pub fn mount_metrics_path() -> &'static str {
-    "/metrics"
-}

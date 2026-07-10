@@ -5,9 +5,11 @@ mod gc;
 mod io_fast;
 mod json_fast;
 mod ncl_fast;
+#[cfg(feature = "nllm")]
 mod nllm_fast;
 mod nml_fast;
 mod nmongo_fast;
+#[cfg(feature = "nrag")]
 mod nrag_fast;
 mod turbo;
 pub mod call_bridge;
@@ -79,7 +81,9 @@ pub struct Vm {
     json_fast_paths: HashMap<u16, json_fast::JsonFastPath>,
     io_fast_paths: HashMap<u16, io_fast::IoFastPath>,
     nmongo_fast_paths: HashMap<u16, nmongo_fast::NmongoFastPath>,
+    #[cfg(feature = "nrag")]
     nrag_fast_paths: HashMap<u16, nrag_fast::NragFastPath>,
+    #[cfg(feature = "nllm")]
     nllm_fast_paths: HashMap<u16, nllm_fast::NllmFastPath>,
     /// Native DSA handles (indexed by `FastVal::Native`).
     native_ds: Vec<Rc<RefCell<NativeDs>>>,
@@ -146,7 +150,9 @@ impl Vm {
             json_fast_paths: HashMap::new(),
             io_fast_paths: HashMap::new(),
             nmongo_fast_paths: HashMap::new(),
+            #[cfg(feature = "nrag")]
             nrag_fast_paths: HashMap::new(),
+            #[cfg(feature = "nllm")]
             nllm_fast_paths: HashMap::new(),
             native_ds: Vec::new(),
             native_refs: Arc::new(Vec::new()),
@@ -256,7 +262,9 @@ impl Vm {
         self.dsa_fast_paths.clear();
         self.nml_fast_paths.clear();
         self.nmongo_fast_paths.clear();
+        #[cfg(feature = "nrag")]
         self.nrag_fast_paths.clear();
+        #[cfg(feature = "nllm")]
         self.nllm_fast_paths.clear();
         self.dsa_loops.clear();
         self.dsa_loop_state.clear();
@@ -310,9 +318,11 @@ impl Vm {
             if let Some(path) = nmongo_fast::NmongoFastPath::from_name(name) {
                 self.nmongo_fast_paths.insert(idx, path);
             }
+            #[cfg(feature = "nrag")]
             if let Some(path) = nrag_fast::NragFastPath::from_name(name) {
                 self.nrag_fast_paths.insert(idx, path);
             }
+            #[cfg(feature = "nllm")]
             if let Some(path) = nllm_fast::NllmFastPath::from_name(name) {
                 self.nllm_fast_paths.insert(idx, path);
             }
@@ -612,7 +622,9 @@ impl Vm {
                     let io_fast = self.io_fast_paths.get(&fidx).copied();
                     let nml_fast = self.nml_fast_paths.get(&fidx).copied();
                     let nmongo_fast = self.nmongo_fast_paths.get(&fidx).copied();
+                    #[cfg(feature = "nrag")]
                     let nrag_fast = self.nrag_fast_paths.get(&fidx).copied();
+                    #[cfg(feature = "nllm")]
                     let nllm_fast = self.nllm_fast_paths.get(&fidx).copied();
                     let dsa_fast = self.dsa_fast_paths.get(&fidx).copied();
                     let native = self.native_indices.get(&fidx).map(Rc::clone);
@@ -706,6 +718,7 @@ impl Vm {
                             return Ok(StepOutcome::Continue);
                         }
                     }
+                    #[cfg(feature = "nrag")]
                     if let Some(path) = nrag_fast {
                         if nrag_fast::NragFastPath::try_execute_stack(&mut self.stack, argc, path) {
                             return Ok(StepOutcome::Continue);
@@ -733,6 +746,7 @@ impl Vm {
                             self.stack.push(v);
                         }
                     }
+                    #[cfg(feature = "nllm")]
                     if let Some(path) = nllm_fast {
                         if nllm_fast::NllmFastPath::try_execute_stack(
                             &mut self.stack,

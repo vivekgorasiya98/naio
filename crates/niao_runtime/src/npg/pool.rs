@@ -1,11 +1,10 @@
 //! r2d2 connection pool builtins.
 
-use super::config::{pool_manager_plain, pool_manager_tls, pool_opts_from_map};
-use super::handles::{self, alloc_pooled_conn, alloc_pool, PgPool, PooledConn};
+use super::config::{pool_manager, pool_opts_from_map};
+use super::handles::{self, alloc_pooled_conn, alloc_pool};
 use crate::{error_from_runtime, error_value, NiaoResult, RuntimeError, Value, ValueRef};
 use niao_ast::Span;
 use niao_errors::codes;
-use postgres::config::SslMode;
 use r2d2::Pool;
 use std::collections::HashMap;
 
@@ -37,37 +36,17 @@ pub fn npg_pool(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
     let (config, display, max_size, min_idle, max_lifetime, connection_timeout) =
         pool_opts_from_map(&opts).map_err(|msg| RuntimeError::at(span, codes::E1907_NPG_TLS, msg))?;
 
-    let pool = if config.get_ssl_mode() == SslMode::Disable {
-        let manager = pool_manager_plain(&config);
-        let mut builder = Pool::builder()
-            .max_size(max_size)
-            .min_idle(Some(min_idle))
-            .connection_timeout(connection_timeout);
-        if let Some(lifetime) = max_lifetime {
-            builder = builder.max_lifetime(Some(lifetime));
-        }
-        PgPool::Plain(
-            builder.build(manager).map_err(|e| {
-                RuntimeError::at(span, codes::E1907_NPG_TLS, e.to_string())
-            })?,
-        )
-    } else {
-        let manager = pool_manager_tls(&config).map_err(|msg| {
-            RuntimeError::at(span, codes::E1907_NPG_TLS, msg)
-        })?;
-        let mut builder = Pool::builder()
-            .max_size(max_size)
-            .min_idle(Some(min_idle))
-            .connection_timeout(connection_timeout);
-        if let Some(lifetime) = max_lifetime {
-            builder = builder.max_lifetime(Some(lifetime));
-        }
-        PgPool::Tls(
-            builder.build(manager).map_err(|e| {
-                RuntimeError::at(span, codes::E1907_NPG_TLS, e.to_string())
-            })?,
-        )
-    };
+    let manager = pool_manager(&config).map_err(|msg| RuntimeError::at(span, codes::E1907_NPG_TLS, msg))?;
+    let mut builder = Pool::builder()
+        .max_size(max_size)
+        .min_idle(Some(min_idle))
+        .connection_timeout(connection_timeout);
+    if let Some(lifetime) = max_lifetime {
+        builder = builder.max_lifetime(Some(lifetime));
+    }
+    let pool = builder.build(manager).map_err(|e| {
+        RuntimeError::at(span, codes::E1907_NPG_TLS, e.to_string())
+    })?;
 
     Ok(ok_int(alloc_pool(pool, display) as i64))
 }
@@ -89,17 +68,8 @@ pub fn npg_pool_get(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
     arity(args, 1, "npg_pool_get", span)?;
     let id = pool_arg(args, 0, "npg_pool_get", span)?;
     handles::with_pool(id, "npg_pool_get", span, |pool_handle| {
-        let conn_id = match &pool_handle.pool {
-            PgPool::Plain(pool) => {
-                let pooled = pool.get().map_err(|e| e.to_string())?;
-                alloc_pooled_conn(PooledConn::Plain(pooled), pool_handle.conninfo.clone())
-            }
-            PgPool::Tls(pool) => {
-                let pooled = pool.get().map_err(|e| e.to_string())?;
-                alloc_pooled_conn(PooledConn::Tls(pooled), pool_handle.conninfo.clone())
-            }
-        };
-        Ok(conn_id as i64)
+        let pooled = pool_handle.pool.get().map_err(|e| e.to_string())?;
+        Ok(alloc_pooled_conn(pooled, pool_handle.conninfo.clone()) as i64)
     })
     .map(ok_int)
     .or_else(|e| Ok(error_from_runtime(&e)))
@@ -109,10 +79,7 @@ pub fn npg_pool_status(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
     arity(args, 1, "npg_pool_status", span)?;
     let id = pool_arg(args, 0, "npg_pool_status", span)?;
     handles::with_pool(id, "npg_pool_status", span, |pool_handle| {
-        let state = match &pool_handle.pool {
-            PgPool::Plain(pool) => pool.state(),
-            PgPool::Tls(pool) => pool.state(),
-        };
+        let state = pool_handle.pool.state();
         let mut map = HashMap::new();
         map.insert("size".to_string(), Value::Int(state.connections as i64).ref_cell());
         map.insert("idle".to_string(), Value::Int(state.idle_connections as i64).ref_cell());

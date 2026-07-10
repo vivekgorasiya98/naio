@@ -1,10 +1,6 @@
-use crate::handler::{HandlerFn, HandlerResult};
+use crate::handler::HandlerFn;
 use crate::response::AhiruResponse;
 use crate::context::RequestContext;
-use std::future::Future;
-use std::pin::Pin;
-
-pub type SchemaFn = HandlerFn;
 
 pub async fn run_validation(
     schema: &HandlerFn,

@@ -19,12 +19,13 @@ pub enum NmlHandle {
     Trainer(Trainer),
     DataLoader(DataLoader),
     KMeans(KMeans),
-    Logistic(LogisticRegression),
-    DecisionTree(DecisionTree),
+    Logistic(#[allow(dead_code)] LogisticRegression),
+    DecisionTree(#[allow(dead_code)] DecisionTree),
     RandomForest(RandomForest),
     SparseAdj(SparseAdj),
     GcnLayer(GcnLayer),
     GraphSageLayer(GraphSageLayer),
+    #[allow(dead_code)]
     GnnModel(GnnModel),
 }
 
@@ -153,13 +154,6 @@ pub fn display_for(id: u64) -> String {
 
 pub fn len_for(id: u64) -> Option<usize> {
     HANDLES.with(|m| m.borrow().get(&id).map(|h| h.len()))
-}
-
-pub fn is_nml_handle(val: &crate::Value) -> Option<u64> {
-    match val {
-        crate::Value::NmlHandle(id) => Some(*id),
-        _ => None,
-    }
 }
 
 /// GNN forward without cloning layer/features/adj handles (hot path for graph ML).

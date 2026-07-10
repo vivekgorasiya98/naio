@@ -66,17 +66,6 @@ pub fn string_arg(args: &[ValueRef], idx: usize, name: &str, span: Span) -> Resu
     }
 }
 
-pub fn bool_arg(args: &[ValueRef], idx: usize, name: &str, span: Span) -> Result<bool, RuntimeError> {
-    match &*args[idx].borrow() {
-        Value::Bool(b) => Ok(*b),
-        other => Err(RuntimeError::at(
-            span,
-            codes::E1974_NML_TYPE,
-            format!("{name}() expects bool, got {}", other.type_name()),
-        )),
-    }
-}
-
 pub fn nml_handle_arg(args: &[ValueRef], idx: usize, name: &str, span: Span) -> Result<u64, RuntimeError> {
     match &*args[idx].borrow() {
         Value::NmlHandle(id) => Ok(*id),

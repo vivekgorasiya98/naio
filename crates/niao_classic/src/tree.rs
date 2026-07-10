@@ -6,7 +6,7 @@ use rayon::prelude::*;
 
 #[derive(Clone, Debug)]
 enum Node {
-    Leaf { value: f32, class: usize },
+    Leaf { _value: f32, class: usize },
     Split {
         feature: usize,
         threshold: f32,
@@ -72,7 +72,6 @@ impl RandomForest {
     }
 
     pub fn fit(&mut self, x: &[f32], y: &[f32], n: usize, dims: usize) {
-        let mut rng = rand::thread_rng();
         self.trees.par_iter_mut().for_each(|tree| {
             let mut local_rng = rand::thread_rng();
             let sample: Vec<usize> = (0..n).map(|_| local_rng.gen_range(0..n)).collect();
@@ -190,7 +189,7 @@ fn leaf(y: &[f32], indices: &[usize]) -> Node {
     let mean = sum / indices.len().max(1) as f32;
     let class = mean.round() as usize;
     Node::Leaf {
-        value: mean,
+        _value: mean,
         class,
     }
 }

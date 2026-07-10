@@ -36,6 +36,7 @@ pub struct RegistryLibEntry {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct RegistryVersionMeta {
     pub name: String,
     pub version: String,
@@ -44,6 +45,7 @@ pub struct RegistryVersionMeta {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct RegistryDist {
     pub tarball: String,
     pub shasum: String,

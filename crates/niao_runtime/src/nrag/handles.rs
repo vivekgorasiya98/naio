@@ -1,6 +1,5 @@
 //! Handle table for loaded RAG indexes + global embedder.
 
-use super::common::*;
 use crate::RuntimeError;
 use niao_ast::Span;
 use niao_errors::codes;
@@ -67,5 +66,3 @@ where
     let emb = guard.as_mut().unwrap();
     f(emb).map_err(|msg| RuntimeError::at(span, codes::E1981_NRAG_ERROR, msg))
 }
-
-pub type IndexHandle = u64;

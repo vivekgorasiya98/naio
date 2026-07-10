@@ -27,10 +27,6 @@ pub fn nml_enable_grad(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
     Ok(Value::NmlHandle(id).ref_cell())
 }
 
-pub fn is_grad_enabled(id: u64) -> bool {
-    GRAD_TENSORS.with(|s| s.borrow().contains(&id))
-}
-
 pub fn nml_zero_grad(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
     arity(args, 1, "nml_zero_grad", span)?;
     let id = nml_handle_arg(args, 0, "nml_zero_grad", span)?;

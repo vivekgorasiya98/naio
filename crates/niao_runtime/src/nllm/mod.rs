@@ -105,7 +105,7 @@ fn parse_load_opts(args: &[ValueRef], span: Span) -> Result<LoadOptions, Runtime
     Ok(opts)
 }
 
-fn parse_gen_opts(map: Option<&HashMap<String, ValueRef>>, span: Span) -> Result<GenerateOptions, RuntimeError> {
+fn parse_gen_opts(map: Option<&HashMap<String, ValueRef>>, _span: Span) -> Result<GenerateOptions, RuntimeError> {
     let mut opts = GenerateOptions::default();
     let Some(map) = map else {
         return Ok(opts);
@@ -281,7 +281,7 @@ fn nllm_chat_stream(args: &[ValueRef], span: Span) -> NiaoResult<ValueRef> {
         }
     };
 
-    let mut deltas: Vec<ValueRef> = Vec::new();
+    let deltas: Vec<ValueRef> = Vec::new();
     let text = handles::chat_stream_session(id, messages, gen_opts, sse_handle, span)?;
 
     let mut out = HashMap::new();

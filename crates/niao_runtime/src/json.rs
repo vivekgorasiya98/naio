@@ -17,8 +17,6 @@ use std::rc::Rc;
 
 #[cfg(feature = "nmongo")]
 use crate::nmongo::bson_field_from_raw;
-#[cfg(feature = "nmongo")]
-use bson::Document;
 
 fn type_err(span: Span, msg: impl Into<String>) -> RuntimeError {
     RuntimeError::TypeError {

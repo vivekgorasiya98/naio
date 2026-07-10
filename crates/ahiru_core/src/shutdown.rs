@@ -44,7 +44,18 @@ pub fn trigger_shutdown() {
 
 
 
-pub async fn wait_for_shutdown(mut rx: watch::Receiver<bool>, drain_secs: u64) {
+pub async fn wait_for_shutdown(rx: watch::Receiver<bool>, drain_secs: u64) {
+    #[cfg(unix)]
+    {
+        wait_for_shutdown_signal(rx, drain_secs).await;
+        return;
+    }
+    #[cfg(not(unix))]
+    wait_for_shutdown_common(rx, drain_secs).await;
+}
+
+#[cfg(not(unix))]
+async fn wait_for_shutdown_common(mut rx: watch::Receiver<bool>, drain_secs: u64) {
 
     tokio::select! {
 

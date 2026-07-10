@@ -13,10 +13,15 @@ ahiru_core = { workspace = true }
 niao_ast = { workspace = true }
 niao_bytecode = { workspace = true }
 niao_ir = { workspace = true }
-niao_runtime = { workspace = true, features = ["nmongo", "nrag", "nllm"] }
-niao_llm = { workspace = true }
+niao_runtime = { workspace = true, features = ["nmongo"] }
+niao_llm = { workspace = true, optional = true }
 niao_errors = { workspace = true }
 num-bigint = "0.4"
+
+[features]
+default = []
+nrag = ["niao_runtime/nrag"]
+nllm = ["niao_runtime/nllm", "dep:niao_llm"]
 
 [dev-dependencies]
 niao_parser = { workspace = true }

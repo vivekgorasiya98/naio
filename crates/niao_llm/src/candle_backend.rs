@@ -73,6 +73,7 @@ impl CandleSession {
         Ok(format_chatml(messages))
     }
 
+    #[allow(dead_code)]
     pub fn chat(&mut self, messages: &[ChatMessage], opts: GenerateOptions) -> Result<String> {
         self.chat_stream(messages, opts, |_| Ok(()))
     }

@@ -27,10 +27,12 @@ clap = { workspace = true }
 tokio = { workspace = true }
 
 [features]
-default = ["nllm-llama"]
-nllm-llama = ["niao_runtime/nllm-llama"]
-nllm-cuda = ["niao_runtime/nllm-cuda"]
-nllm-vulkan = ["niao_runtime/nllm-vulkan"]
+default = ["nllm-llama", "nrag", "nllm"]
+nrag = ["niao_vm/nrag", "niao_runtime/nrag"]
+nllm = ["niao_vm/nllm", "niao_runtime/nllm"]
+nllm-llama = ["nllm", "niao_runtime/nllm-llama"]
+nllm-cuda = ["nllm", "niao_runtime/nllm-cuda"]
+nllm-vulkan = ["nllm", "niao_runtime/nllm-vulkan"]
 
 [dev-dependencies]
 niao_interpreter = { workspace = true }

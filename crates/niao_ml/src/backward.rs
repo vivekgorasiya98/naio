@@ -2,7 +2,7 @@
 
 use crate::layer::{Layer, LayerCache, LayerKind};
 use niao_tensor::cpu;
-use niao_tensor::{Device, Tensor, TensorResult};
+use niao_tensor::{Tensor, TensorResult};
 
 #[derive(Debug, Clone, Default)]
 pub struct ParamGrad {
@@ -150,7 +150,7 @@ fn backward_tanh(cache: &LayerCache, grad_out: &[f32]) -> TensorResult<(Vec<f32>
     Ok((gx, ParamGrad::default()))
 }
 
-fn backward_softmax(cache: &LayerCache, grad_out: &[f32]) -> TensorResult<(Vec<f32>, ParamGrad)> {
+fn backward_softmax(_cache: &LayerCache, grad_out: &[f32]) -> TensorResult<(Vec<f32>, ParamGrad)> {
     // For softmax output layer with CE loss, grad is pre-computed; passthrough
     Ok((grad_out.to_vec(), ParamGrad::default()))
 }

@@ -331,7 +331,7 @@ impl Layer {
                 Ok(result)
             }
             LayerKind::Conv2d {
-                in_channels,
+                in_channels: _,
                 out_channels,
                 kernel,
                 stride,

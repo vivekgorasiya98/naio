@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { syncToFtp, testFtpConnection, ftpConfigured } from '../services/ftp.js';
+import { syncToFtp, testFtpConnection, ftpConfigured, createConsoleFtpProgress } from '../services/ftp.js';
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ async function main() {
   console.log('Testing FTP connection…');
   try {
     const test = await testFtpConnection();
-    console.log(`  ✓ Connected to ${test.host} (${test.entries} files in ${test.pwd})\n`);
+    console.log(`  ✓ Connected to ${test.host} (${test.entries} entries in ${test.pwd})\n`);
   } catch (err) {
     console.error(`  ✗ ${err.message}\n`);
     console.error('Before syncing, unlock FTP in StackCP:');
@@ -24,8 +24,15 @@ async function main() {
   }
 
   console.log('Uploading registry data…');
-  const result = await syncToFtp();
-  console.log(`  ✓ Uploaded ${result.uploaded} files → ${result.remote}\n`);
+  const progress = createConsoleFtpProgress({ label: 'FTP sync' });
+  try {
+    const result = await syncToFtp({ onProgress: progress.onProgress });
+    progress.done(result);
+    console.log('');
+  } catch (err) {
+    progress.fail(err);
+    throw err;
+  }
 }
 
 main().catch((err) => {

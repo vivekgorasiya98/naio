@@ -15,7 +15,7 @@ mod ops;
 mod runtime;
 mod transactions;
 mod types;
-pub(crate) use types::{bson_field_from_raw, bson_to_niao_cell, raw_bson_ref_to_niao_cell};
+pub(crate) use types::{bson_field_from_raw, raw_bson_ref_to_niao_cell};
 
 use crate::{NativeFn, NiaoResult, Value, ValueRef};
 use aggregate::nmongo_aggregate;

@@ -1,6 +1,6 @@
 //! Sequential model container.
 
-use crate::backward::{clip_grads, ParamGrad};
+use crate::backward::ParamGrad;
 use crate::layer::Layer;
 use niao_tensor::{Device, Tensor, TensorResult};
 

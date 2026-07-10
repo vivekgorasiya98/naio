@@ -9,7 +9,7 @@ See **[DEPLOY.md](./DEPLOY.md)** for full deployment guide.
 
 ## Publish a new release (from your PC)
 
-One command builds **all platforms**, seeds the catalog, and uploads to FTP:
+One command — **build locally, upload directly to FTP**. No GitHub needed.
 
 ```bash
 cd package-manager
@@ -20,28 +20,24 @@ npm run release
 
 | Step | Action |
 |------|--------|
-| 1 | Build **Windows** locally (+ `NiaoSetup.exe`) |
-| 2 | Build **Linux + macOS** via GitHub Actions (if `GITHUB_TOKEN` set) |
-| 3 | Write `manifest.json` with all 5 platforms |
-| 4 | Seed library catalog |
-| 5 | Upload everything to FTP (`nm.c4compare.com`) |
+| 1 | Build `niao` + `nm` for your OS (+ `NiaoSetup.exe` on Windows) |
+| 2 | Write `manifest.json` |
+| 3 | Seed library catalog |
+| 4 | Upload everything to FTP (`nm.c4compare.com`) |
 
 ### Setup
 
-1. Bump version in `.env`: `NIAO_VERSION=0.2.3`
-2. Unlock FTP in StackCP
-3. For all platforms from Windows, add to `.env`:
-   ```
-   GITHUB_TOKEN=ghp_your_pat_here
-   GITHUB_REF=main
-   ```
-   PAT needs `repo` + `actions:read` scopes.
+1. Set FTP credentials in `.env` (`FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`)
+2. Bump version: `NIAO_VERSION=0.2.3`
+3. Unlock FTP in StackCP
+4. Run `npm run release`
+
+On Windows you get Windows builds. Run the same command on a Linux or Mac machine to add those platforms.
 
 ### Skip flags (optional)
 
 | Env | Effect |
 |-----|--------|
-| `NIAO_SKIP_CI=1` | Windows only, keep existing Linux/Mac files |
 | `NIAO_SKIP_FTP=1` | Build only, no upload |
 | `NIAO_SKIP_SEED=1` | Skip catalog rebuild |
 

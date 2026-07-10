@@ -32,11 +32,8 @@ const homePage = path.join(__dirname, '../public/home.html');
 
 export async function registryRoutes(app) {
   app.get('/', async (_req, reply) => {
-    const [html, catalog] = await Promise.all([
-      fs.readFile(homePage, 'utf8'),
-      readCatalog().catch(() => null),
-    ]);
-    const payload = await buildSitePayload(catalog);
+    const html = await fs.readFile(homePage, 'utf8');
+    const payload = await buildSitePayload();
     const injected = html.replace(
       '<!--SITE_DATA-->',
       `<script id="site-data" type="application/json">${JSON.stringify(payload).replace(/</g, '\\u003c')}</script>`,
@@ -44,10 +41,7 @@ export async function registryRoutes(app) {
     reply.type('text/html').send(injected);
   });
 
-  app.get('/v1/site', async () => {
-    const catalog = await readCatalog().catch(() => null);
-    return buildSitePayload(catalog);
-  });
+  app.get('/v1/site', async () => buildSitePayload());
 
   app.get('/health', async () => ({
     ok: true,

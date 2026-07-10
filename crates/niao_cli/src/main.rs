@@ -3,7 +3,6 @@ mod cache;
 mod ahiru;
 
 use cache::{build_to_cache, clean_bytecode_cache, default_cache_dir, load_or_compile};
-use niao_bytecode::compile_to_bytecode;
 use niao_docs::generate_docs;
 use niao_format::format_source;
 use niao_interpreter::Interpreter;

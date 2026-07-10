@@ -1,11 +1,11 @@
 /**
- * Full Niao release pipeline — build all platforms, seed catalog, upload FTP.
+ * Niao release — build locally, upload directly to FTP.
+ * No GitHub required.
  *
- * Windows: built locally (+ NiaoSetup.exe)
- * Linux / macOS: built via GitHub Actions (set GITHUB_TOKEN in .env)
- *
- * Usage (from package-manager/):
  *   npm run release
+ *
+ * Builds niao + nm for your OS, creates installers, seeds catalog,
+ * uploads everything to FTP (nm.c4compare.com).
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -16,14 +16,15 @@ import * as tar from 'tar';
 import dotenv from 'dotenv';
 import { config } from '../config.js';
 import { DEFAULT_PLATFORMS, releaseInstallerFileName } from '../db/registry-db.js';
-import { syncToFtp, testFtpConnection, ftpConfigured } from '../services/ftp.js';
+import { syncToFtp, testFtpConnection, ftpConfigured, createConsoleFtpProgress } from '../services/ftp.js';
 import {
-  githubCiConfigured,
-  triggerReleaseWorkflow,
-  waitForLatestRun,
-  downloadRunArtifacts,
-  copyCiArtifactsToReleases,
-} from './github-ci.js';
+  ensureWindowsBuildTools,
+  execWithMsvc,
+  hasNasm,
+  hasMsvcArm64,
+  hasMsvcX86,
+  hasClang,
+} from './ensure-build-tools.js';
 
 dotenv.config();
 
@@ -32,13 +33,16 @@ const pkgRoot = path.resolve(__dirname, '../..');
 const repoRoot = path.resolve(pkgRoot, '..');
 const version = config.niaoVersion;
 const releasesDir = path.join(config.dataDir, 'releases');
-const ciArtifactsDir = path.join(releasesDir, '.ci-artifacts');
 
 const CARGO_ARGS = '--release --no-default-features -p niao_cli -p niao_nm';
-const BUILD_ALL = process.env.NIAO_BUILD_ALL !== '0';
-const SKIP_CI = process.env.NIAO_SKIP_CI === '1';
 const SKIP_FTP = process.env.NIAO_SKIP_FTP === '1';
 const SKIP_SEED = process.env.NIAO_SKIP_SEED === '1';
+const MACOS_TARGETS = new Set(['x86_64-apple-darwin', 'aarch64-apple-darwin']);
+const LINUX_TARGETS = new Set(['x86_64-unknown-linux-gnu', 'aarch64-unknown-linux-gnu']);
+const WINDOWS_CROSS_TARGETS = new Set(['i686-pc-windows-msvc', 'aarch64-pc-windows-msvc']);
+
+/** @type {{ pathExtra: string, vsPath: string | null }} */
+let winBuildEnv = { pathExtra: '', vsPath: null };
 
 async function sha256File(filePath) {
   const buf = await fs.readFile(filePath);
@@ -66,32 +70,80 @@ function hostTarget() {
     ?.trim();
 }
 
-function installedTargets() {
-  const out = execSync('rustup target list --installed', { encoding: 'utf8' });
-  return new Set(out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean));
+function hasZigbuild() {
+  try {
+    execSync('cargo zigbuild --help', { stdio: 'pipe' });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function ensureRustTargets() {
-  console.log('Ensuring Rust targets…');
-  const installed = installedTargets();
-  for (const p of DEFAULT_PLATFORMS) {
-    if (installed.has(p.target)) continue;
+  const host = hostTarget();
+  const needed = new Set(
+    DEFAULT_PLATFORMS.map((p) => p.target).filter((t) => t && t !== host),
+  );
+  for (const target of needed) {
     try {
-      console.log(`  rustup target add ${p.target}`);
-      execSync(`rustup target add ${p.target}`, { stdio: 'inherit' });
+      execSync(`rustup target add ${target}`, { stdio: 'pipe' });
+      console.log(`  ✓ rust target ${target}`);
     } catch {
-      console.log(`  ⊘ could not add ${p.target}`);
+      console.log(`  ⊘ could not add rust target ${target}`);
     }
   }
 }
 
+function crossBuildMethod(target) {
+  if (LINUX_TARGETS.has(target)) return hasZigbuild() ? 'zig' : null;
+  if (process.platform !== 'win32' || !WINDOWS_CROSS_TARGETS.has(target)) return null;
+  if (target === 'i686-pc-windows-msvc' && (!hasNasm() || !hasMsvcX86(winBuildEnv.vsPath))) return null;
+  if (target === 'aarch64-pc-windows-msvc' && (!hasMsvcArm64(winBuildEnv.vsPath) || !hasClang(winBuildEnv.vsPath))) return null;
+  return 'cargo';
+}
+
 function cargoBuild(target) {
   const flag = target ? `--target ${target}` : '';
-  console.log(`  cargo build ${CARGO_ARGS} ${flag}`.trim());
-  execSync(`cargo build ${CARGO_ARGS} ${flag}`.trim(), {
+  const cmd = `cargo build ${CARGO_ARGS} ${flag}`.trim();
+  console.log(`  ${cmd}`);
+  execWithMsvc(cmd, {
+    cwd: repoRoot,
+    target: target || 'x86_64-pc-windows-msvc',
+    pathExtra: winBuildEnv.pathExtra,
+  });
+}
+
+function cargoZigbuild(target) {
+  console.log(`  cargo zigbuild ${CARGO_ARGS} --target ${target}`);
+  execSync(`cargo zigbuild ${CARGO_ARGS} --target ${target}`, {
     cwd: repoRoot,
     stdio: 'inherit',
   });
+}
+
+function canCrossBuild(target) {
+  if (MACOS_TARGETS.has(target)) return false;
+  return crossBuildMethod(target) != null;
+}
+
+function skipReason(platform) {
+  if (MACOS_TARGETS.has(platform.target)) {
+    return 'macOS requires a Mac (Apple SDK not available on Windows)';
+  }
+  if (LINUX_TARGETS.has(platform.target) && !hasZigbuild()) {
+    return 'install cargo-zigbuild + zig for Linux cross-compile';
+  }
+  if (platform.target === 'i686-pc-windows-msvc' && !hasNasm()) {
+    return 'NASM install failed — retry or install manually from nasm.us';
+  }
+  if (platform.target === 'aarch64-pc-windows-msvc') {
+    if (!hasMsvcArm64(winBuildEnv.vsPath)) return 'MSVC ARM64 tools install failed — run as Administrator';
+    if (!hasClang(winBuildEnv.vsPath)) return 'LLVM clang install failed — run as Administrator';
+  }
+  if (platform.target === 'i686-pc-windows-msvc' && !hasMsvcX86(winBuildEnv.vsPath)) {
+    return 'MSVC x86 tools install failed — run terminal as Administrator';
+  }
+  return 'unsupported cross-compile target';
 }
 
 function binPaths(target) {
@@ -158,57 +210,6 @@ async function packageArchive(platform, bins) {
   return { outName, outPath, stat, shasum: await sha256File(outPath) };
 }
 
-async function buildLocalPlatform(platform) {
-  const host = hostTarget();
-  if (platform.target !== host) {
-    return null;
-  }
-
-  try {
-    cargoBuild(null);
-  } catch {
-    console.log(`  ⊘ ${platform.id} local build failed`);
-    return null;
-  }
-
-  const bins = binPaths(null);
-  for (const p of [bins.niao, bins.nm]) {
-    try {
-      await fs.access(p);
-    } catch {
-      console.log(`  ⊘ ${platform.id} missing ${path.basename(p)}`);
-      return null;
-    }
-  }
-
-  const { outName, stat, shasum } = await packageArchive(platform, bins);
-  console.log(`  ✓ ${outName} (${(stat.size / 1024 / 1024).toFixed(2)} MB)`);
-
-  const variant = {
-    id: platform.id,
-    label: platform.label,
-    platform: platform.platform,
-    arch: platform.arch,
-    ext: platform.ext || 'zip',
-    url: `${config.filesUrl}/releases/${outName}`,
-    shasum,
-    size: stat.size,
-    status: 'active',
-    installer_ext: platform.installer_ext || 'sh',
-    installer_label: platform.installer_label || 'install.sh',
-  };
-
-  if (platform.id === 'windows-x64' && process.platform === 'win32') {
-    const winInstaller = await buildWindowsInstaller();
-    if (winInstaller) Object.assign(variant, winInstaller);
-  } else if (platform.id !== 'windows-x64') {
-    const unixInstaller = await buildUnixInstaller(platform, variant.url);
-    Object.assign(variant, unixInstaller);
-  }
-
-  return variant;
-}
-
 async function buildWindowsInstaller() {
   const platform = DEFAULT_PLATFORMS.find((p) => p.id === 'windows-x64');
   const winDir = path.join(repoRoot, 'windows');
@@ -262,35 +263,85 @@ async function buildUnixInstaller(platform, archiveUrl) {
   };
 }
 
-async function fetchCiBuilds() {
-  if (SKIP_CI || !githubCiConfigured()) {
-    if (!SKIP_CI && !githubCiConfigured()) {
-      console.log('\n⊘ GITHUB_TOKEN not set — Linux/macOS builds need GitHub Actions');
-      console.log('  Add GITHUB_TOKEN to .env (PAT with repo + actions:read/write)');
-      console.log('  Or place existing artifacts in data/releases/\n');
-    }
-    return;
+async function packagePlatformVariant(platform, bins) {
+  const { outName, stat, shasum } = await packageArchive(platform, bins);
+  console.log(`  ✓ ${outName} (${(stat.size / 1024 / 1024).toFixed(2)} MB)`);
+
+  const variant = {
+    id: platform.id,
+    label: platform.label,
+    platform: platform.platform,
+    arch: platform.arch,
+    ext: platform.ext || 'zip',
+    url: `${config.filesUrl}/releases/${outName}`,
+    shasum,
+    size: stat.size,
+    status: 'active',
+    installer_ext: platform.installer_ext || 'sh',
+    installer_label: platform.installer_label || 'install.sh',
+  };
+
+  if (platform.id === 'windows-x64' && process.platform === 'win32') {
+    const winInstaller = await buildWindowsInstaller();
+    if (winInstaller) Object.assign(variant, winInstaller);
+  } else if (platform.platform !== 'windows') {
+    const unixInstaller = await buildUnixInstaller(platform, variant.url);
+    Object.assign(variant, unixInstaller);
   }
 
-  console.log('\nFetching Linux + macOS builds from GitHub Actions…');
+  return variant;
+}
+
+async function buildLocalPlatform(platform) {
+  const host = hostTarget();
+  if (platform.target !== host) return null;
+
   try {
-    const ref = process.env.GITHUB_REF || 'main';
-    const triggered = await triggerReleaseWorkflow(config.githubRepo, ref);
-    if (!triggered) return;
-
-    const run = await waitForLatestRun(triggered.ownerRepo, triggered.workflowId, {
-      minRunId: triggered.minRunId,
-    });
-    console.log(`\n  ✓ CI run ${run.id} completed`);
-
-    await fs.rm(ciArtifactsDir, { recursive: true, force: true });
-    await downloadRunArtifacts(run.id, triggered.ownerRepo, ciArtifactsDir);
-    await copyCiArtifactsToReleases(ciArtifactsDir, releasesDir, version);
-  } catch (err) {
-    console.log(`\n⊘ CI build skipped: ${err.message}`);
-    console.log('  Windows release will still publish.');
-    console.log('  To enable all platforms: push repo to GitHub with .github/workflows/niao-release.yml\n');
+    cargoBuild(null);
+  } catch {
+    console.log(`  ⊘ ${platform.id} build failed`);
+    return null;
   }
+
+  const bins = binPaths(null);
+  for (const p of [bins.niao, bins.nm]) {
+    try {
+      await fs.access(p);
+    } catch {
+      console.log(`  ⊘ ${platform.id} missing ${path.basename(p)}`);
+      return null;
+    }
+  }
+
+  return packagePlatformVariant(platform, bins);
+}
+
+async function buildCrossPlatform(platform) {
+  const method = crossBuildMethod(platform.target);
+  if (!method) {
+    console.log(`  ⊘ ${platform.id} (${skipReason(platform)})`);
+    return null;
+  }
+
+  try {
+    if (method === 'zig') cargoZigbuild(platform.target);
+    else cargoBuild(platform.target);
+  } catch {
+    console.log(`  ⊘ ${platform.id} cross-build failed (${skipReason(platform)})`);
+    return null;
+  }
+
+  const bins = binPaths(platform.target);
+  for (const p of [bins.niao, bins.nm]) {
+    try {
+      await fs.access(p);
+    } catch {
+      console.log(`  ⊘ ${platform.id} missing ${path.basename(p)}`);
+      return null;
+    }
+  }
+
+  return packagePlatformVariant(platform, bins);
 }
 
 async function variantFromDisk(platform) {
@@ -376,9 +427,10 @@ async function writeManifest(variants) {
     },
     variants,
   };
-  const manifestPath = path.join(releasesDir, 'manifest.json');
-  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  return manifest;
+  await fs.writeFile(
+    path.join(releasesDir, 'manifest.json'),
+    JSON.stringify(manifest, null, 2) + '\n',
+  );
 }
 
 function runSeed() {
@@ -400,39 +452,51 @@ async function uploadFtp() {
     return;
   }
   if (!ftpConfigured()) {
-    console.log('\n⊘ FTP not configured — set FTP_* in .env');
-    return;
+    throw new Error('FTP not configured — set FTP_HOST, FTP_USER, FTP_PASSWORD in .env');
   }
 
   console.log('\nUploading to FTP…');
   const test = await testFtpConnection();
-  console.log(`  ✓ Connected to ${test.host}`);
+  console.log(`  ✓ Connected to ${test.host} (${config.filesUrl})`);
 
-  const result = await syncToFtp();
-  console.log(`  ✓ Uploaded ${result.uploaded} files → ${result.remote}`);
+  const progress = createConsoleFtpProgress({ label: 'Release upload' });
+  try {
+    const result = await syncToFtp({ onProgress: progress.onProgress });
+    progress.done(result);
+  } catch (err) {
+    progress.fail(err);
+    throw err;
+  }
 }
 
 async function main() {
-  console.log(`\n══ Niao ${version} release ══\n`);
+  console.log(`\n══ Niao ${version} release → FTP ══\n`);
+
   await ensureDir(releasesDir);
 
-  if (BUILD_ALL) ensureRustTargets();
+  if (process.platform === 'win32') {
+    console.log('[0/5] Windows build tools…');
+    winBuildEnv = await ensureWindowsBuildTools();
+    console.log('');
+  }
 
-  console.log('\n[1/5] Local platform build…');
+  console.log(`[${process.platform === 'win32' ? '1' : '0'}/5] Rust targets…`);
+  ensureRustTargets();
+
+  console.log(`\n[${process.platform === 'win32' ? '2' : '1'}/5] Build binaries…`);
   const host = hostTarget();
   const localBuilt = new Map();
   for (const platform of DEFAULT_PLATFORMS) {
+    let v = null;
     if (platform.target === host) {
-      const v = await buildLocalPlatform(platform);
-      if (v) localBuilt.set(platform.id, v);
+      v = await buildLocalPlatform(platform);
+    } else {
+      v = await buildCrossPlatform(platform);
     }
+    if (v) localBuilt.set(platform.id, v);
   }
 
-  console.log('\n[2/5] Remote platform builds (CI)…');
-  const needCi = DEFAULT_PLATFORMS.some((p) => p.target !== host && !localBuilt.has(p.id));
-  if (needCi) await fetchCiBuilds();
-
-  console.log('\n[3/5] Collecting release artifacts…');
+  console.log(`\n[${process.platform === 'win32' ? '3' : '2'}/5] Package + manifest…`);
   const variants = [];
   for (const platform of DEFAULT_PLATFORMS) {
     const v = localBuilt.get(platform.id) || (await variantFromDisk(platform));
@@ -440,31 +504,29 @@ async function main() {
       variants.push(v);
       console.log(`  ✓ ${platform.id}`);
     } else {
-      console.log(`  ⊘ ${platform.id} (not built)`);
+      console.log(`  ⊘ ${platform.id} (${skipReason(platform)})`);
     }
   }
 
   if (!variants.length) {
-    throw new Error('No platform artifacts — build failed or missing CI artifacts');
+    throw new Error('No release artifacts built');
   }
 
   await buildToolchainTarball();
   await writeManifest(variants);
+  console.log(`\n  ${variants.length}/${DEFAULT_PLATFORMS.length} platforms ready`);
 
-  console.log(`\n  ${variants.length}/${DEFAULT_PLATFORMS.length} platforms in manifest`);
-
-  console.log('\n[4/5] Seed catalog…');
+  console.log(`\n[${process.platform === 'win32' ? '4' : '3'}/5] Seed catalog…`);
   runSeed();
 
-  console.log('\n[5/5] FTP upload…');
+  console.log(`\n[${process.platform === 'win32' ? '5' : '4'}/5] FTP upload…`);
   await uploadFtp();
 
-  console.log('\n══ Release complete ══\n');
+  console.log('\n══ Done — live on CDN ══\n');
   for (const v of variants) {
     console.log(`  ${v.label}: ${v.installer_url || v.url}`);
   }
-  console.log(`\n  manifest → ${path.join(releasesDir, 'manifest.json')}`);
-  console.log(`  site     → ${config.filesUrl}\n`);
+  console.log(`\n  ${config.filesUrl}/releases/manifest.json\n`);
 }
 
 main().catch((err) => {

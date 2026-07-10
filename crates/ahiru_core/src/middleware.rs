@@ -306,6 +306,3 @@ pub fn request_id_enabled_in_chain(middleware: &[MiddlewareEntry]) -> bool {
     })
 }
 
-pub fn kinds_for_axum_layers(middleware: &[MiddlewareEntry]) -> Vec<&MiddlewareKind> {
-    middleware.iter().map(|e| &e.kind).collect()
-}

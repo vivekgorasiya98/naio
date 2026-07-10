@@ -21,6 +21,8 @@ export const RELEASE_STATUS = {
 
 export const DEFAULT_PLATFORMS = [
   { id: 'windows-x64', label: 'Windows x64', platform: 'windows', arch: 'x64', ext: 'zip', target: 'x86_64-pc-windows-msvc', installer_ext: 'exe', installer_kind: 'setup', installer_label: 'NiaoSetup.exe' },
+  { id: 'windows-x86', label: 'Windows x86', platform: 'windows', arch: 'x86', ext: 'zip', target: 'i686-pc-windows-msvc', installer_ext: 'zip', installer_kind: 'archive', installer_label: 'niao.zip' },
+  { id: 'windows-arm64', label: 'Windows ARM64', platform: 'windows', arch: 'arm64', ext: 'zip', target: 'aarch64-pc-windows-msvc', installer_ext: 'zip', installer_kind: 'archive', installer_label: 'niao.zip' },
   { id: 'linux-x64', label: 'Linux x64', platform: 'linux', arch: 'x64', ext: 'tar.gz', target: 'x86_64-unknown-linux-gnu', installer_ext: 'sh', installer_kind: 'install', installer_label: 'install.sh' },
   { id: 'linux-arm64', label: 'Linux ARM64', platform: 'linux', arch: 'arm64', ext: 'tar.gz', target: 'aarch64-unknown-linux-gnu', installer_ext: 'sh', installer_kind: 'install', installer_label: 'install.sh' },
   { id: 'macos-x64', label: 'macOS Intel', platform: 'macos', arch: 'x64', ext: 'tar.gz', target: 'x86_64-apple-darwin', installer_ext: 'sh', installer_kind: 'install', installer_label: 'install.sh' },

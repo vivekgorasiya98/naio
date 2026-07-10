@@ -1,7 +1,6 @@
 use crate::handler::HandlerFn;
 use crate::middleware::MiddlewareEntry;
 use crate::router::RouteMeta;
-use std::sync::Arc;
 
 /// Scoped route registration handle — prefix and inherited options.
 #[derive(Clone)]

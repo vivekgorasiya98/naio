@@ -3,26 +3,18 @@
 use niao_ast::Span;
 use niao_errors::codes;
 use postgres::Client;
-use postgres_native_tls::MakeTlsConnector;
 use postgres::tls::NoTls;
 use r2d2::Pool;
 use r2d2_postgres::PostgresConnectionManager;
 use std::cell::RefCell;
 use std::collections::HashMap as StdHashMap;
 
+pub type PooledConn = r2d2::PooledConnection<PostgresConnectionManager<NoTls>>;
+pub type PgPool = Pool<PostgresConnectionManager<NoTls>>;
+
 pub enum ConnInner {
     Direct(Client),
     Pooled(PooledConn),
-}
-
-pub enum PooledConn {
-    Plain(r2d2::PooledConnection<PostgresConnectionManager<NoTls>>),
-    Tls(r2d2::PooledConnection<PostgresConnectionManager<MakeTlsConnector>>),
-}
-
-pub enum PgPool {
-    Plain(Pool<PostgresConnectionManager<NoTls>>),
-    Tls(Pool<PostgresConnectionManager<MakeTlsConnector>>),
 }
 
 pub struct ConnHandle {
@@ -35,10 +27,7 @@ impl ConnHandle {
     pub fn client_mut(&mut self) -> &mut Client {
         match &mut self.inner {
             ConnInner::Direct(c) => c,
-            ConnInner::Pooled(p) => match p {
-                PooledConn::Plain(pc) => pc,
-                PooledConn::Tls(pc) => pc,
-            },
+            ConnInner::Pooled(p) => p,
         }
     }
 }

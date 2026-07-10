@@ -11,6 +11,9 @@ err*.txt
 ncl_demo_out.csv
 myapi/
 windows/payload/
+windows/niao_home/bin/
+windows/niao_home/niao_libs/
+target/
 .fastembed_cache/
 package-manager/.env
 package-manager/.test-*/

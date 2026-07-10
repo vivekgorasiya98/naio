@@ -1,6 +1,6 @@
 //! Normalization utilities.
 
-use niao_tensor::{Device, Tensor, TensorResult};
+use niao_tensor::{Tensor, TensorResult};
 
 #[derive(Debug, Clone)]
 pub struct Normalizer {

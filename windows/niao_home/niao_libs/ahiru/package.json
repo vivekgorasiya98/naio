@@ -1,8 +1,0 @@
-{
-  "name": "ahiru",
-  "version": "0.3.0",
-  "kind": "native",
-  "description": "ahiru-server 0.3.0: state, custom middleware, groups, cache, jobs, metrics, CLI toolkit",
-  "import_paths": ["ahiru", "std/ahiru"],
-  "builtin_count": 36
-}

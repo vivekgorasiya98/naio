@@ -1,5 +1,4 @@
 use crate::server::AhiruApp;
-use crate::ServeRuntimeOptions;
 use axum::body::Body;
 use axum::http::Request;
 use tower::ServiceExt;
@@ -11,7 +10,7 @@ pub async fn test_request(
     body: Option<&str>,
 ) -> Result<(u16, String), String> {
     let router = app.build_test_router();
-    let mut req = Request::builder()
+    let req = Request::builder()
         .method(method)
         .uri(path)
         .header("content-type", "application/json");

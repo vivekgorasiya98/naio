@@ -62,6 +62,12 @@ export async function buildApp() {
   await adminRoutes(app);
 
   await app.register(fastifyStatic, {
+    root: path.join(__dirname, 'public/assets'),
+    prefix: '/assets/',
+    decorateReply: false,
+  });
+
+  await app.register(fastifyStatic, {
     root: path.join(__dirname, 'public'),
     prefix: '/admin/',
     decorateReply: false,

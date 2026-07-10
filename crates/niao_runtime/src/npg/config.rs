@@ -1,10 +1,8 @@
-//! Connection string parsing, TLS, and client open helpers.
+//! Connection string parsing and client open helpers.
 
-use native_tls::TlsConnector;
 use postgres::config::{Config, SslMode};
 use postgres::tls::NoTls;
 use postgres::Client;
-use postgres_native_tls::MakeTlsConnector;
 use r2d2_postgres::PostgresConnectionManager;
 use std::collections::HashMap;
 use std::time::Duration;
@@ -13,6 +11,8 @@ use super::handles::redact_conninfo;
 use crate::{RuntimeError, Value, ValueRef};
 use niao_ast::Span;
 use niao_errors::codes;
+
+const SSL_MSG: &str = "PostgreSQL SSL is not enabled in this build; use sslmode=disable";
 
 pub fn parse_ssl_mode(s: &str) -> Result<SslMode, String> {
     match s.to_lowercase().as_str() {
@@ -23,19 +23,11 @@ pub fn parse_ssl_mode(s: &str) -> Result<SslMode, String> {
     }
 }
 
-fn make_native_tls() -> Result<MakeTlsConnector, String> {
-    let connector = TlsConnector::builder().build().map_err(|e| e.to_string())?;
-    Ok(MakeTlsConnector::new(connector))
-}
-
 pub fn connect_config(config: &Config) -> Result<Client, String> {
-    match config.get_ssl_mode() {
-        SslMode::Disable => config.connect(NoTls).map_err(|e| e.to_string()),
-        _ => {
-            let tls = make_native_tls()?;
-            config.connect(tls).map_err(|e| e.to_string())
-        }
+    if config.get_ssl_mode() != SslMode::Disable {
+        return Err(SSL_MSG.to_string());
     }
+    config.connect(NoTls).map_err(|e| e.to_string())
 }
 
 pub fn connect_url(url: &str) -> Result<Client, String> {
@@ -112,7 +104,7 @@ pub fn config_from_opts(opts: &HashMap<String, ValueRef>) -> Result<(Config, Str
             other => Err(format!("sslmode must be string, got {}", other.type_name())),
         })
         .transpose()?
-        .unwrap_or(SslMode::Prefer);
+        .unwrap_or(SslMode::Disable);
     config.ssl_mode(sslmode);
     display_parts.push(format!("sslmode={sslmode:?}"));
 
@@ -164,13 +156,11 @@ pub fn parse_connect_opts(opts_ref: &ValueRef, span: Span) -> Result<(Config, St
     config_from_opts(&opts).map_err(|msg| RuntimeError::at(span, codes::E1907_NPG_TLS, msg))
 }
 
-pub fn pool_manager_plain(config: &Config) -> PostgresConnectionManager<NoTls> {
-    PostgresConnectionManager::new(config.clone(), NoTls)
-}
-
-pub fn pool_manager_tls(config: &Config) -> Result<PostgresConnectionManager<MakeTlsConnector>, String> {
-  let tls = make_native_tls()?;
-  Ok(PostgresConnectionManager::new(config.clone(), tls))
+pub fn pool_manager(config: &Config) -> Result<PostgresConnectionManager<NoTls>, String> {
+    if config.get_ssl_mode() != SslMode::Disable {
+        return Err(SSL_MSG.to_string());
+    }
+    Ok(PostgresConnectionManager::new(config.clone(), NoTls))
 }
 
 pub fn pool_opts_from_map(

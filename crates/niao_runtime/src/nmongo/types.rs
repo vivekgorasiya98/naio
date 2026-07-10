@@ -408,7 +408,7 @@ pub fn bson_to_niao_cell(bson: &Bson) -> ValueRef {
             Value::Array(arr.iter().map(bson_to_niao_cell).collect()).ref_cell()
         }
         Bson::Document(doc) => bson_doc_to_niao_ref(doc),
-        Bson::DateTime(dt) => bson_to_niao_ref(bson).ref_cell(),
+        Bson::DateTime(_dt) => bson_to_niao_ref(bson).ref_cell(),
         Bson::Decimal128(_) => bson_to_niao_ref(bson).ref_cell(),
         Bson::RegularExpression(re) => Value::String(re.pattern.clone()).ref_cell(),
         Bson::JavaScriptCode(s) => Value::String(s.clone()).ref_cell(),

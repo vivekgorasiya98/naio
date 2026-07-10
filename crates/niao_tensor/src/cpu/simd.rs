@@ -150,9 +150,3 @@ unsafe fn simd_mul_f32_avx2(a: &[f32], b: &[f32], out: &mut [f32]) {
         i += 1;
     }
 }
-
-#[cfg(not(target_arch = "x86_64"))]
-fn simd_add_f32_avx2(_a: &[f32], _b: &[f32], _out: &mut [f32]) {}
-
-#[cfg(not(target_arch = "x86_64"))]
-fn simd_mul_f32_avx2(_a: &[f32], _b: &[f32], _out: &mut [f32]) {}
